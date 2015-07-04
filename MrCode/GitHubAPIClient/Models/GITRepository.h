@@ -47,7 +47,7 @@ typedef NS_ENUM(NSUInteger, JGHRepositoryOrderBy) {
 @property (nonatomic, assign          ) NSUInteger watchersCount;
 @property (nonatomic, assign          ) NSUInteger stargazersCount;
 @property (nonatomic, readonly, strong) NSURL      *homepage;
-@property (nonatomic, assign          ) BOOL       fork;
+@property (nonatomic, assign          ) BOOL       isForked;
 @property (nonatomic, readonly, copy  ) NSString   *desc;
 @property (nonatomic, assign          ) BOOL       hasDownloads;
 @property (nonatomic, readonly, copy  ) NSString   *hasPages;
@@ -57,9 +57,9 @@ typedef NS_ENUM(NSUInteger, JGHRepositoryOrderBy) {
 @property (nonatomic, readonly, strong) NSURL      *svnURL;
 @property (nonatomic, readonly, copy  ) NSString   *sshURL;
 @property (nonatomic, assign          ) BOOL       hasIssues;
-@property (nonatomic, assign          ) BOOL       *isAdmin;
-@property (nonatomic, assign          ) BOOL       *canPush;
-@property (nonatomic, assign          ) BOOL       *canPull;
+@property (nonatomic, assign          ) BOOL       isAdmin;
+@property (nonatomic, assign          ) BOOL       canPush;
+@property (nonatomic, assign          ) BOOL       canPull;
 @property (nonatomic, readonly, copy  ) NSString   *openIssuesCount;
 @property (nonatomic, readonly, copy  ) NSString   *name;
 @property (nonatomic, readonly, copy  ) NSString   *language;

@@ -7,10 +7,14 @@
 //
 
 #import "RepositoriesTableVC.h"
+#import "UIImage+Octions.h"
+#import "GITRepository.h"
 
 static NSString *kReposCellIdentifier = @"ReposCellIdentifier";
 
 @interface RepositoriesTableVC ()
+
+@property (nonatomic, strong) NSArray *repos;
 
 @end
 
@@ -24,6 +28,10 @@ static NSString *kReposCellIdentifier = @"ReposCellIdentifier";
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
+    _repos = [NSArray array];
+    
+    [self loadData];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -38,14 +46,28 @@ static NSString *kReposCellIdentifier = @"ReposCellIdentifier";
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 3;
+    return [self.repos count];
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kReposCellIdentifier forIndexPath:indexPath];
-    cell.textLabel.text = @"repos";
-    cell.detailTextLabel.text = @"Objective-C";
+    GITRepository *repo = self.repos[indexPath.row];
+    
+    NSString *detailText;
+    if (repo.language) {
+        detailText = [NSString stringWithFormat:@"%@ - %@ stars, %@ forks", repo.language, @(repo.stargazersCount), @(repo.forksCount)];
+    } else {
+        detailText = [NSString stringWithFormat:@"%@ stars, %@ forks", @(repo.stargazersCount), @(repo.forksCount)];
+    }
+    cell.textLabel.text            = repo.fullName;
+    cell.detailTextLabel.text      = detailText;
+    cell.detailTextLabel.textColor = [UIColor grayColor];
+    cell.imageView.image = [UIImage octicon_imageWithIcon:repo.isForked ? @"RepoForked" : @"Repo"
+                                          backgroundColor:[UIColor clearColor]
+                                                iconColor:[UIColor darkGrayColor]
+                                                iconScale:1.0
+                                                  andSize:CGSizeMake(30.0f, 30.0f)];
     
     return cell;
 }
@@ -94,5 +116,17 @@ static NSString *kReposCellIdentifier = @"ReposCellIdentifier";
     // Pass the selected object to the new view controller.
 }
 */
+
+#pragma mark - Private
+
+- (void)loadData
+{
+    [GITRepository myRepositoriesWithSuccess:^(NSArray * repos) {
+        self.repos = repos;
+        [self.tableView reloadData];
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+}
 
 @end

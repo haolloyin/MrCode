@@ -21,13 +21,16 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - MJExtension (2.3.7)
+  - OcticonsIOS (0.0.2)
 
 DEPENDENCIES:
   - AFNetworking
   - MJExtension
+  - OcticonsIOS
 
 SPEC CHECKSUMS:
   AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
   MJExtension: ab4e7c529b2c7a705e6f78f73e33d97929a42b39
+  OcticonsIOS: 845ce2794c2837cf688049c4782467ef0c3c949d
 
 COCOAPODS: 0.37.2

@@ -9,6 +9,15 @@
 #import "AppDelegate.h"
 #import "GitHubOAuthClient.h"
 
+NSString * const kClientID         = @"a17a1237e6cb4e8ac584";
+NSString * const kClientSecret     = @"9df3af59331d5618d66a0c2f95a1e833e4c388bb";
+NSString * const kRedirectURL      = @"MrCode://OAuth";
+NSString * const kOAuthScope       = @"user,public_repo,repo,notifications,gist,read:org";
+
+NSString * const kGitHubAPIBaseURL = @"https://api.github.com";
+NSString * const kAuthorizeURL     = @"https://github.com/login/oauth/authorize";
+NSString * const kAccessURL        = @"https://github.com/login/oauth/access_token";
+
 @interface AppDelegate ()
 
 @end
@@ -18,6 +27,9 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    [self setupGitHubOAuth];
+    
     return YES;
 }
 
@@ -53,6 +65,23 @@
     }
     
     return NO;
+}
+
+#pragma mark - Private
+
+- (void)setupGitHubOAuth
+{
+    GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
+    if (!client.alreadyOAuth) {
+        [client setupWithClientID:kClientID
+                           secret:kClientSecret
+                          baseURL:kGitHubAPIBaseURL
+                     authorizeURL:kAuthorizeURL
+                      redirectURL:kRedirectURL
+                   accessTokenURL:kAccessURL];
+        
+        [client authorizeWithScope:kOAuthScope];
+    }
 }
 
 @end

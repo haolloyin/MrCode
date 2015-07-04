@@ -1,0 +1,30 @@
+//
+//  MrCode-Prefix.pch
+//  MrCode
+//
+//  Created by hao on 7/4/15.
+//  Copyright (c) 2015 hao. All rights reserved.
+//
+
+#ifndef MrCode_MrCode_Prefix_pch
+#define MrCode_MrCode_Prefix_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#pragma mark - Some better NSLog
+
+#define NSLog(format, ...) do {         \
+fprintf(stderr, "<%s : %d> %s\n",       \
+[[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], \
+__LINE__, __func__);                    \
+(NSLog)((format), ##__VA_ARGS__);       \
+fprintf(stderr, "-------\n");           \
+} while (0)
+
+#define NSLogRect(rect) NSLog(@"%s x:%.4f, y:%.4f, w:%.4f, h:%.4f", #rect, rect.origin.x, rect.origin.y, rect.size.width, rect.size.height)
+#define NSLogSize(size) NSLog(@"%s w:%.4f, h:%.4f", #size, size.width, size.height)
+#define NSLogPoint(point) NSLog(@"%s x:%.4f, y:%.4f", #point, point.x, point.y)
+#define NSLogInset(inset) NSLog(@"%s top:%.4f, left:%.4f, bottom:%.4f, right:%.4f", #inset, inset.top, inset.left, inset.bottom, inset.right)
+
+#endif

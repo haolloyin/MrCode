@@ -26,7 +26,7 @@
              @"watchersCount": @"watchers_count",
              @"stargazersCount": @"stargazers_count",
              @"homepage": @"homepage",
-             @"fork": @"fork",
+             @"isForked": @"fork",
              @"desc": @"description",
              @"hasDownloads": @"has_downloads",
              @"hasPages": @"has_pages",
@@ -76,7 +76,7 @@
 + (AFHTTPRequestOperation *)myRepositoriesWithSuccess:(void (^)(NSArray *))success
                                               failure:(GitHubClientFailureBlock)failure
 {
-    return [GITRepository repositoriesOfUrl:@"user/repos" success:success failure:failure];
+    return [GITRepository repositoriesOfUrl:@"/user/repos" success:success failure:failure];
 }
 
 + (AFHTTPRequestOperation *)repositoriesOfUser:(NSString *)user
