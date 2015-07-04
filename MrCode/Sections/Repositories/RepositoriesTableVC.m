@@ -14,7 +14,10 @@ static NSString *kReposCellIdentifier = @"ReposCellIdentifier";
 
 @interface RepositoriesTableVC ()
 
+@property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property (nonatomic, strong) NSArray *repos;
+@property (nonatomic, strong) NSArray *ownedReposCache;
+@property (nonatomic, strong) NSArray *starredReposCache;
 
 @end
 
@@ -29,7 +32,11 @@ static NSString *kReposCellIdentifier = @"ReposCellIdentifier";
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-    _repos = [NSArray array];
+    _repos             = [NSArray array];
+    _ownedReposCache   = [NSArray array];
+    _starredReposCache = [NSArray array];
+    _segmentedControl.selectedSegmentIndex = 0;
+    [_segmentedControl addTarget:self action:@selector(loadData) forControlEvents:UIControlEventValueChanged];
     
     [self loadData];
 }
@@ -37,6 +44,13 @@ static NSString *kReposCellIdentifier = @"ReposCellIdentifier";
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - IBAction
+
+- (void)segmentedControlTapped:(id)sender
+{
+    
 }
 
 #pragma mark - Table view data source
@@ -53,7 +67,7 @@ static NSString *kReposCellIdentifier = @"ReposCellIdentifier";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kReposCellIdentifier forIndexPath:indexPath];
     GITRepository *repo = self.repos[indexPath.row];
-    
+
     NSString *detailText;
     if (repo.language) {
         detailText = [NSString stringWithFormat:@"%@ - %@ stars, %@ forks", repo.language, @(repo.stargazersCount), @(repo.forksCount)];
@@ -121,12 +135,36 @@ static NSString *kReposCellIdentifier = @"ReposCellIdentifier";
 
 - (void)loadData
 {
-    [GITRepository myRepositoriesWithSuccess:^(NSArray * repos) {
-        self.repos = repos;
-        [self.tableView reloadData];
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    if (_segmentedControl.selectedSegmentIndex == 0) {
+        if ([self.ownedReposCache count] > 0) {
+            self.repos = self.ownedReposCache;
+            [self.tableView reloadData];
+            return;
+        }
         
-    }];
+        [GITRepository myRepositoriesWithSuccess:^(NSArray * repos) {
+            self.ownedReposCache = repos;
+            self.repos = self.ownedReposCache;
+            [self.tableView reloadData];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+        }];
+    } else if (_segmentedControl.selectedSegmentIndex == 1) {
+        if ([self.starredReposCache count] > 0) {
+            self.repos = self.starredReposCache;
+            [self.tableView reloadData];
+            return;
+        }
+        
+        [GITRepository starredRepositoriesByUser:@"haolloyin" success:^(NSArray * repos) {
+            self.starredReposCache = repos;
+            self.repos = self.starredReposCache;
+            [self.tableView reloadData];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+        }];
+    }
+
 }
 
 @end

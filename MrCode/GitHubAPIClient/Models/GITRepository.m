@@ -76,7 +76,7 @@
 + (AFHTTPRequestOperation *)myRepositoriesWithSuccess:(void (^)(NSArray *))success
                                               failure:(GitHubClientFailureBlock)failure
 {
-    return [GITRepository repositoriesOfUrl:@"/user/repos" success:success failure:failure];
+    return [GITRepository repositoriesOfUrl:@"/user/repos?sort=created" success:success failure:failure];
 }
 
 + (AFHTTPRequestOperation *)repositoriesOfUser:(NSString *)user
@@ -111,6 +111,14 @@
                                             failure:(GitHubClientFailureBlock)failure;
 {
     NSString *url = [NSString stringWithFormat:@"/repositories?since=%@", since ? since : @"0"];
+    return [GITRepository repositoriesOfUrl:url success:success failure:failure];
+}
+
++ (AFHTTPRequestOperation *)starredRepositoriesByUser:(NSString *)user
+                                              success:(void (^)(NSArray *))success
+                                              failure:(GitHubClientFailureBlock)failure
+{
+    NSString *url = [NSString stringWithFormat:@"/users/%@/starred?sort=created", user];
     return [GITRepository repositoriesOfUrl:url success:success failure:failure];
 }
 

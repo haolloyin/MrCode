@@ -50,7 +50,7 @@
             </objects>
             <point key="canvasLocation" x="1059" y="-340"/>
         </scene>
-        <!--Repositories-->
+        <!--Repositories TableVC-->
         <scene sceneID="ozG-BQ-w9K">
             <objects>
                 <tableViewController id="pbu-Ix-DVe" customClass="RepositoriesTableVC" sceneMemberID="viewController">
@@ -85,7 +85,20 @@
                             <outlet property="delegate" destination="pbu-Ix-DVe" id="nKB-UL-6gH"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Repositories" id="6J3-62-Dsz"/>
+                    <navigationItem key="navigationItem" id="6J3-62-Dsz">
+                        <nil key="title"/>
+                        <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="bCo-xW-pWa">
+                            <rect key="frame" x="85" y="7" width="151" height="31"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <segments>
+                                <segment title="Owned"/>
+                                <segment title="Starred"/>
+                            </segments>
+                        </segmentedControl>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="segmentedControl" destination="bCo-xW-pWa" id="Ef2-6w-PXl"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="C6V-xi-a4z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
