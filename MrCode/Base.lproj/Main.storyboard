@@ -17,6 +17,7 @@
                     <connections>
                         <segue destination="Cq6-y5-SbT" kind="relationship" relationship="viewControllers" id="pMR-rl-pBt"/>
                         <segue destination="JhY-XZ-Ycj" kind="relationship" relationship="viewControllers" id="GQ3-f2-x8W"/>
+                        <segue destination="V56-aY-A6c" kind="relationship" relationship="viewControllers" id="fBv-jS-GYu"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
@@ -122,6 +123,25 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5bV-SL-3MD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="527" y="-340"/>
+        </scene>
+        <!--Test View Controller-->
+        <scene sceneID="xfm-3f-47w">
+            <objects>
+                <viewController id="V56-aY-A6c" customClass="TestViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="fhK-vT-kaR"/>
+                        <viewControllerLayoutGuide type="bottom" id="yAr-YQ-Q2O"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="EWS-Me-mgo">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" systemItem="more" id="G4l-xH-QeS"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Spc-2H-okr" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="0.0" y="752"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="2d7-FZ-qie">

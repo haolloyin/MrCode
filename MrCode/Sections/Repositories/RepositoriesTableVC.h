@@ -10,4 +10,6 @@
 
 @interface RepositoriesTableVC : UITableViewController
 
+@property (nonatomic, copy) NSString *user;
+
 @end

@@ -21,6 +21,8 @@
 		3F25477B1B45A1DE0012CDD6 /* GITUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F2547761B45A1DE0012CDD6 /* GITUser.m */; };
 		3F2547871B47F41D0012CDD6 /* NotificationsTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F2547861B47F41D0012CDD6 /* NotificationsTableVC.m */; };
 		3F25478E1B47F6FF0012CDD6 /* RepositoriesTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F25478D1B47F6FF0012CDD6 /* RepositoriesTableVC.m */; };
+		3F2547931B4842C80012CDD6 /* ReposTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F2547921B4842C80012CDD6 /* ReposTableViewCell.m */; };
+		3F2547961B4900960012CDD6 /* TestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F2547951B4900960012CDD6 /* TestViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +63,10 @@
 		3F25478C1B47F6FF0012CDD6 /* RepositoriesTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoriesTableVC.h; sourceTree = "<group>"; };
 		3F25478D1B47F6FF0012CDD6 /* RepositoriesTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepositoriesTableVC.m; sourceTree = "<group>"; };
 		3F2547901B48053C0012CDD6 /* MrCode-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MrCode-Prefix.pch"; sourceTree = "<group>"; };
+		3F2547911B4842C80012CDD6 /* ReposTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReposTableViewCell.h; sourceTree = "<group>"; };
+		3F2547921B4842C80012CDD6 /* ReposTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReposTableViewCell.m; sourceTree = "<group>"; };
+		3F2547941B4900960012CDD6 /* TestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestViewController.h; sourceTree = "<group>"; };
+		3F2547951B4900960012CDD6 /* TestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestViewController.m; sourceTree = "<group>"; };
 		AB24770223FEE1F449EAD4FD /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		C003DD33F5E02E04E4EEC24D /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		E8E792D13A526B5E88944E2D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -117,6 +123,8 @@
 				3F2547511B45A0070012CDD6 /* Images.xcassets */,
 				3F2547531B45A0070012CDD6 /* LaunchScreen.xib */,
 				3F2547411B45A0060012CDD6 /* Supporting Files */,
+				3F2547941B4900960012CDD6 /* TestViewController.h */,
+				3F2547951B4900960012CDD6 /* TestViewController.m */,
 			);
 			path = MrCode;
 			sourceTree = "<group>";
@@ -205,6 +213,8 @@
 			children = (
 				3F25478C1B47F6FF0012CDD6 /* RepositoriesTableVC.h */,
 				3F25478D1B47F6FF0012CDD6 /* RepositoriesTableVC.m */,
+				3F2547911B4842C80012CDD6 /* ReposTableViewCell.h */,
+				3F2547921B4842C80012CDD6 /* ReposTableViewCell.m */,
 			);
 			path = Repositories;
 			sourceTree = "<group>";
@@ -375,6 +385,8 @@
 				3F2547441B45A0060012CDD6 /* main.m in Sources */,
 				3F2547871B47F41D0012CDD6 /* NotificationsTableVC.m in Sources */,
 				3F25477B1B45A1DE0012CDD6 /* GITUser.m in Sources */,
+				3F2547961B4900960012CDD6 /* TestViewController.m in Sources */,
+				3F2547931B4842C80012CDD6 /* ReposTableViewCell.m in Sources */,
 				3F25477A1B45A1DE0012CDD6 /* GITRepository.m in Sources */,
 				3F2547781B45A1DE0012CDD6 /* GITNotification.m in Sources */,
 			);
