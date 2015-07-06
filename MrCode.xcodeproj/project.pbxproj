@@ -23,6 +23,7 @@
 		3F25478E1B47F6FF0012CDD6 /* RepositoriesTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F25478D1B47F6FF0012CDD6 /* RepositoriesTableVC.m */; };
 		3F2547931B4842C80012CDD6 /* ReposTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F2547921B4842C80012CDD6 /* ReposTableViewCell.m */; };
 		3F2547961B4900960012CDD6 /* TestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F2547951B4900960012CDD6 /* TestViewController.m */; };
+		3FBFD28C1B4AD68800BDC00F /* UIImage+MRC_Octicons.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD28B1B4AD68800BDC00F /* UIImage+MRC_Octicons.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,8 @@
 		3F2547921B4842C80012CDD6 /* ReposTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReposTableViewCell.m; sourceTree = "<group>"; };
 		3F2547941B4900960012CDD6 /* TestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestViewController.h; sourceTree = "<group>"; };
 		3F2547951B4900960012CDD6 /* TestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestViewController.m; sourceTree = "<group>"; };
+		3FBFD28A1B4AD68800BDC00F /* UIImage+MRC_Octicons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MRC_Octicons.h"; sourceTree = "<group>"; };
+		3FBFD28B1B4AD68800BDC00F /* UIImage+MRC_Octicons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+MRC_Octicons.m"; sourceTree = "<group>"; };
 		AB24770223FEE1F449EAD4FD /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		C003DD33F5E02E04E4EEC24D /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		E8E792D13A526B5E88944E2D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -116,7 +119,7 @@
 			children = (
 				3F25476A1B45A1DE0012CDD6 /* GitHubAPIClient */,
 				3F2547811B47F3D40012CDD6 /* Sections */,
-				3F25478F1B47FC9D0012CDD6 /* Helpers */,
+				3FBFD2891B4AD67800BDC00F /* Helpers */,
 				3F2547451B45A0060012CDD6 /* AppDelegate.h */,
 				3F2547461B45A0060012CDD6 /* AppDelegate.m */,
 				3F25474E1B45A0060012CDD6 /* Main.storyboard */,
@@ -219,9 +222,11 @@
 			path = Repositories;
 			sourceTree = "<group>";
 		};
-		3F25478F1B47FC9D0012CDD6 /* Helpers */ = {
+		3FBFD2891B4AD67800BDC00F /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				3FBFD28A1B4AD68800BDC00F /* UIImage+MRC_Octicons.h */,
+				3FBFD28B1B4AD68800BDC00F /* UIImage+MRC_Octicons.m */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -382,6 +387,7 @@
 				3F2547471B45A0060012CDD6 /* AppDelegate.m in Sources */,
 				3F25478E1B47F6FF0012CDD6 /* RepositoriesTableVC.m in Sources */,
 				3F2547771B45A1DE0012CDD6 /* GitHubOAuthClient.m in Sources */,
+				3FBFD28C1B4AD68800BDC00F /* UIImage+MRC_Octicons.m in Sources */,
 				3F2547441B45A0060012CDD6 /* main.m in Sources */,
 				3F2547871B47F41D0012CDD6 /* NotificationsTableVC.m in Sources */,
 				3F25477B1B45A1DE0012CDD6 /* GITUser.m in Sources */,

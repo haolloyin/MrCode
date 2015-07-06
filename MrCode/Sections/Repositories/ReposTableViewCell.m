@@ -8,7 +8,12 @@
 
 #import "ReposTableViewCell.h"
 #import "Masonry.h"
-#import "UIImage+Octions.h"
+#import "UIImage+MRC_Octicons.h"
+
+static UIImage *_repoIconImage = nil;
+static UIImage *_repoForkedIconImage = nil;
+static UIImage *_repoStarImage = nil;
+static UIImage *_repoForkImage = nil;
 
 @interface ReposTableViewCell ()
 
@@ -26,7 +31,7 @@
 @implementation ReposTableViewCell
 
 - (void)awakeFromNib {
-    // Initialization code
+    
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -35,7 +40,7 @@
     // Configure the view for the selected state
 }
 
-#pragma mark - 
+#pragma mark - Initial
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -43,6 +48,8 @@
     if (!self) {
         return nil;
     }
+    
+    [self setupImageIcons];
     
 //    NSLog(@"reuseIdentifier: %@", reuseIdentifier);
     self.contentView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -117,31 +124,49 @@
         make.bottom.mas_equalTo(-verticalPadding);
     }];
     
+    self.languageLabel = [UILabel new];
+    self.languageLabel.font = [UIFont systemFontOfSize:9.f];
+    self.languageLabel.textColor = [UIColor darkGrayColor];
+    self.languageLabel.textAlignment = NSTextAlignmentRight;
+    self.languageLabel.numberOfLines = 1;
+    [self.contentView addSubview:self.languageLabel];
+    [self.languageLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.forkLabel.mas_right).mas_offset(horizontalPadding * 4);
+        make.top.equalTo(self.descLabel.mas_bottom).offset(verticalPadding);
+        make.bottom.mas_equalTo(-verticalPadding);
+    }];
+    
     return self;
 }
+
+#pragma mark - Private
+
+- (void)setupImageIcons
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        CGSize iconSize    = CGSizeMake(20.f, 20.f);
+        CGSize markupSize  = CGSizeMake(10.f, 10.f);
+        _repoIconImage = [UIImage octicon_imageWithIdentifier:@"Repo" size:iconSize];
+        _repoForkedIconImage = [UIImage octicon_imageWithIdentifier:@"RepoForked" size:iconSize];
+        _repoStarImage = [UIImage octicon_imageWithIdentifier:@"Star" size:markupSize];
+        _repoForkImage = [UIImage octicon_imageWithIdentifier:@"GitBranch" size:markupSize];
+    });
+}
+
+#pragma mark - Public
 
 - (void)configWithRepository:(GITRepository *)repo
 {
     self.repo = repo;
     self.titleLabel.text = self.repo.name;
-    self.descLabel.text = self.repo.desc;
-    self.iconImageView.image = [UIImage octicon_imageWithIcon:repo.isForked ? @"RepoForked" : @"Repo"
-                                              backgroundColor:[UIColor clearColor]
-                                                    iconColor:[UIColor darkGrayColor]
-                                                    iconScale:1.0
-                                                      andSize:CGSizeMake(20, 20)];
-    self.starImageView.image = [UIImage octicon_imageWithIcon:@"Star"
-                                              backgroundColor:[UIColor clearColor]
-                                                    iconColor:[UIColor darkGrayColor]
-                                                    iconScale:1.0
-                                                      andSize:CGSizeMake(10, 10)];
-    self.forkImageView.image = [UIImage octicon_imageWithIcon:@"GitBranch"
-                                              backgroundColor:[UIColor clearColor]
-                                                    iconColor:[UIColor darkGrayColor]
-                                                    iconScale:1.0
-                                                      andSize:CGSizeMake(10, 10)];
+    self.descLabel.text  = self.repo.desc;
+    self.iconImageView.image = repo.isForked ? _repoForkedIconImage : _repoIconImage;
+    self.starImageView.image = _repoStarImage;
+    self.forkImageView.image = _repoForkImage;
     self.starLabel.text = [NSString stringWithFormat:@"%@", @(self.repo.stargazersCount)];
     self.forkLabel.text = [NSString stringWithFormat:@"%@", @(self.repo.forksCount)];
+    self.languageLabel.text = self.repo.language;
     
 }
 
