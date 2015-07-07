@@ -11,6 +11,7 @@
 #import "GITRepository.h"
 #import "ReposTableViewCell.h"
 #import "UITableView+FDTemplateLayoutCell.h"
+#import "RepositoryDetailTableVC.h"
 
 static NSString *kReposCellIdentifier = @"ReposCellIdentifier";
 static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
@@ -86,6 +87,28 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     return height;
 }
 
+#pragma mark - Table view cell
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"");
+    [self performSegueWithIdentifier:@"RepositoriesTableVC2RepoDetail" sender:self.repos[indexPath.row]];
+}
+
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    NSString *identifier = segue.identifier;
+    NSLog(@"segue.identifier: %@", identifier);
+    if ([identifier isEqualToString:@"RepositoriesTableVC2RepoDetail"]) {
+        RepositoryDetailTableVC *controller = (RepositoryDetailTableVC *)segue.destinationViewController;
+        controller.repo = (GITRepository *)sender;
+    }
+}
+
+#pragma mark - Private
+
 - (void)configCell:(UITableViewCell *)cell withRepo:(GITRepository *)repo
 {
     NSString *detailText;
@@ -103,53 +126,6 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
                                                 iconScale:1.0
                                                   andSize:CGSizeMake(30.0f, 30.0f)];
 }
-
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
-#pragma mark - Private
 
 - (void)loadData
 {

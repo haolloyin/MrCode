@@ -24,6 +24,8 @@
 		3F2547931B4842C80012CDD6 /* ReposTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F2547921B4842C80012CDD6 /* ReposTableViewCell.m */; };
 		3F2547961B4900960012CDD6 /* TestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F2547951B4900960012CDD6 /* TestViewController.m */; };
 		3FBFD28C1B4AD68800BDC00F /* UIImage+MRC_Octicons.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD28B1B4AD68800BDC00F /* UIImage+MRC_Octicons.m */; };
+		3FBFD28F1B4C1C0900BDC00F /* RepositoryDetailTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD28E1B4C1C0900BDC00F /* RepositoryDetailTableVC.m */; };
+		3FBFD2921B4C1C3500BDC00F /* RepositoryHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD2911B4C1C3500BDC00F /* RepositoryHeaderView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +72,10 @@
 		3F2547951B4900960012CDD6 /* TestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestViewController.m; sourceTree = "<group>"; };
 		3FBFD28A1B4AD68800BDC00F /* UIImage+MRC_Octicons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MRC_Octicons.h"; sourceTree = "<group>"; };
 		3FBFD28B1B4AD68800BDC00F /* UIImage+MRC_Octicons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+MRC_Octicons.m"; sourceTree = "<group>"; };
+		3FBFD28D1B4C1C0900BDC00F /* RepositoryDetailTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoryDetailTableVC.h; sourceTree = "<group>"; };
+		3FBFD28E1B4C1C0900BDC00F /* RepositoryDetailTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepositoryDetailTableVC.m; sourceTree = "<group>"; };
+		3FBFD2901B4C1C3500BDC00F /* RepositoryHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoryHeaderView.h; sourceTree = "<group>"; };
+		3FBFD2911B4C1C3500BDC00F /* RepositoryHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepositoryHeaderView.m; sourceTree = "<group>"; };
 		AB24770223FEE1F449EAD4FD /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		C003DD33F5E02E04E4EEC24D /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		E8E792D13A526B5E88944E2D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -218,6 +224,10 @@
 				3F25478D1B47F6FF0012CDD6 /* RepositoriesTableVC.m */,
 				3F2547911B4842C80012CDD6 /* ReposTableViewCell.h */,
 				3F2547921B4842C80012CDD6 /* ReposTableViewCell.m */,
+				3FBFD28D1B4C1C0900BDC00F /* RepositoryDetailTableVC.h */,
+				3FBFD28E1B4C1C0900BDC00F /* RepositoryDetailTableVC.m */,
+				3FBFD2901B4C1C3500BDC00F /* RepositoryHeaderView.h */,
+				3FBFD2911B4C1C3500BDC00F /* RepositoryHeaderView.m */,
 			);
 			path = Repositories;
 			sourceTree = "<group>";
@@ -388,10 +398,12 @@
 				3F25478E1B47F6FF0012CDD6 /* RepositoriesTableVC.m in Sources */,
 				3F2547771B45A1DE0012CDD6 /* GitHubOAuthClient.m in Sources */,
 				3FBFD28C1B4AD68800BDC00F /* UIImage+MRC_Octicons.m in Sources */,
+				3FBFD2921B4C1C3500BDC00F /* RepositoryHeaderView.m in Sources */,
 				3F2547441B45A0060012CDD6 /* main.m in Sources */,
 				3F2547871B47F41D0012CDD6 /* NotificationsTableVC.m in Sources */,
 				3F25477B1B45A1DE0012CDD6 /* GITUser.m in Sources */,
 				3F2547961B4900960012CDD6 /* TestViewController.m in Sources */,
+				3FBFD28F1B4C1C0900BDC00F /* RepositoryDetailTableVC.m in Sources */,
 				3F2547931B4842C80012CDD6 /* ReposTableViewCell.m in Sources */,
 				3F25477A1B45A1DE0012CDD6 /* GITRepository.m in Sources */,
 				3F2547781B45A1DE0012CDD6 /* GITNotification.m in Sources */,
