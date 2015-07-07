@@ -20,8 +20,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    NSLog(@"");
-    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -72,10 +70,5 @@
 
 #pragma mark - Private
 
-- (void)setRepo:(GITRepository *)repo
-{
-    NSLog(@"");
-    _repo = repo;
-}
 
 @end

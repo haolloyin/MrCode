@@ -585,7 +585,6 @@
 		BB7651406CA954963787F84B = {
 			isa = PBXGroup;
 			children = (
-				7FE9A38C8F7713618F4142CC /* Podfile */,
 				05B0D64BAA80C818AC5F51DE /* Frameworks */,
 				C1E824F5FE317CE834075A4A /* Pods */,
 				C2B3BC0546888170542D1F62 /* Products */,
@@ -621,6 +620,7 @@
 		D47BFF93F27FF09C4FDE8E6D /* MJExtension */ = {
 			isa = PBXGroup;
 			children = (
+				7FE9A38C8F7713618F4142CC /* Podfile */,
 				2DCE701B0C694B6D38C9B78B /* MJConst.h */,
 				E1A97429E9F8E09494B5D641 /* MJConst.m */,
 				18C97F8B19270764D204B9A6 /* MJExtension.h */,

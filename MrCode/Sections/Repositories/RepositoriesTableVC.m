@@ -100,7 +100,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     NSString *identifier = segue.identifier;
-    NSLog(@"segue.identifier: %@", identifier);
+
     if ([identifier isEqualToString:@"RepositoriesTableVC2RepoDetail"]) {
         RepositoryDetailTableVC *controller = (RepositoryDetailTableVC *)segue.destinationViewController;
         controller.repo = (GITRepository *)sender;
