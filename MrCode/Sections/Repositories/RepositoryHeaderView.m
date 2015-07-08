@@ -47,18 +47,18 @@
     
     // Buttons
     _starButton = [UIButton new];
-    _starButton.backgroundColor = [UIColor lightGrayColor];
-    [_starButton setTitleColor:[UIColor darkTextColor] forState:UIControlStateNormal];
+    _starButton.tag = 101;
+    [self setupButtoon:_starButton];
     [self addSubview:_starButton];
     
     _forkButton = [UIButton new];
-    _forkButton.backgroundColor = [UIColor lightGrayColor];
-    [_forkButton setTitleColor:[UIColor darkTextColor] forState:UIControlStateNormal];
+    _forkButton.tag = 102;
+    [self setupButtoon:_forkButton];
     [self addSubview:_forkButton];
     
     _watchButton = [UIButton new];
-    _watchButton.backgroundColor = [UIColor lightGrayColor];
-    [_watchButton setTitleColor:[UIColor darkTextColor] forState:UIControlStateNormal];
+    _watchButton.tag = 103;
+    [self setupButtoon:_watchButton];
     [self addSubview:_watchButton];
     
     return self;
@@ -87,7 +87,7 @@
     // Buttons
     CGFloat horizontalPadding = 15;
     [self.starButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.equalTo(@40);
+        make.height.equalTo(@30);
         make.left.mas_equalTo(horizontalPadding);
         make.top.equalTo(self.updatedLabel.mas_bottom).offset(10);
         make.bottom.lessThanOrEqualTo(@-10);
@@ -112,6 +112,27 @@
     NSLog(@"");
 }
 
+#pragma mark - Private
+
+- (void)setupButtoon:(UIButton *)button
+{
+    button.titleLabel.textAlignment = NSTextAlignmentCenter;
+    button.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    button.titleLabel.numberOfLines = 2;
+    button.titleLabel.font = [UIFont systemFontOfSize:11];
+    button.backgroundColor = [UIColor greenColor];
+    button.enabled = YES;
+    [button setUserInteractionEnabled:YES];
+    [button setTitleColor:[UIColor darkTextColor] forState:UIControlStateNormal];
+    
+    [button addTarget:self action:@selector(tapButton:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)tapButton:(UIButton *)button
+{
+    NSLog(@"%@", @(button.tag));
+}
+
 #pragma mark - Property
 
 - (void)setRepo:(GITRepository *)repo
@@ -119,9 +140,9 @@
     _repo = repo;
     self.titleLabel.text = self.repo.name;
     self.updatedLabel.text = self.repo.updatedAt;
-    [self.starButton setTitle:[NSString stringWithFormat:@"Star %@", @(self.repo.stargazersCount)] forState:UIControlStateNormal];
-    [self.forkButton setTitle:[NSString stringWithFormat:@"Fork %@", @(self.repo.forksCount)] forState:UIControlStateNormal];
-    [self.watchButton setTitle:[NSString stringWithFormat:@"Watch %@", @(self.repo.watchersCount)] forState:UIControlStateNormal];
+    [self.starButton setTitle:[NSString stringWithFormat:@"Star\n%@", @(self.repo.stargazersCount)] forState:UIControlStateNormal];
+    [self.forkButton setTitle:[NSString stringWithFormat:@"Fork\n%@", @(self.repo.forksCount)] forState:UIControlStateNormal];
+    [self.watchButton setTitle:[NSString stringWithFormat:@"Watch\n%@", @(self.repo.watchersCount)] forState:UIControlStateNormal];
 }
 
 @end
