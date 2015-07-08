@@ -90,20 +90,20 @@
         make.height.equalTo(@30);
         make.left.mas_equalTo(horizontalPadding);
         make.top.equalTo(self.updatedLabel.mas_bottom).offset(10);
-        make.bottom.lessThanOrEqualTo(@-10);
+        make.bottom.equalTo(@-15);
     }];
     [self.forkButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.equalTo(self.starButton);
         make.left.equalTo(self.starButton.mas_right).offset(horizontalPadding);
         make.top.equalTo(self.starButton);
-        make.bottom.lessThanOrEqualTo(@-10);
+        make.bottom.equalTo(@-15);
     }];
     [self.watchButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.equalTo(self.forkButton);
         make.left.equalTo(self.forkButton.mas_right).offset(horizontalPadding);
         make.top.equalTo(self.forkButton);
         make.right.mas_equalTo(-horizontalPadding);
-        make.bottom.lessThanOrEqualTo(@-10);
+        make.bottom.equalTo(@-15);
     }];
 }
 

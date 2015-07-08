@@ -29,6 +29,12 @@
     if (!self.tableView.tableHeaderView) {
         self.headerView = [[RepositoryHeaderView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 150.f)];
         self.headerView.repo = self.repo;
+        
+        [self.headerView setNeedsLayout];
+        [self.headerView layoutIfNeeded];
+        
+        CGFloat height = [self.headerView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+        self.headerView.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), height);
         self.tableView.tableHeaderView = self.headerView;
     }
 }
