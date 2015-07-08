@@ -8,10 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import "GitHubOAuthClient.h"
+#import "GITBaseModel.h"
 
 static NSString *kAUTHENTICATED_USER_IDENTIFIER = @"GitHubOAuthClient_AUTHENTICATED_USER_IDENTIFIER";
 
-@interface GITUser : NSObject
+@interface GITUser : GITBaseModel
 
 @property (nonatomic, assign          ) NSUInteger publicRepos;
 @property (nonatomic, readonly, copy  ) NSString   *siteAdmin;
@@ -31,14 +32,14 @@ static NSString *kAUTHENTICATED_USER_IDENTIFIER = @"GitHubOAuthClient_AUTHENTICA
 @property (nonatomic, readonly, copy  ) NSString   *company;
 @property (nonatomic, readonly, strong) NSURL      *eventsURL;
 @property (nonatomic, readonly, strong) NSURL      *htmlURL;
-@property (nonatomic, readonly, copy  ) NSString   *updatedAt;
+@property (nonatomic, readonly, copy  ) NSDate     *updatedAt;
 @property (nonatomic, readonly, strong) NSURL      *receivedEventsURL;
 @property (nonatomic, readonly, strong) NSURL      *starredURL;
 @property (nonatomic, assign          ) NSUInteger publicGists;
 @property (nonatomic, readonly, copy  ) NSString   *name;
 @property (nonatomic, readonly, strong) NSURL      *organizationsURL;
 @property (nonatomic, readonly, strong) NSURL      *url;
-@property (nonatomic, readonly, copy  ) NSString   *createdAt;
+@property (nonatomic, readonly, copy  ) NSDate     *createdAt;
 @property (nonatomic, readonly, strong) NSURL      *avatarURL;
 @property (nonatomic, readonly, strong) NSURL      *reposURL;
 @property (nonatomic, readonly, copy  ) NSString   *following;

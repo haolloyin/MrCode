@@ -58,9 +58,11 @@ install_resource()
   esac
 }
 if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_resource "DateTools/DateTools/DateTools.bundle"
   install_resource "OcticonsIOS/OcticonsIOS/octicons.ttf"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_resource "DateTools/DateTools/DateTools.bundle"
   install_resource "OcticonsIOS/OcticonsIOS/octicons.ttf"
 fi
 

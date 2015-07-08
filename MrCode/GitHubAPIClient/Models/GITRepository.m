@@ -7,6 +7,7 @@
 //
 
 #import "GITRepository.h"
+#import "NSString+ToNSDate.h"
 
 @implementation GITRepository
 

@@ -8,13 +8,14 @@
 
 #import <Foundation/Foundation.h>
 #import "GitHubOAuthClient.h"
+#import "GITBaseModel.h"
 
-@interface GITOrganization : NSObject
+@interface GITOrganization : GITBaseModel
 
 @property (nonatomic, assign          ) NSUInteger publicRepos;
 @property (nonatomic, assign          ) NSUInteger publicGists;
 @property (nonatomic, readonly, copy  ) NSString   *name;
-@property (nonatomic, readonly, copy  ) NSString   *createdAt;
+@property (nonatomic, readonly, copy  ) NSDate     *createdAt;
 @property (nonatomic, readonly, strong) NSURL      *url;
 @property (nonatomic, readonly, copy  ) NSString   *company;
 @property (nonatomic, readonly, strong) NSURL      *htmlURL;

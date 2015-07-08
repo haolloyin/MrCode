@@ -24,6 +24,13 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    NSString *str = @"2014-06-08T10:16:16Z";
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ssZ";
+    NSDate *date = [dateFormatter dateFromString:str];
+    NSLog(@"date: %@, class: %@", date, [date class]);
+    
     _superView = [UIView new];
     _superView.backgroundColor = [UIColor greenColor];
     [self.view addSubview:_superView];

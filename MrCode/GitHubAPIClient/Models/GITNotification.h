@@ -8,9 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import "GitHubOAuthClient.h"
+#import "GITBaseModel.h"
 #import "GITRepository.h"
 
-@interface GITNotification : NSObject
+@interface GITNotification : GITBaseModel
 
 @property (nonatomic, readonly, copy  ) NSString      *ID;
 @property (nonatomic, strong          ) GITRepository *repository;
@@ -19,8 +20,8 @@
 @property (nonatomic, readonly, copy  ) NSString      *subjectType;
 @property (nonatomic, readonly, copy  ) NSString      *subjectTitle;
 @property (nonatomic, readonly, strong) NSURL         *url;
-@property (nonatomic, readonly, copy  ) NSString      *updatedAt;
-@property (nonatomic, readonly, copy  ) NSString      *lastReadAt;
+@property (nonatomic, readonly, copy  ) NSDate        *updatedAt;
+@property (nonatomic, readonly, copy  ) NSDate        *lastReadAt;
 @property (nonatomic, readonly, copy  ) NSString      *reason;
 @property (nonatomic, assign          ) BOOL          isUnread;
 

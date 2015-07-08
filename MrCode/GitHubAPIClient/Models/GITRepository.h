@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "GitHubOAuthClient.h"
+#import "GITBaseModel.h"
 #import "GITUser.h"
 
 typedef NS_ENUM(NSUInteger, JGHRepositoryType) {
@@ -32,12 +33,11 @@ typedef NS_ENUM(NSUInteger, JGHRepositoryOrderBy) {
     JGHRepositoryOrderByDesc,
 };
 
-@interface GITRepository : NSObject
+@interface GITRepository : GITBaseModel
 
 @property (nonatomic, assign          ) BOOL       hasWiki;
 @property (nonatomic, readonly, copy  ) NSString   *mirrorURL;
 @property (nonatomic, assign          ) NSUInteger forksCount;
-@property (nonatomic, readonly, copy  ) NSString   *updatedAt;
 @property (nonatomic, readonly, copy  ) NSString   *isPrivate;
 @property (nonatomic, readonly, copy  ) NSString   *fullName;
 @property (nonatomic, strong          ) GITUser    *owner;
@@ -64,8 +64,9 @@ typedef NS_ENUM(NSUInteger, JGHRepositoryOrderBy) {
 @property (nonatomic, readonly, copy  ) NSString   *name;
 @property (nonatomic, readonly, copy  ) NSString   *language;
 @property (nonatomic, readonly, strong) NSURL      *url;
-@property (nonatomic, readonly, copy  ) NSString   *createdAt;
-@property (nonatomic, readonly, copy  ) NSString   *pushedAt;
+@property (nonatomic, readonly, copy  ) NSDate     *updatedAt;
+@property (nonatomic, readonly, copy  ) NSDate     *createdAt;
+@property (nonatomic, readonly, copy  ) NSDate     *pushedAt;
 
 + (AFHTTPRequestOperation *)myRepositoriesWithSuccess:(void (^)(NSArray *))success
                                               failure:(GitHubClientFailureBlock)failure;

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		05B3E000177B2E760B3A5B0E /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E8E792D13A526B5E88944E2D /* libPods.a */; };
+		3F0006F21B4D7C6C00503F50 /* NSString+ToNSDate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F0006F11B4D7C6C00503F50 /* NSString+ToNSDate.m */; };
 		3F2547441B45A0060012CDD6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F2547431B45A0060012CDD6 /* main.m */; };
 		3F2547471B45A0060012CDD6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F2547461B45A0060012CDD6 /* AppDelegate.m */; };
 		3F2547501B45A0060012CDD6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3F25474E1B45A0060012CDD6 /* Main.storyboard */; };
@@ -23,6 +24,7 @@
 		3F25478E1B47F6FF0012CDD6 /* RepositoriesTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F25478D1B47F6FF0012CDD6 /* RepositoriesTableVC.m */; };
 		3F2547931B4842C80012CDD6 /* ReposTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F2547921B4842C80012CDD6 /* ReposTableViewCell.m */; };
 		3F2547961B4900960012CDD6 /* TestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F2547951B4900960012CDD6 /* TestViewController.m */; };
+		3F29DF1B1B4D8A6D002257DF /* GITBaseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F29DF1A1B4D8A6D002257DF /* GITBaseModel.m */; };
 		3FBFD28C1B4AD68800BDC00F /* UIImage+MRC_Octicons.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD28B1B4AD68800BDC00F /* UIImage+MRC_Octicons.m */; };
 		3FBFD28F1B4C1C0900BDC00F /* RepositoryDetailTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD28E1B4C1C0900BDC00F /* RepositoryDetailTableVC.m */; };
 		3FBFD2921B4C1C3500BDC00F /* RepositoryHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD2911B4C1C3500BDC00F /* RepositoryHeaderView.m */; };
@@ -39,6 +41,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3F0006F01B4D7C6C00503F50 /* NSString+ToNSDate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+ToNSDate.h"; sourceTree = "<group>"; };
+		3F0006F11B4D7C6C00503F50 /* NSString+ToNSDate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+ToNSDate.m"; sourceTree = "<group>"; };
 		3F25473E1B45A0060012CDD6 /* MrCode.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MrCode.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F2547421B45A0060012CDD6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3F2547431B45A0060012CDD6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -70,6 +74,8 @@
 		3F2547921B4842C80012CDD6 /* ReposTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReposTableViewCell.m; sourceTree = "<group>"; };
 		3F2547941B4900960012CDD6 /* TestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestViewController.h; sourceTree = "<group>"; };
 		3F2547951B4900960012CDD6 /* TestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestViewController.m; sourceTree = "<group>"; };
+		3F29DF191B4D8A6D002257DF /* GITBaseModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GITBaseModel.h; sourceTree = "<group>"; };
+		3F29DF1A1B4D8A6D002257DF /* GITBaseModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GITBaseModel.m; sourceTree = "<group>"; };
 		3FBFD28A1B4AD68800BDC00F /* UIImage+MRC_Octicons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MRC_Octicons.h"; sourceTree = "<group>"; };
 		3FBFD28B1B4AD68800BDC00F /* UIImage+MRC_Octicons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+MRC_Octicons.m"; sourceTree = "<group>"; };
 		3FBFD28D1B4C1C0900BDC00F /* RepositoryDetailTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoryDetailTableVC.h; sourceTree = "<group>"; };
@@ -179,14 +185,16 @@
 		3F25476E1B45A1DE0012CDD6 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				3F29DF191B4D8A6D002257DF /* GITBaseModel.h */,
+				3F29DF1A1B4D8A6D002257DF /* GITBaseModel.m */,
+				3F2547751B45A1DE0012CDD6 /* GITUser.h */,
+				3F2547761B45A1DE0012CDD6 /* GITUser.m */,
 				3F25476F1B45A1DE0012CDD6 /* GITNotification.h */,
 				3F2547701B45A1DE0012CDD6 /* GITNotification.m */,
 				3F2547711B45A1DE0012CDD6 /* GITOrganization.h */,
 				3F2547721B45A1DE0012CDD6 /* GITOrganization.m */,
 				3F2547731B45A1DE0012CDD6 /* GITRepository.h */,
 				3F2547741B45A1DE0012CDD6 /* GITRepository.m */,
-				3F2547751B45A1DE0012CDD6 /* GITUser.h */,
-				3F2547761B45A1DE0012CDD6 /* GITUser.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -237,6 +245,8 @@
 			children = (
 				3FBFD28A1B4AD68800BDC00F /* UIImage+MRC_Octicons.h */,
 				3FBFD28B1B4AD68800BDC00F /* UIImage+MRC_Octicons.m */,
+				3F0006F01B4D7C6C00503F50 /* NSString+ToNSDate.h */,
+				3F0006F11B4D7C6C00503F50 /* NSString+ToNSDate.m */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -402,7 +412,9 @@
 				3F2547441B45A0060012CDD6 /* main.m in Sources */,
 				3F2547871B47F41D0012CDD6 /* NotificationsTableVC.m in Sources */,
 				3F25477B1B45A1DE0012CDD6 /* GITUser.m in Sources */,
+				3F29DF1B1B4D8A6D002257DF /* GITBaseModel.m in Sources */,
 				3F2547961B4900960012CDD6 /* TestViewController.m in Sources */,
+				3F0006F21B4D7C6C00503F50 /* NSString+ToNSDate.m in Sources */,
 				3FBFD28F1B4C1C0900BDC00F /* RepositoryDetailTableVC.m in Sources */,
 				3F2547931B4842C80012CDD6 /* ReposTableViewCell.m in Sources */,
 				3F25477A1B45A1DE0012CDD6 /* GITRepository.m in Sources */,
