@@ -13,7 +13,8 @@
 
 - (id)newValueFromOldValue:(id)oldValue property:(MJProperty *)property
 {
-    if (property.type.typeClass == [NSDate class]) {
+    if (oldValue != [NSNull null] && property.type.typeClass == [NSDate class]) {
+//        NSLog(@"oldValue: %@, class: %@", oldValue, [oldValue class]);
         NSDate *date = [oldValue toNSDate];
         return date;
     }

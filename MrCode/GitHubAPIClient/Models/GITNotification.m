@@ -38,8 +38,8 @@
     return [client getWithURL:url parameters:nil success:^(AFHTTPRequestOperation *operation, id obj) {
         NSMutableArray *mutableArray = [NSMutableArray array];
         for (NSDictionary *dict in obj) {
-            GITNotification *org = [GITNotification objectWithKeyValues:dict];
-            [mutableArray addObject:org];
+            GITNotification *notification = [GITNotification objectWithKeyValues:dict];
+            [mutableArray addObject:notification];
         }
         success([mutableArray copy]);
     } failure:failure];
