@@ -189,7 +189,7 @@ static NSString *kTOKEN_STORE_IDENTIFIER = @"GitHubOAuthClient_TOKEN_STORE_IDENT
         return [self.requestManager GET:urlString
                              parameters:parameters
                                 success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                                    NSLog(@"response: %@, %@,", [responseObject class], responseObject);
+//                                    NSLog(@"response: %@, %@,", [responseObject class], responseObject);
                                     success(operation, responseObject);
                                     
                                 } failure:^(AFHTTPRequestOperation *operation, NSError *error) {

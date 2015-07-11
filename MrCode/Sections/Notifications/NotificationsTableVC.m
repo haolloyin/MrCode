@@ -8,6 +8,8 @@
 
 #import "NotificationsTableVC.h"
 #import "GITNotification.h"
+#import "NotificationTableViewCell.h"
+#import "UITableView+FDTemplateLayoutCell.h"
 
 static NSString *kNotificationCellIdentifier = @"NotificationCellIdentifier";
 
@@ -30,6 +32,13 @@ static NSString *kNotificationCellIdentifier = @"NotificationCellIdentifier";
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
+    [self.tableView registerClass:[NotificationTableViewCell class]
+           forCellReuseIdentifier:NSStringFromClass([NotificationTableViewCell class])];
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.estimatedRowHeight = 80.0;
+    
+    _notifications = [NSArray new];
+    
     [self loadData];
 }
 
@@ -49,14 +58,27 @@ static NSString *kNotificationCellIdentifier = @"NotificationCellIdentifier";
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kNotificationCellIdentifier forIndexPath:indexPath];
-    GITNotification *notification = self.notifications[indexPath.row];
-    cell.textLabel.text = notification.subjectTitle;
-    cell.detailTextLabel.text = notification.subjectType;
     
-    NSLog(@"%@, %@", cell.textLabel.text, cell.detailTextLabel.text);
+//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kNotificationCellIdentifier forIndexPath:indexPath];
+//    GITNotification *notification = self.notifications[indexPath.row];
+//    cell.textLabel.text = notification.subjectTitle;
+//    cell.detailTextLabel.text = notification.subjectType;
+//    NSLog(@"%@, %@", cell.textLabel.text, cell.detailTextLabel.text);
+    
+    NotificationTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([NotificationTableViewCell class])
+                                                                      forIndexPath:indexPath];
+    cell.notification = self.notifications[indexPath.row];
     
     return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    CGFloat height = [tableView fd_heightForCellWithIdentifier:NSStringFromClass([NotificationTableViewCell class])
+                                                 configuration:^(NotificationTableViewCell *cell) {
+        cell.notification = self.notifications[indexPath.row];
+    }];
+    return height;
 }
 
 /*
