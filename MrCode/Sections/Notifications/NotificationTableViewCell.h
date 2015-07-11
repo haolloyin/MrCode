@@ -10,8 +10,15 @@
 
 @class GITNotification;
 
+@protocol NotificationTableViewCellRepoNameTapped <NSObject>
+
+- (void)notificationTabViewCellRepoNameTapped:(GITNotification *)notification;
+
+@end
+
 @interface NotificationTableViewCell : UITableViewCell
 
 @property (nonatomic, strong) GITNotification *notification;
+@property (nonatomic, weak) id<NotificationTableViewCellRepoNameTapped> delegate;
 
 @end

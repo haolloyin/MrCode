@@ -94,7 +94,7 @@
     [self.starButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.equalTo(@30);
         make.left.mas_equalTo(horizontalPadding);
-        make.top.equalTo(self.updatedLabel.mas_bottom).offset(10);
+        make.top.equalTo(self.iconImageView.mas_bottom).offset(10);
     }];
     [self.forkButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.equalTo(self.starButton);
@@ -153,7 +153,7 @@
     self.titleLabel.text       = self.repo.name;
     self.updatedLabel.text     = self.repo.updatedAt.timeAgoSinceNow;
     self.descriptionLabel.text = self.repo.desc;
-    // TODO: 调用 https://developer.github.com/v3/repos/ 获取到的 Repos updated 时间好像是错的。
+    // FIXME: 调用 https://developer.github.com/v3/repos/ 获取到的 Repos updated 时间好像是错的。
 //    NSLog(@"NSDate: %@, formate: %@", self.repo.updatedAt, self.repo.updatedAt.timeAgoSinceNow);
     
     [self.starButton setTitle:[NSString stringWithFormat:@"Star\n%@", @(self.repo.stargazersCount)] forState:UIControlStateNormal];

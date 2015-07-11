@@ -60,10 +60,13 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Notifications" id="mq5-8h-Z1Z"/>
+                    <connections>
+                        <segue destination="Zsf-ip-eNN" kind="push" identifier="NotificationCell2RepositoryDetail" id="a08-hr-d3G"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aFr-2z-Omz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1059" y="-340"/>
+            <point key="canvasLocation" x="1059" y="-395"/>
         </scene>
         <!--Repositories TableVC-->
         <scene sceneID="ozG-BQ-w9K">
@@ -238,7 +241,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5bV-SL-3MD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="527" y="-340"/>
+            <point key="canvasLocation" x="527" y="-395"/>
         </scene>
         <!--Test View Controller-->
         <scene sceneID="xfm-3f-47w">
@@ -284,4 +287,7 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="a08-hr-d3G"/>
+    </inferredMetricsTieBreakers>
 </document>

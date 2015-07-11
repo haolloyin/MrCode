@@ -19,7 +19,6 @@ static UIImage *_IssueOpenedIcon = nil;
 
 @property (nonatomic, strong) UIImageView *iconImageView;
 @property (nonatomic, strong) UILabel *subjectTitleLabel;
-@property (nonatomic, strong) UILabel *subjectTypeLabel;
 @property (nonatomic, strong) UILabel *repoNameLabel;
 @property (nonatomic, strong) UILabel *updatedLabel;
 
@@ -68,25 +67,18 @@ static UIImage *_IssueOpenedIcon = nil;
         make.right.mas_equalTo(-10);
     }];
     
-    _subjectTypeLabel = [UILabel new];
-    _subjectTypeLabel.font = [UIFont systemFontOfSize:10];
-    _subjectTypeLabel.textColor = [UIColor lightGrayColor];
-    [self.contentView addSubview:_subjectTypeLabel];
-    [_subjectTypeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(_subjectTitleLabel);
-        make.top.equalTo(_subjectTitleLabel.mas_bottom).offset(horizontalPadding);
-        make.bottom.mas_equalTo(-horizontalPadding);
-    }];
-    
     _repoNameLabel = [UILabel new];
     _repoNameLabel.font = [UIFont systemFontOfSize:10];
     _repoNameLabel.textColor = [UIColor colorWithRed:98/255.0 green:176/255.0 blue:244/255.0 alpha:1.0];
     [self.contentView addSubview:_repoNameLabel];
     [_repoNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(_subjectTypeLabel.mas_right).offset(10);
+        make.left.equalTo(_subjectTitleLabel);
         make.top.equalTo(_subjectTitleLabel.mas_bottom).offset(horizontalPadding);
-        make.bottom.equalTo(_subjectTypeLabel);
+        make.bottom.mas_equalTo(-horizontalPadding);
     }];
+    _repoNameLabel.userInteractionEnabled = YES;
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(repoNameLabelTapped)];
+    [_repoNameLabel addGestureRecognizer:tapGestureRecognizer];
     
     _updatedLabel = [UILabel new];
     _updatedLabel.font = [UIFont systemFontOfSize:10];
@@ -95,7 +87,7 @@ static UIImage *_IssueOpenedIcon = nil;
     [_updatedLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(@-10);
         make.top.equalTo(_subjectTitleLabel.mas_bottom).offset(horizontalPadding);
-        make.bottom.equalTo(_subjectTypeLabel);
+        make.bottom.equalTo(_repoNameLabel);
     }];
     
     return self;
@@ -116,7 +108,6 @@ static UIImage *_IssueOpenedIcon = nil;
     _notification = notification;
     
     self.subjectTitleLabel.text = self.notification.subjectTitle;
-    self.subjectTypeLabel.text = self.notification.subjectType;
     self.repoNameLabel.text = self.notification.repository.name;
     self.updatedLabel.text = [self.notification.updatedAt timeAgoSinceNow];
     
@@ -128,6 +119,13 @@ static UIImage *_IssueOpenedIcon = nil;
     });
     
     self.iconImageView.image = [self.notification.subjectType isEqualToString:@"Issue"] ? _IssueOpenedIcon : _GitPullRequestIcon;
+}
+
+#pragma mark - Private
+
+- (void)repoNameLabelTapped
+{
+    [self.delegate notificationTabViewCellRepoNameTapped:self.notification];
 }
 
 @end

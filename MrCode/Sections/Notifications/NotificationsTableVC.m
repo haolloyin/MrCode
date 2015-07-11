@@ -10,10 +10,11 @@
 #import "GITNotification.h"
 #import "NotificationTableViewCell.h"
 #import "UITableView+FDTemplateLayoutCell.h"
+#import "RepositoryDetailTableVC.h"
 
 static NSString *kNotificationCellIdentifier = @"NotificationCellIdentifier";
 
-@interface NotificationsTableVC ()
+@interface NotificationsTableVC () <NotificationTableViewCellRepoNameTapped>
 
 @property (nonatomic, strong) NSArray *notifications;
 
@@ -68,6 +69,7 @@ static NSString *kNotificationCellIdentifier = @"NotificationCellIdentifier";
     NotificationTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([NotificationTableViewCell class])
                                                                       forIndexPath:indexPath];
     cell.notification = self.notifications[indexPath.row];
+    cell.delegate = self;
     
     return cell;
 }
@@ -81,15 +83,23 @@ static NSString *kNotificationCellIdentifier = @"NotificationCellIdentifier";
     return height;
 }
 
-/*
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    NSString *identifier = segue.identifier;
+    if ([identifier isEqualToString:@"NotificationCell2RepositoryDetail"]) {
+        RepositoryDetailTableVC *controller = (RepositoryDetailTableVC *)segue.destinationViewController;
+        GITNotification *notification = (GITNotification *)sender;
+        controller.repo = notification.repository;
+    }
 }
-*/
+
+#pragma mark - Protocol
+
+- (void)notificationTabViewCellRepoNameTapped:(GITNotification *)notification
+{
+    [self performSegueWithIdentifier:@"NotificationCell2RepositoryDetail" sender:notification];
+}
 
 #pragma makr - Private
 
