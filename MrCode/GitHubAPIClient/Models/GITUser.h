@@ -47,6 +47,8 @@ static NSString *kAUTHENTICATED_USER_IDENTIFIER = @"GitHubOAuthClient_AUTHENTICA
 
 + (instancetype)currentAuthenticatedUser;
 
++ (NSString *)username;
+
 + (AFHTTPRequestOperation *)authenticatedUserWithSuccess:(void (^)(GITUser *))success failure:(GitHubClientFailureBlock)failure;
 
 + (AFHTTPRequestOperation *)userWithUserName:(NSString *)username success:(void (^)(GITUser *))success failure:(GitHubClientFailureBlock)failure;

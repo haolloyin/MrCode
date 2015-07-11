@@ -8,6 +8,7 @@
 
 #import "TestViewController.h"
 #import "Masonry.h"
+#import "GITEvent.h"
 
 @interface TestViewController ()
 
@@ -68,6 +69,15 @@
         make.top.equalTo(_v2.mas_bottom).offset(10);
         make.right.lessThanOrEqualTo(@-130);
 //        make.bottom.equalTo(@-2);
+    }];
+    
+    // GITEvent
+    [GITEvent eventsOfUser:nil success:^(NSArray *events) {
+        for (GITEvent *event in events) {
+            NSLog(@"event: %@", event);
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
     }];
 }
 

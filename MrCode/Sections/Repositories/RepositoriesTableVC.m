@@ -136,7 +136,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
             return;
         }
         
-        [GITRepository myRepositoriesWithSuccess:^(NSArray * repos) {
+        [GITRepository myRepositoriesWithSuccess:^(NSArray *repos) {
             self.ownedReposCache = repos;
             self.repos = self.ownedReposCache;
             [self.tableView reloadData];

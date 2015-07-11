@@ -7,6 +7,7 @@
 //
 
 #import "GitHubOAuthClient.h"
+#import "GITUser.h"
 
 static NSString *kTOKEN_STORE_IDENTIFIER = @"GitHubOAuthClient_TOKEN_STORE_IDENTIFIER";
 
@@ -132,6 +133,11 @@ static NSString *kTOKEN_STORE_IDENTIFIER = @"GitHubOAuthClient_TOKEN_STORE_IDENT
                               NSDictionary *dict = responseObject;
                               // store token
                               [self storeWithAccessToken:dict[@"access_token"] tokenType:dict[@"token_type"]];
+                              [GITUser authenticatedUserWithSuccess:^(GITUser *user) {
+                                  NSLog(@"%@", user.login);
+                              } failure:^(AFHTTPRequestOperation *oper, NSError *error) {
+                                  
+                              }];
                           }
                       } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                           NSLog(@"error: %@", error);

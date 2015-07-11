@@ -40,7 +40,7 @@ static NSString *kNotificationCellIdentifier = @"NotificationCellIdentifier";
     
     _notifications = [NSArray new];
     
-    [self loadData];
+//    [self loadData];
 }
 
 - (void)didReceiveMemoryWarning {

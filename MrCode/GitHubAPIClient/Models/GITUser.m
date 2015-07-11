@@ -50,7 +50,7 @@
 
 + (void)storeCurrentAuthenticatedUser:(GITUser *)user
 {
-    [[NSUserDefaults standardUserDefaults] setObject:user forKey:kAUTHENTICATED_USER_IDENTIFIER];
+    [[NSUserDefaults standardUserDefaults] setObject:user.login forKey:kAUTHENTICATED_USER_IDENTIFIER];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
@@ -58,8 +58,13 @@
 
 + (instancetype)currentAuthenticatedUser
 {
-    GITUser *user = [[NSUserDefaults standardUserDefaults] objectForKey:kAUTHENTICATED_USER_IDENTIFIER];
+    GITUser *user = (GITUser *)[[NSUserDefaults standardUserDefaults] objectForKey:kAUTHENTICATED_USER_IDENTIFIER];
     return user;
+}
+
++ (NSString *)username
+{
+    return [[NSUserDefaults standardUserDefaults] objectForKey:kAUTHENTICATED_USER_IDENTIFIER];
 }
 
 + (AFHTTPRequestOperation *)authenticatedUserWithSuccess:(void (^)(GITUser *))success failure:(GitHubClientFailureBlock)failure
