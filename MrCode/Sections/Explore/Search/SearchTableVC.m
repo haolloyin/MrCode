@@ -9,8 +9,11 @@
 #import "SearchTableVC.h"
 #import "SearchRepositoryCell.h"
 #import "SearchDeveloperCell.h"
+#import "GITSearch.h"
+#import "GITRepository.h"
+#import "GITUser.h"
 
-@interface SearchTableVC ()
+@interface SearchTableVC () <UISearchBarDelegate>
 
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
@@ -32,6 +35,12 @@
     
     [self.tableView registerClass:[SearchRepositoryCell class] forCellReuseIdentifier:NSStringFromClass([SearchRepositoryCell class])];
     [self.tableView registerClass:[SearchDeveloperCell class] forCellReuseIdentifier:NSStringFromClass([SearchDeveloperCell class])];
+    
+    self.searchBar.delegate = self;
+    self.searchBar.placeholder = @"Repository or Developer";
+    
+    _repositories = [NSMutableArray array];
+    _developers = [NSMutableArray array];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -46,13 +55,14 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    NSInteger count = 0;
     if (self.segmentedControl.selectedSegmentIndex == 0) {
-        return [self.repositories count];
+        count = [self.repositories count];
     } else if (self.segmentedControl.selectedSegmentIndex == 1) {
-        return [self.developers count];
+        count = [self.developers count];
     }
     
-    return 0;
+    return count;
 }
 
 
@@ -60,11 +70,34 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SearchBasicCell" forIndexPath:indexPath];
     
     if (self.segmentedControl.selectedSegmentIndex == 0) {
-        cell.textLabel.text = @"";
-        cell.detailTextLabel.text = @"";
+        GITRepository *repo = self.repositories[indexPath.row];
+        cell.textLabel.text = repo.fullName;
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ - %@ stars, %@ forks",
+                                     repo.language, @(repo.stargazersCount), @(repo.forksCount)];
     }
     
     return cell;
+}
+
+#pragma mark - UISearchBarDelegate
+
+- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar
+{
+    searchBar.showsCancelButton = YES;
+    return YES;
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+    NSLog(@"keyword: %@", searchBar.text);
+    [searchBar resignFirstResponder];
+    [self loadData];
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
+{
+    NSLog(@"");
+    [searchBar resignFirstResponder];
 }
 
 #pragma mark - Navigation
@@ -73,6 +106,21 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+}
+
+#pragma mark - Private
+
+- (void)loadData
+{
+    if (self.segmentedControl.selectedSegmentIndex == 0 && [self.repositories count] == 0) {
+        [GITSearch searchRepositoriesWith:nil language:nil sortBy:nil success:^(NSArray *array) {
+            [self.repositories addObjectsFromArray:array];
+            
+            [self.tableView reloadData];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+        }];
+    }
 }
 
 @end
