@@ -56,12 +56,6 @@
 
 #pragma mark - API
 
-+ (instancetype)currentAuthenticatedUser
-{
-    GITUser *user = (GITUser *)[[NSUserDefaults standardUserDefaults] objectForKey:kAUTHENTICATED_USER_IDENTIFIER];
-    return user;
-}
-
 + (NSString *)username
 {
     return [[NSUserDefaults standardUserDefaults] objectForKey:kAUTHENTICATED_USER_IDENTIFIER];

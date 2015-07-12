@@ -27,6 +27,10 @@
 		3F29DF1B1B4D8A6D002257DF /* GITBaseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F29DF1A1B4D8A6D002257DF /* GITBaseModel.m */; };
 		3F29DF211B50E718002257DF /* NotificationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F29DF201B50E718002257DF /* NotificationTableViewCell.m */; };
 		3F29DF241B516804002257DF /* GITEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F29DF231B516804002257DF /* GITEvent.m */; };
+		3F29DF2B1B523E05002257DF /* ExploreTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F29DF2A1B523E05002257DF /* ExploreTableVC.m */; };
+		3F29DF2E1B523FD1002257DF /* SearchTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F29DF2D1B523FD1002257DF /* SearchTableVC.m */; };
+		3F29DF311B52407E002257DF /* SearchRepositoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F29DF301B52407E002257DF /* SearchRepositoryCell.m */; };
+		3F29DF341B5240B9002257DF /* SearchDeveloperCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F29DF331B5240B9002257DF /* SearchDeveloperCell.m */; };
 		3FBFD28C1B4AD68800BDC00F /* UIImage+MRC_Octicons.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD28B1B4AD68800BDC00F /* UIImage+MRC_Octicons.m */; };
 		3FBFD28F1B4C1C0900BDC00F /* RepositoryDetailTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD28E1B4C1C0900BDC00F /* RepositoryDetailTableVC.m */; };
 		3FBFD2921B4C1C3500BDC00F /* RepositoryHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD2911B4C1C3500BDC00F /* RepositoryHeaderView.m */; };
@@ -82,6 +86,14 @@
 		3F29DF201B50E718002257DF /* NotificationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationTableViewCell.m; sourceTree = "<group>"; };
 		3F29DF221B516804002257DF /* GITEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GITEvent.h; sourceTree = "<group>"; };
 		3F29DF231B516804002257DF /* GITEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GITEvent.m; sourceTree = "<group>"; };
+		3F29DF291B523E05002257DF /* ExploreTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExploreTableVC.h; sourceTree = "<group>"; };
+		3F29DF2A1B523E05002257DF /* ExploreTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExploreTableVC.m; sourceTree = "<group>"; };
+		3F29DF2C1B523FD1002257DF /* SearchTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchTableVC.h; sourceTree = "<group>"; };
+		3F29DF2D1B523FD1002257DF /* SearchTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchTableVC.m; sourceTree = "<group>"; };
+		3F29DF2F1B52407E002257DF /* SearchRepositoryCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchRepositoryCell.h; sourceTree = "<group>"; };
+		3F29DF301B52407E002257DF /* SearchRepositoryCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchRepositoryCell.m; sourceTree = "<group>"; };
+		3F29DF321B5240B9002257DF /* SearchDeveloperCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchDeveloperCell.h; sourceTree = "<group>"; };
+		3F29DF331B5240B9002257DF /* SearchDeveloperCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchDeveloperCell.m; sourceTree = "<group>"; };
 		3FBFD28A1B4AD68800BDC00F /* UIImage+MRC_Octicons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MRC_Octicons.h"; sourceTree = "<group>"; };
 		3FBFD28B1B4AD68800BDC00F /* UIImage+MRC_Octicons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+MRC_Octicons.m"; sourceTree = "<group>"; };
 		3FBFD28D1B4C1C0900BDC00F /* RepositoryDetailTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoryDetailTableVC.h; sourceTree = "<group>"; };
@@ -212,6 +224,7 @@
 			children = (
 				3F2547821B47F3D40012CDD6 /* Notifications */,
 				3F25478B1B47F6ED0012CDD6 /* Repositories */,
+				3F29DF261B523DDC002257DF /* Explore */,
 				3F2547841B47F3D40012CDD6 /* Settings */,
 			);
 			path = Sections;
@@ -248,6 +261,37 @@
 				3FBFD2911B4C1C3500BDC00F /* RepositoryHeaderView.m */,
 			);
 			path = Repositories;
+			sourceTree = "<group>";
+		};
+		3F29DF261B523DDC002257DF /* Explore */ = {
+			isa = PBXGroup;
+			children = (
+				3F29DF291B523E05002257DF /* ExploreTableVC.h */,
+				3F29DF2A1B523E05002257DF /* ExploreTableVC.m */,
+				3F29DF271B523DDC002257DF /* Search */,
+				3F29DF281B523DDC002257DF /* Trending */,
+			);
+			path = Explore;
+			sourceTree = "<group>";
+		};
+		3F29DF271B523DDC002257DF /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				3F29DF2C1B523FD1002257DF /* SearchTableVC.h */,
+				3F29DF2D1B523FD1002257DF /* SearchTableVC.m */,
+				3F29DF2F1B52407E002257DF /* SearchRepositoryCell.h */,
+				3F29DF301B52407E002257DF /* SearchRepositoryCell.m */,
+				3F29DF321B5240B9002257DF /* SearchDeveloperCell.h */,
+				3F29DF331B5240B9002257DF /* SearchDeveloperCell.m */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		3F29DF281B523DDC002257DF /* Trending */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Trending;
 			sourceTree = "<group>";
 		};
 		3FBFD2891B4AD67800BDC00F /* Helpers */ = {
@@ -413,7 +457,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F29DF311B52407E002257DF /* SearchRepositoryCell.m in Sources */,
 				3F2547791B45A1DE0012CDD6 /* GITOrganization.m in Sources */,
+				3F29DF2B1B523E05002257DF /* ExploreTableVC.m in Sources */,
 				3F29DF241B516804002257DF /* GITEvent.m in Sources */,
 				3F2547471B45A0060012CDD6 /* AppDelegate.m in Sources */,
 				3F29DF211B50E718002257DF /* NotificationTableViewCell.m in Sources */,
@@ -425,6 +471,8 @@
 				3F2547871B47F41D0012CDD6 /* NotificationsTableVC.m in Sources */,
 				3F25477B1B45A1DE0012CDD6 /* GITUser.m in Sources */,
 				3F29DF1B1B4D8A6D002257DF /* GITBaseModel.m in Sources */,
+				3F29DF341B5240B9002257DF /* SearchDeveloperCell.m in Sources */,
+				3F29DF2E1B523FD1002257DF /* SearchTableVC.m in Sources */,
 				3F2547961B4900960012CDD6 /* TestViewController.m in Sources */,
 				3F0006F21B4D7C6C00503F50 /* NSString+ToNSDate.m in Sources */,
 				3FBFD28F1B4C1C0900BDC00F /* RepositoryDetailTableVC.m in Sources */,

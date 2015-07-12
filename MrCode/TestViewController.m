@@ -74,7 +74,7 @@
     // GITEvent
     [GITEvent eventsOfUser:nil success:^(NSArray *events) {
         for (GITEvent *event in events) {
-            NSLog(@"event: %@", event);
+            NSLog(@"event: %@", event.createdAt);
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         

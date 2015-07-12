@@ -131,12 +131,16 @@ static NSString *kTOKEN_STORE_IDENTIFIER = @"GitHubOAuthClient_TOKEN_STORE_IDENT
                       success:^(AFHTTPRequestOperation *operation, id responseObject) {
                           if ([responseObject isKindOfClass:[NSDictionary class]]) {
                               NSDictionary *dict = responseObject;
+                              
                               // store token
                               [self storeWithAccessToken:dict[@"access_token"] tokenType:dict[@"token_type"]];
+                              
+                              //TODO: 这里用异步可能有问题
+                              // current authorized user
                               [GITUser authenticatedUserWithSuccess:^(GITUser *user) {
                                   NSLog(@"%@", user.login);
                               } failure:^(AFHTTPRequestOperation *oper, NSError *error) {
-                                  
+                                  NSLog(@"error: %@", error);
                               }];
                           }
                       } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -157,7 +161,7 @@ static NSString *kTOKEN_STORE_IDENTIFIER = @"GitHubOAuthClient_TOKEN_STORE_IDENT
     [self setRequestManagerAuthosizationHeader];
 }
 
-- (void)removeTokenIfAuthorizedWithOperation:(AFHTTPRequestOperation *)operation
+- (void)removeTokenIfUnauthorizedWithOperation:(AFHTTPRequestOperation *)operation
 {
     // Maybe user revoke authorized application from https://github.com/settings/applications
     if (operation.response.statusCode == GitHubOAuthClienAPIStatus401_Unauthorized) {
@@ -177,8 +181,8 @@ static NSString *kTOKEN_STORE_IDENTIFIER = @"GitHubOAuthClient_TOKEN_STORE_IDENT
     [_requestManager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     
     if (self.accessToken) {
-        [_requestManager.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@", _accessToken]
-                                 forHTTPHeaderField:@"Authorization"];
+        NSString *value = [NSString stringWithFormat:@"Bearer %@", _accessToken];
+        [_requestManager.requestSerializer setValue:value forHTTPHeaderField:@"Authorization"];
     }
 }
 
@@ -199,7 +203,7 @@ static NSString *kTOKEN_STORE_IDENTIFIER = @"GitHubOAuthClient_TOKEN_STORE_IDENT
                                     success(operation, responseObject);
                                     
                                 } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                    [self removeTokenIfAuthorizedWithOperation:operation];
+                                    [self removeTokenIfUnauthorizedWithOperation:operation];
                                     NSLog(@"error: %@", error);
                                     failure(operation, error);
                                 }];
@@ -211,7 +215,7 @@ static NSString *kTOKEN_STORE_IDENTIFIER = @"GitHubOAuthClient_TOKEN_STORE_IDENT
                                      success(operation, responseObject);
                                      
                                  } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                     [self removeTokenIfAuthorizedWithOperation:operation];
+                                     [self removeTokenIfUnauthorizedWithOperation:operation];
                                      NSLog(@"error: %@", error);
                                      failure(operation, error);
                                  }];
@@ -223,7 +227,7 @@ static NSString *kTOKEN_STORE_IDENTIFIER = @"GitHubOAuthClient_TOKEN_STORE_IDENT
                                     success(operation, responseObject);
                                     
                                 } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                    [self removeTokenIfAuthorizedWithOperation:operation];
+                                    [self removeTokenIfUnauthorizedWithOperation:operation];
                                     NSLog(@"error: %@", error);
                                     failure(operation, error);
                                 }];
@@ -235,7 +239,7 @@ static NSString *kTOKEN_STORE_IDENTIFIER = @"GitHubOAuthClient_TOKEN_STORE_IDENT
                                       success(operation, responseObject);
                                     
                                   } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                      [self removeTokenIfAuthorizedWithOperation:operation];
+                                      [self removeTokenIfUnauthorizedWithOperation:operation];
                                       NSLog(@"error: %@", error);
                                       failure(operation, error);
                                   }];
