@@ -18,8 +18,7 @@
                                            success:(void (^)(NSArray *))success
                                            failure:(GitHubClientFailureBlock)failure
 {
-//    NSMutableString *url = [NSMutableString stringWithFormat:@"/search/repositories?q=%@", keyword];
-    NSMutableString *url = [NSMutableString stringWithFormat:@"/search/repositories?q=%@", @"AFNetworking"];
+    NSMutableString *url = [NSMutableString stringWithFormat:@"/search/repositories?q=%@", keyword];
     if (language) {
         [url appendFormat:@"+language:%@", language];
     }

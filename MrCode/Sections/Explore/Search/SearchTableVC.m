@@ -9,9 +9,12 @@
 #import "SearchTableVC.h"
 #import "SearchRepositoryCell.h"
 #import "SearchDeveloperCell.h"
+#import "ReposTableViewCell.h"
 #import "GITSearch.h"
 #import "GITRepository.h"
 #import "GITUser.h"
+#import "UITableView+FDTemplateLayoutCell.h"
+#import "RepositoryDetailTableVC.h"
 
 @interface SearchTableVC () <UISearchBarDelegate>
 
@@ -19,6 +22,7 @@
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (nonatomic, strong) NSMutableArray *repositories;
 @property (nonatomic, strong) NSMutableArray *developers;
+@property (nonatomic, strong) NSString *keyword;
 
 @end
 
@@ -35,9 +39,19 @@
     
     [self.tableView registerClass:[SearchRepositoryCell class] forCellReuseIdentifier:NSStringFromClass([SearchRepositoryCell class])];
     [self.tableView registerClass:[SearchDeveloperCell class] forCellReuseIdentifier:NSStringFromClass([SearchDeveloperCell class])];
+    [self.tableView registerClass:[ReposTableViewCell class] forCellReuseIdentifier:NSStringFromClass([ReposTableViewCell class])];
+    
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.estimatedRowHeight = 80.0;
     
     self.searchBar.delegate = self;
-    self.searchBar.placeholder = @"Repository or Developer";
+    
+    if (self.segmentedControl.selectedSegmentIndex == 0) {
+        self.searchBar.placeholder = @"Repository";
+    }
+    else if (self.segmentedControl.selectedSegmentIndex == 1) {
+        self.searchBar.placeholder = @"Developer";
+    }
     
     _repositories = [NSMutableArray array];
     _developers = [NSMutableArray array];
@@ -67,16 +81,56 @@
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SearchBasicCell" forIndexPath:indexPath];
-    
+//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SearchBasicCell" forIndexPath:indexPath];
+//    
+//    if (self.segmentedControl.selectedSegmentIndex == 0) {
+//        GITRepository *repo = self.repositories[indexPath.row];
+//        cell.textLabel.text = repo.fullName;
+//        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ - %@ stars, %@ forks",
+//                                     repo.language, @(repo.stargazersCount), @(repo.forksCount)];
+//    }
+
     if (self.segmentedControl.selectedSegmentIndex == 0) {
+        ReposTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([ReposTableViewCell class])
+                                                                   forIndexPath:indexPath];
         GITRepository *repo = self.repositories[indexPath.row];
-        cell.textLabel.text = repo.fullName;
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ - %@ stars, %@ forks",
-                                     repo.language, @(repo.stargazersCount), @(repo.forksCount)];
+        [cell configWithRepository:repo];
+        
+        return cell;
+    }
+    else if (self.segmentedControl.selectedSegmentIndex == 1) {
+        
     }
     
-    return cell;
+    return nil;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    CGFloat height = 0;
+    
+    if (self.segmentedControl.selectedSegmentIndex == 0) {
+        height = [tableView fd_heightForCellWithIdentifier:NSStringFromClass([ReposTableViewCell class]) configuration:^(id cell) {
+            GITRepository *repo = self.repositories[indexPath.row];
+            [cell configWithRepository:repo];
+        }];
+    }
+    else if (self.segmentedControl.selectedSegmentIndex == 1) {
+        
+    }
+
+    return height;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (self.segmentedControl.selectedSegmentIndex == 0) {
+        [self performSegueWithIdentifier:@"SearchVC2RepositoryDetail" sender:self.repositories[indexPath.row]];
+    }
+    else if (self.segmentedControl.selectedSegmentIndex == 1) {
+        
+    }
+
 }
 
 #pragma mark - UISearchBarDelegate
@@ -90,6 +144,8 @@
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
     NSLog(@"keyword: %@", searchBar.text);
+    
+    self.keyword = searchBar.text;
     [searchBar resignFirstResponder];
     [self loadData];
 }
@@ -102,10 +158,13 @@
 
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    NSString *identifier = segue.identifier;
+    
+    if ([identifier isEqualToString:@"SearchVC2RepositoryDetail"]) {
+        RepositoryDetailTableVC *controller = (RepositoryDetailTableVC *)segue.destinationViewController;
+        controller.repo = (GITRepository *)sender;
+    }
 }
 
 #pragma mark - Private
@@ -113,8 +172,17 @@
 - (void)loadData
 {
     if (self.segmentedControl.selectedSegmentIndex == 0 && [self.repositories count] == 0) {
-        [GITSearch searchRepositoriesWith:nil language:nil sortBy:nil success:^(NSArray *array) {
+        [GITSearch searchRepositoriesWith:self.keyword language:nil sortBy:nil success:^(NSArray *array) {
             [self.repositories addObjectsFromArray:array];
+            
+            [self.tableView reloadData];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+        }];
+    }
+    else if (self.segmentedControl.selectedSegmentIndex == 1) {
+        [GITSearch searchDevelopersWith:self.keyword sortBy:nil success:^(NSArray *array) {
+            [self.developers addObjectsFromArray:array];
             
             [self.tableView reloadData];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
