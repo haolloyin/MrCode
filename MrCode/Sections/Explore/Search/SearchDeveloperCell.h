@@ -10,4 +10,7 @@
 
 @interface SearchDeveloperCell : UITableViewCell
 
+@property (nonatomic, strong) UIImageView *avatarImageView;
+@property (nonatomic, strong) UILabel *nameLabel;
+
 @end

@@ -17,6 +17,7 @@
 
 #import "UITableView+FDTemplateLayoutCell.h"
 #import "UIImageView+WebCache.h"
+#import "UIImage+MRC_Octicons.h"
 
 
 @interface SearchTableVC () <UISearchBarDelegate>
@@ -26,6 +27,7 @@
 @property (nonatomic, strong) NSMutableArray *repositories;
 @property (nonatomic, strong) NSMutableArray *developers;
 @property (nonatomic, strong) NSString *keyword;
+@property (nonatomic, strong) UIImage *placehodlerImage;
 
 @end
 
@@ -93,11 +95,18 @@
         return cell;
     }
     else if (self.segmentedControl.selectedSegmentIndex == 1) {
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SearchBasicCell" forIndexPath:indexPath];
-        GITUser *user = self.developers[indexPath.row];
-        cell.textLabel.text = user.login;
-        [cell.imageView sd_setImageWithURL:user.avatarURL];
+
+        SearchDeveloperCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([SearchDeveloperCell class])
+                                                                    forIndexPath:indexPath];
         
+//        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SearchBasicCell" forIndexPath:indexPath];
+//        cell.textLabel.text = user.login;
+//        [cell.imageView sd_setImageWithURL:user.avatarURL placeholderImage:self.placehodlerImage];
+        
+        GITUser *user = self.developers[indexPath.row];
+
+        [cell.nameLabel setText:user.login];
+        [cell.avatarImageView sd_setImageWithURL:user.avatarURL placeholderImage:self.placehodlerImage];
         return cell;
     }
     
@@ -185,6 +194,16 @@
             
         }];
     }
+}
+
+- (UIImage *)placehodlerImage
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _placehodlerImage = [UIImage octicon_imageWithIdentifier:@"Octoface" size:CGSizeMake(20, 20)];
+    });
+    
+    return _placehodlerImage;
 }
 
 @end
