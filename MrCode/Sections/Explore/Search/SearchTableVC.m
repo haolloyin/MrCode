@@ -13,8 +13,11 @@
 #import "GITSearch.h"
 #import "GITRepository.h"
 #import "GITUser.h"
-#import "UITableView+FDTemplateLayoutCell.h"
 #import "RepositoryDetailTableVC.h"
+
+#import "UITableView+FDTemplateLayoutCell.h"
+#import "UIImageView+WebCache.h"
+
 
 @interface SearchTableVC () <UISearchBarDelegate>
 
@@ -81,15 +84,6 @@
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SearchBasicCell" forIndexPath:indexPath];
-//    
-//    if (self.segmentedControl.selectedSegmentIndex == 0) {
-//        GITRepository *repo = self.repositories[indexPath.row];
-//        cell.textLabel.text = repo.fullName;
-//        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ - %@ stars, %@ forks",
-//                                     repo.language, @(repo.stargazersCount), @(repo.forksCount)];
-//    }
-
     if (self.segmentedControl.selectedSegmentIndex == 0) {
         ReposTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([ReposTableViewCell class])
                                                                    forIndexPath:indexPath];
@@ -99,7 +93,12 @@
         return cell;
     }
     else if (self.segmentedControl.selectedSegmentIndex == 1) {
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SearchBasicCell" forIndexPath:indexPath];
+        GITUser *user = self.developers[indexPath.row];
+        cell.textLabel.text = user.login;
+        [cell.imageView sd_setImageWithURL:user.avatarURL];
         
+        return cell;
     }
     
     return nil;
@@ -107,16 +106,13 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGFloat height = 0;
+    CGFloat height = 43;
     
     if (self.segmentedControl.selectedSegmentIndex == 0) {
         height = [tableView fd_heightForCellWithIdentifier:NSStringFromClass([ReposTableViewCell class]) configuration:^(id cell) {
             GITRepository *repo = self.repositories[indexPath.row];
             [cell configWithRepository:repo];
         }];
-    }
-    else if (self.segmentedControl.selectedSegmentIndex == 1) {
-        
     }
 
     return height;

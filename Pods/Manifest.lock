@@ -24,6 +24,9 @@ PODS:
   - Masonry (0.6.1)
   - MJExtension (2.3.7)
   - OcticonsIOS (0.0.2)
+  - SDWebImage (3.7.3):
+    - SDWebImage/Core (= 3.7.3)
+  - SDWebImage/Core (3.7.3)
   - UITableView+FDTemplateLayoutCell (1.3)
 
 DEPENDENCIES:
@@ -32,6 +35,7 @@ DEPENDENCIES:
   - Masonry
   - MJExtension
   - OcticonsIOS
+  - SDWebImage
   - UITableView+FDTemplateLayoutCell
 
 SPEC CHECKSUMS:
@@ -40,6 +44,7 @@ SPEC CHECKSUMS:
   Masonry: 4972309f2f134de9dd312f4dc4a21359b50e6caa
   MJExtension: ab4e7c529b2c7a705e6f78f73e33d97929a42b39
   OcticonsIOS: 845ce2794c2837cf688049c4782467ef0c3c949d
+  SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
   UITableView+FDTemplateLayoutCell: d5be6056b5060313f5955a2590ecd33142ad713d
 
 COCOAPODS: 0.37.2
