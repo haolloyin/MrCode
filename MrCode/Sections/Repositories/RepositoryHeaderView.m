@@ -48,16 +48,13 @@
     
     // Buttons
     _starButton = [UIButton new];
-    _starButton.tag = 101;
-    [self setupButtoon:_starButton];
+    [self setupButton:_starButton withTag:101];
     
     _forkButton = [UIButton new];
-    _forkButton.tag = 102;
-    [self setupButtoon:_forkButton];
+    [self setupButton:_forkButton withTag:102];
     
     _watchButton = [UIButton new];
-    _watchButton.tag = 103;
-    [self setupButtoon:_watchButton];
+    [self setupButton:_watchButton withTag:103];
     
     _descriptionLabel = [UILabel new];
     _descriptionLabel.numberOfLines = 0;
@@ -124,8 +121,9 @@
 
 #pragma mark - Private
 
-- (void)setupButtoon:(UIButton *)button
+- (void)setupButton:(UIButton *)button withTag:(NSUInteger)tag
 {
+    button.tag = tag;
     button.titleLabel.textAlignment = NSTextAlignmentCenter;
     button.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
     button.titleLabel.numberOfLines = 2;
