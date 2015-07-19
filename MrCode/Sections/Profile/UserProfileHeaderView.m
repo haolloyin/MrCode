@@ -46,7 +46,7 @@
     _bioLabel = [UILabel new];
     _bioLabel.font = [UIFont systemFontOfSize:10.f];
     _bioLabel.textColor = [UIColor lightGrayColor];
-    _bioLabel.numberOfLines = 2;
+    _bioLabel.numberOfLines = 1;
     [self addSubview:_bioLabel];
     
     // Buttons
@@ -136,7 +136,6 @@
     _user = user;
     self.titleLabel.text = user.login;
     self.bioLabel.text   = user.bio ? : [NSString stringWithFormat:@"Updated %@", user.updatedAt.timeAgoSinceNow];
-    
     
     [self.followingButton setTitle:[NSString stringWithFormat:@"Following\n%@", @(user.following)] forState:UIControlStateNormal];
     [self.repositoriesButton setTitle:[NSString stringWithFormat:@"Repositories\n%@", @(user.publicRepos)] forState:UIControlStateNormal];

@@ -28,7 +28,8 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
     if (!self.tableView.tableHeaderView) {
-        self.headerView = [[UserProfileHeaderView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 150.f)];
+        self.headerView = [[UserProfileHeaderView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 50.f)];
+        self.tableView.tableHeaderView = self.headerView;
     }
     
     [self fetchUserProfile];
@@ -71,27 +72,13 @@
 
 #pragma mark - Private
 
-- (void)setupHeaderView
-{
-    self.headerView.user = self.user;
-    
-    [self.headerView setNeedsLayout];
-    [self.headerView layoutIfNeeded];
-    
-    CGFloat height = [self.headerView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
-//    self.headerView.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), height);
-    self.tableView.tableHeaderView = self.headerView;
-    
-    NSLog(@"height: %@", @(height));
-}
-
 - (void)fetchUserProfile
 {
     NSLog(@"");
     if (!self.user) {
         [GITUser authenticatedUserWithSuccess:^(GITUser *user) {
             self.user = user;
-            [self setupHeaderView];
+            self.headerView.user = self.user;
             [self.tableView reloadData];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             
@@ -100,7 +87,7 @@
     else {
         [GITUser userWithUserName:self.user.login success:^(GITUser *user) {
             self.user = user;
-            [self setupHeaderView];
+            self.headerView.user = self.user;
             [self.tableView reloadData];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             
@@ -113,7 +100,7 @@
 - (void)setUser:(GITUser *)user
 {
     _user = user;
-    self.headerView.user = _user;
+    self.headerView.user = self.user;
 }
 
 @end
