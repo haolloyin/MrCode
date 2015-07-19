@@ -32,6 +32,8 @@
 		3F29DF311B52407E002257DF /* SearchRepositoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F29DF301B52407E002257DF /* SearchRepositoryCell.m */; };
 		3F29DF341B5240B9002257DF /* SearchDeveloperCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F29DF331B5240B9002257DF /* SearchDeveloperCell.m */; };
 		3F29DF371B52485B002257DF /* GITSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F29DF361B52485B002257DF /* GITSearch.m */; };
+		3F4149061B5B5EE30025B708 /* UserProfileTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F4149051B5B5EE30025B708 /* UserProfileTableVC.m */; };
+		3F4149091B5B8E2B0025B708 /* UserProfileHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F4149081B5B8E2B0025B708 /* UserProfileHeaderView.m */; };
 		3FBFD28C1B4AD68800BDC00F /* UIImage+MRC_Octicons.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD28B1B4AD68800BDC00F /* UIImage+MRC_Octicons.m */; };
 		3FBFD28F1B4C1C0900BDC00F /* RepositoryDetailTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD28E1B4C1C0900BDC00F /* RepositoryDetailTableVC.m */; };
 		3FBFD2921B4C1C3500BDC00F /* RepositoryHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD2911B4C1C3500BDC00F /* RepositoryHeaderView.m */; };
@@ -97,6 +99,10 @@
 		3F29DF331B5240B9002257DF /* SearchDeveloperCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchDeveloperCell.m; sourceTree = "<group>"; };
 		3F29DF351B52485B002257DF /* GITSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GITSearch.h; sourceTree = "<group>"; };
 		3F29DF361B52485B002257DF /* GITSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GITSearch.m; sourceTree = "<group>"; };
+		3F4149041B5B5EE30025B708 /* UserProfileTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProfileTableVC.h; sourceTree = "<group>"; };
+		3F4149051B5B5EE30025B708 /* UserProfileTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProfileTableVC.m; sourceTree = "<group>"; };
+		3F4149071B5B8E2B0025B708 /* UserProfileHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProfileHeaderView.h; sourceTree = "<group>"; };
+		3F4149081B5B8E2B0025B708 /* UserProfileHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProfileHeaderView.m; sourceTree = "<group>"; };
 		3FBFD28A1B4AD68800BDC00F /* UIImage+MRC_Octicons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MRC_Octicons.h"; sourceTree = "<group>"; };
 		3FBFD28B1B4AD68800BDC00F /* UIImage+MRC_Octicons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+MRC_Octicons.m"; sourceTree = "<group>"; };
 		3FBFD28D1B4C1C0900BDC00F /* RepositoryDetailTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoryDetailTableVC.h; sourceTree = "<group>"; };
@@ -227,6 +233,7 @@
 		3F2547811B47F3D40012CDD6 /* Sections */ = {
 			isa = PBXGroup;
 			children = (
+				3F4149031B5B5E6D0025B708 /* Profile */,
 				3F2547821B47F3D40012CDD6 /* Notifications */,
 				3F25478B1B47F6ED0012CDD6 /* Repositories */,
 				3F29DF261B523DDC002257DF /* Explore */,
@@ -297,6 +304,17 @@
 			children = (
 			);
 			path = Trending;
+			sourceTree = "<group>";
+		};
+		3F4149031B5B5E6D0025B708 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				3F4149041B5B5EE30025B708 /* UserProfileTableVC.h */,
+				3F4149051B5B5EE30025B708 /* UserProfileTableVC.m */,
+				3F4149071B5B8E2B0025B708 /* UserProfileHeaderView.h */,
+				3F4149081B5B8E2B0025B708 /* UserProfileHeaderView.m */,
+			);
+			path = Profile;
 			sourceTree = "<group>";
 		};
 		3FBFD2891B4AD67800BDC00F /* Helpers */ = {
@@ -462,8 +480,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F4149061B5B5EE30025B708 /* UserProfileTableVC.m in Sources */,
 				3F29DF311B52407E002257DF /* SearchRepositoryCell.m in Sources */,
 				3F2547791B45A1DE0012CDD6 /* GITOrganization.m in Sources */,
+				3F4149091B5B8E2B0025B708 /* UserProfileHeaderView.m in Sources */,
 				3F29DF2B1B523E05002257DF /* ExploreTableVC.m in Sources */,
 				3F29DF241B516804002257DF /* GITEvent.m in Sources */,
 				3F2547471B45A0060012CDD6 /* AppDelegate.m in Sources */,

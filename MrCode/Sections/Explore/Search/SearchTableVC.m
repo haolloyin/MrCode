@@ -14,6 +14,7 @@
 #import "GITRepository.h"
 #import "GITUser.h"
 #import "RepositoryDetailTableVC.h"
+#import "UserProfileTableVC.h"
 
 #import "UITableView+FDTemplateLayoutCell.h"
 #import "UIImageView+WebCache.h"
@@ -104,8 +105,8 @@
 //        [cell.imageView sd_setImageWithURL:user.avatarURL placeholderImage:self.placehodlerImage];
         
         GITUser *user = self.developers[indexPath.row];
-
-        [cell.nameLabel setText:user.login];
+        cell.accessoryType = UITableViewRowActionStyleNormal;
+        cell.nameLabel.text = user.login;
         [cell.avatarImageView sd_setImageWithURL:user.avatarURL placeholderImage:self.placehodlerImage];
         return cell;
     }
@@ -133,7 +134,7 @@
         [self performSegueWithIdentifier:@"SearchVC2RepositoryDetail" sender:self.repositories[indexPath.row]];
     }
     else if (self.segmentedControl.selectedSegmentIndex == 1) {
-        
+        [self performSegueWithIdentifier:@"Search2UserProfile" sender:self.developers[indexPath.row]];
     }
 
 }
@@ -169,6 +170,10 @@
     if ([identifier isEqualToString:@"SearchVC2RepositoryDetail"]) {
         RepositoryDetailTableVC *controller = (RepositoryDetailTableVC *)segue.destinationViewController;
         controller.repo = (GITRepository *)sender;
+    }
+    else if ([identifier isEqualToString:@"Search2UserProfile"]) {
+        UserProfileTableVC *controller = (UserProfileTableVC *)segue.destinationViewController;
+        controller.user = (GITUser *)sender;
     }
 }
 

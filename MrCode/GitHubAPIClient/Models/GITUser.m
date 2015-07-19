@@ -14,10 +14,10 @@
 {
     return @{
              @"publicRepos": @"public_repos",
-             @"siteAdmin": @"site_admin",
+             @"isSiteAdmin": @"site_admin",
              @"subscriptionsURL": @"subscriptions_url",
              @"gravatarId": @"gravatar_id",
-             @"hireable": @"hireable",
+             @"isHireable": @"hireable",
              @"ID": @"id",
              @"followersURL": @"followers_url",
              @"followingURL": @"following_url",
