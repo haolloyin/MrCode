@@ -28,7 +28,7 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
     if (!self.tableView.tableHeaderView) {
-        self.headerView = [[UserProfileHeaderView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 50.f)];
+        self.headerView = [[UserProfileHeaderView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 90.f)];
         self.tableView.tableHeaderView = self.headerView;
     }
     
@@ -47,18 +47,56 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 3;
+    return section == 0 ? 2 : 4;
 }
 
-/*
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
     
-    // Configure the cell...
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UserProfileTableViewCell" forIndexPath:indexPath];
+    NSString *titleLabel = @"";
+    NSString *detailLabel = @"";
+    
+    if (indexPath.section == 0) {
+        switch (indexPath.row) {
+            case 0:
+                titleLabel = @"Name";
+                detailLabel = self.user.name;
+                break;
+            case 1:
+                titleLabel = @"Starred Repositories";
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                break;
+        }
+    }
+    else if (indexPath.section == 1) {
+        switch (indexPath.row) {
+            case 0:
+                titleLabel = @"Blog";
+                detailLabel = [self.user.blog absoluteString];
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                break;
+            case 1:
+                titleLabel = @"Email";
+                detailLabel = self.user.email;
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                break;
+            case 2:
+                titleLabel = @"Location";
+                detailLabel = self.user.location;
+                break;
+            case 3:
+                titleLabel = @"Organization";
+                detailLabel = [self.user.organizationsURL absoluteString];
+                break;
+            default:
+                break;
+        }
+    }
+    cell.textLabel.text = titleLabel;
+    cell.detailTextLabel.text = detailLabel;
     
     return cell;
 }
-*/
 
 /*
 #pragma mark - Navigation
