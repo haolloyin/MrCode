@@ -7,11 +7,12 @@
 //
 
 #import "RepositoriesTableVC.h"
-#import "UIImage+Octions.h"
 #import "GITRepository.h"
 #import "ReposTableViewCell.h"
-#import "UITableView+FDTemplateLayoutCell.h"
 #import "RepositoryDetailTableVC.h"
+
+#import "UIImage+Octions.h"
+#import "UITableView+FDTemplateLayoutCell.h"
 
 static NSString *kReposCellIdentifier = @"ReposCellIdentifier";
 static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";

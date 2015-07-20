@@ -8,11 +8,13 @@
 
 #import "UserProfileHeaderView.h"
 #import "GITUser.h"
-#import "UIImage+MRC_Octicons.h"
 
 #import "Masonry.h"
+#import "UIImage+MRC_Octicons.h"
 #import "NSDate+DateTools.h"
+#import "UIImageView+WebCache.h"
 
+#define kAvatarSize CGSizeMake(60, 60)
 
 @interface UserProfileHeaderView ()
 
@@ -35,16 +37,16 @@
     }
     
     _avatarImageView = [UIImageView new];
-    _avatarImageView.image = [UIImage octicon_imageWithIdentifier:@"Person" size:CGSizeMake(30.f, 30.f)];
+    _avatarImageView.image = [UIImage octicon_imageWithIdentifier:@"Person" size:kAvatarSize];
     [self addSubview:_avatarImageView];
     
     _titleLabel = [UILabel new];
-    _titleLabel.font = [UIFont systemFontOfSize:14.f];
+    _titleLabel.font = [UIFont systemFontOfSize:22.f];
     _titleLabel.textColor = [UIColor darkTextColor];
     [self addSubview:_titleLabel];
     
     _bioLabel = [UILabel new];
-    _bioLabel.font = [UIFont systemFontOfSize:10.f];
+    _bioLabel.font = [UIFont systemFontOfSize:12.f];
     _bioLabel.textColor = [UIColor lightGrayColor];
     _bioLabel.numberOfLines = 1;
     [self addSubview:_bioLabel];
@@ -67,14 +69,14 @@
     [super layoutSubviews];
     
     [self.avatarImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(30, 30));
+        make.size.mas_equalTo(kAvatarSize);
         make.left.equalTo(@5);
         make.top.equalTo(@10);
     }];
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.avatarImageView.mas_right).offset(10);
-        make.top.equalTo(@10);
+        make.top.equalTo(@18);
     }];
     
     [self.bioLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -136,6 +138,8 @@
     _user = user;
     self.titleLabel.text = user.login;
     self.bioLabel.text   = user.bio ? : [NSString stringWithFormat:@"Updated %@", user.updatedAt.timeAgoSinceNow];
+    
+    [self.avatarImageView sd_setImageWithURL:user.avatarURL];
     
     [self.followingButton setTitle:[NSString stringWithFormat:@"Following\n%@", @(user.following)] forState:UIControlStateNormal];
     [self.repositoriesButton setTitle:[NSString stringWithFormat:@"Repositories\n%@", @(user.publicRepos)] forState:UIControlStateNormal];

@@ -10,6 +10,8 @@
 #import "UserProfileHeaderView.h"
 #import "GITUser.h"
 
+#import "UIImage+MRC_Octicons.h"
+
 @interface UserProfileTableVC ()
 
 @property (nonatomic, strong) UserProfileHeaderView *headerView;
@@ -28,7 +30,7 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
     if (!self.tableView.tableHeaderView) {
-        self.headerView = [[UserProfileHeaderView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 90.f)];
+        self.headerView = [[UserProfileHeaderView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 130.f)];
         self.tableView.tableHeaderView = self.headerView;
     }
     
@@ -55,38 +57,46 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UserProfileTableViewCell" forIndexPath:indexPath];
     NSString *titleLabel = @"";
     NSString *detailLabel = @"";
+    CGSize size = CGSizeMake(30, 30);
+    UIImage *image = nil;
     
     if (indexPath.section == 0) {
         switch (indexPath.row) {
             case 0:
                 titleLabel = @"Name";
+                image = [UIImage octicon_imageWithIdentifier:@"Person" size:size];
                 detailLabel = self.user.name;
+                cell.accessoryType = UITableViewCellAccessoryNone;
                 break;
             case 1:
                 titleLabel = @"Starred Repositories";
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                image = [UIImage octicon_imageWithIdentifier:@"Star" size:size];
                 break;
         }
     }
     else if (indexPath.section == 1) {
         switch (indexPath.row) {
             case 0:
-                titleLabel = @"Blog";
-                detailLabel = [self.user.blog absoluteString];
+                titleLabel = [self.user.blog absoluteString];
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                image = [UIImage octicon_imageWithIdentifier:@"Link" size:size];
                 break;
             case 1:
-                titleLabel = @"Email";
-                detailLabel = self.user.email;
+                titleLabel = self.user.email;
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                image = [UIImage octicon_imageWithIdentifier:@"Mail" size:size];
                 break;
             case 2:
-                titleLabel = @"Location";
-                detailLabel = self.user.location;
+                titleLabel = self.user.location;
+                image = [UIImage octicon_imageWithIdentifier:@"Location" size:size];
+                cell.accessoryType = UITableViewCellAccessoryNone;
                 break;
             case 3:
                 titleLabel = @"Organization";
-                detailLabel = [self.user.organizationsURL absoluteString];
+                image = [UIImage octicon_imageWithIdentifier:@"Organization" size:size];
+                cell.detailTextLabel.text = [self.user.organizationsURL absoluteString];
+                cell.accessoryType = UITableViewCellAccessoryNone;
                 break;
             default:
                 break;
@@ -94,6 +104,10 @@
     }
     cell.textLabel.text = titleLabel;
     cell.detailTextLabel.text = detailLabel;
+    cell.imageView.image = image;
+    
+    [cell.contentView setNeedsLayout];
+    [cell.contentView layoutIfNeeded];
     
     return cell;
 }
@@ -110,14 +124,19 @@
 
 #pragma mark - Private
 
+- (void)reload
+{
+    [self.tableView reloadData];
+    [self.tableView setNeedsLayout];
+    [self.tableView layoutIfNeeded];
+}
+
 - (void)fetchUserProfile
 {
-    NSLog(@"");
     if (!self.user) {
         [GITUser authenticatedUserWithSuccess:^(GITUser *user) {
             self.user = user;
-            self.headerView.user = self.user;
-            [self.tableView reloadData];
+            [self reload];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             
         }];
@@ -125,8 +144,7 @@
     else {
         [GITUser userWithUserName:self.user.login success:^(GITUser *user) {
             self.user = user;
-            self.headerView.user = self.user;
-            [self.tableView reloadData];
+            [self reload];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             
         }];
