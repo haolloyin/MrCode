@@ -124,6 +124,11 @@
 - (void)setupButton:(UIButton *)button withTag:(NSUInteger)tag
 {
     button.tag = tag;
+    
+    button.layer.cornerRadius = 5;
+    button.layer.borderWidth = 0.2;
+    button.layer.borderColor = [[UIColor blackColor] CGColor];
+    
     button.titleLabel.textAlignment = NSTextAlignmentCenter;
     button.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
     button.titleLabel.numberOfLines = 2;
@@ -154,9 +159,9 @@
     // FIXME: 调用 https://developer.github.com/v3/repos/ 获取到的 Repos updated 时间好像是错的。
 //    NSLog(@"NSDate: %@, formate: %@", self.repo.updatedAt, self.repo.updatedAt.timeAgoSinceNow);
     
-    [self.starButton setTitle:[NSString stringWithFormat:@"Star\n%@", @(self.repo.stargazersCount)] forState:UIControlStateNormal];
-    [self.forkButton setTitle:[NSString stringWithFormat:@"Fork\n%@", @(self.repo.forksCount)] forState:UIControlStateNormal];
-    [self.watchButton setTitle:[NSString stringWithFormat:@"Watch\n%@", @(self.repo.watchersCount)] forState:UIControlStateNormal];
+    [self.starButton setTitle:[NSString stringWithFormat:@"%@\nStar", @(self.repo.stargazersCount)] forState:UIControlStateNormal];
+    [self.forkButton setTitle:[NSString stringWithFormat:@"%@\nFork", @(self.repo.forksCount)] forState:UIControlStateNormal];
+    [self.watchButton setTitle:[NSString stringWithFormat:@"%@\nWatch", @(self.repo.watchersCount)] forState:UIControlStateNormal];
 }
 
 @end

@@ -47,7 +47,7 @@
     [self addSubview:_titleLabel];
 
     _nameLabel = [UILabel new];
-    _nameLabel.font = [UIFont systemFontOfSize:13.f];
+    _nameLabel.font = [UIFont systemFontOfSize:14.f];
     _nameLabel.textColor = [UIColor grayColor];
     [self addSubview:_nameLabel];
     
@@ -86,7 +86,7 @@
     }];
     
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.titleLabel.mas_right).offset(8);
+        make.left.equalTo(self.titleLabel.mas_right).offset(10);
         make.centerY.equalTo(self.titleLabel);
     }];
     
@@ -121,8 +121,9 @@
 - (void)setupButton:(UIButton *)button withTag:(NSUInteger)tag
 {
     button.tag = tag;
-    
-    button.layer.borderWidth = 1;
+
+    button.layer.cornerRadius = 5;
+    button.layer.borderWidth = 0.2;
     button.layer.borderColor = [[UIColor blackColor] CGColor];
     
     button.titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -148,14 +149,14 @@
 {
     _user = user;
     self.titleLabel.text = user.login;
-    self.nameLabel.text = [NSString stringWithFormat:@"(%@)", user.name];
+    self.nameLabel.text = [NSString stringWithFormat:@"%@", user.name];
     self.bioLabel.text   = user.bio ? : [NSString stringWithFormat:@"Updated %@", user.updatedAt.timeAgoSinceNow];
     
     [self.avatarImageView sd_setImageWithURL:user.avatarURL];
     
-    [self.followingButton setTitle:[NSString stringWithFormat:@"Following\n%@", @(user.following)] forState:UIControlStateNormal];
-    [self.repositoriesButton setTitle:[NSString stringWithFormat:@"Repositories\n%@", @(user.publicRepos)] forState:UIControlStateNormal];
-    [self.followersButton setTitle:[NSString stringWithFormat:@"Followers\n%@", @(user.followers)] forState:UIControlStateNormal];
+    [self.followingButton setTitle:[NSString stringWithFormat:@"%@\nFollowing", @(user.following)] forState:UIControlStateNormal];
+    [self.repositoriesButton setTitle:[NSString stringWithFormat:@"%@\nRepositories", @(user.publicRepos)] forState:UIControlStateNormal];
+    [self.followersButton setTitle:[NSString stringWithFormat:@"%@\nFollowers", @(user.followers)] forState:UIControlStateNormal];
 }
 
 @end
