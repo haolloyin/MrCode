@@ -176,6 +176,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Reopsitory Detail" id="HMM-mz-31X"/>
+                    <connections>
+                        <segue destination="t2G-KY-Cq4" kind="push" identifier="RepositoryDetail2UserProfile" id="tBB-ju-T8Q"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8aQ-Zx-MoC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -452,6 +455,6 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="a08-hr-d3G"/>
-        <segue reference="Gc8-A6-8Vw"/>
+        <segue reference="tBB-ju-T8Q"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -87,7 +87,7 @@
     
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.titleLabel.mas_right).offset(10);
-        make.centerY.equalTo(self.titleLabel);
+        make.baseline.equalTo(self.titleLabel);
     }];
     
     [self.bioLabel mas_makeConstraints:^(MASConstraintMaker *make) {

@@ -66,48 +66,43 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UserProfileTableViewCell" forIndexPath:indexPath];
     NSString *titleLabel = @"";
     NSString *detailLabel = @"";
+    NSString *iconIdentifier;
     CGSize size = CGSizeMake(30, 30);
-    UIImage *image = nil;
     
     if (indexPath.section == 0) {
+        cell.accessoryType = UITableViewCellAccessoryNone;
         switch (indexPath.row) {
             case 0:
-                titleLabel = self.user.location;
-                image = [UIImage octicon_imageWithIdentifier:@"Location" size:size];
-                cell.accessoryType = UITableViewCellAccessoryNone;
+                iconIdentifier = @"Location";
+                titleLabel = [self stringDescription:self.user.location];
                 break;
             case 1:
+                iconIdentifier = @"Organization";
                 titleLabel = @"Organization";
-                image = [UIImage octicon_imageWithIdentifier:@"Organization" size:size];
                 cell.detailTextLabel.text = [self.user.organizationsURL absoluteString];
-                cell.accessoryType = UITableViewCellAccessoryNone;
                 break;
         }
     }
     else if (indexPath.section == 1) {
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         switch (indexPath.row) {
             case 0:
-                titleLabel = [self.user.blog absoluteString];
-                cell.textLabel.font = [UIFont systemFontOfSize:14];
-                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                image = [UIImage octicon_imageWithIdentifier:@"Link" size:size];
+                iconIdentifier = @"Link";
+                titleLabel = [self stringDescription:[self.user.blog absoluteString]];
                 break;
             case 1:
-                titleLabel = self.user.email;
-                cell.textLabel.font = [UIFont systemFontOfSize:14];
-                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                image = [UIImage octicon_imageWithIdentifier:@"Mail" size:size];
+                iconIdentifier = @"Mail";
+                titleLabel = [self stringDescription:self.user.email];
                 break;
             case 2:
+                iconIdentifier = @"Star";
                 titleLabel = @"Starred Repositories";
-                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                image = [UIImage octicon_imageWithIdentifier:@"Star" size:size];
                 break;
         }
     }
     cell.textLabel.text = titleLabel;
     cell.detailTextLabel.text = detailLabel;
-    cell.imageView.image = image;
+    cell.imageView.image = [UIImage octicon_imageWithIdentifier:iconIdentifier size:size];
     
     [cell.contentView setNeedsLayout];
     [cell.contentView layoutIfNeeded];
@@ -152,6 +147,18 @@
             
         }];
     }
+}
+
+- (NSString *)stringDescription:(id)obj
+{
+    if (!obj) {
+        return @"No Set";
+    }
+    if ([obj isKindOfClass:[NSString class]] && [obj isEqualToString:@""]) {
+        return @"No Set";
+    }
+    
+    return obj;
 }
 
 #pragma mark - Property

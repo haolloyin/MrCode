@@ -8,6 +8,7 @@
 
 #import "RepositoryDetailTableVC.h"
 #import "RepositoryHeaderView.h"
+#import "UserProfileTableVC.h"
 
 #import "UIImage+MRC_Octicons.h"
 
@@ -27,6 +28,8 @@
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
+    self.navigationItem.title = self.repo.name;
     
     if (!self.tableView.tableHeaderView) {
         self.headerView = [[RepositoryHeaderView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 150.f)];
@@ -131,16 +134,31 @@
     return cell;
 }
 
+#pragma mark - Table view delegate
 
-/*
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == 0) {
+        switch (indexPath.row) {
+            case 0:
+                [self performSegueWithIdentifier:@"RepositoryDetail2UserProfile" sender:nil];
+                break;
+            default:
+                break;
+        }
+    }
+}
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    NSString *identifier = segue.identifier;
+    if ([identifier isEqualToString:@"RepositoryDetail2UserProfile"]) {
+        UserProfileTableVC *controller = (UserProfileTableVC *)segue.destinationViewController;
+        controller.user = self.repo.owner;
+    }
 }
-*/
 
 #pragma mark - Private
 
