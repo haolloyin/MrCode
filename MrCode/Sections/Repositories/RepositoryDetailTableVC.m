@@ -9,6 +9,8 @@
 #import "RepositoryDetailTableVC.h"
 #import "RepositoryHeaderView.h"
 
+#import "UIImage+MRC_Octicons.h"
+
 @interface RepositoryDetailTableVC ()
 
 @property (nonatomic, strong) RepositoryHeaderView *headerView;
@@ -47,22 +49,88 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 3;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return 2;
 }
 
-/*
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return section == 0 ? 2 : 7;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    return @" ";
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
+    UITableViewCell *cell;
+    NSString *textLabel = @"";
+    NSString *iconIdentifier;
     
-    // Configure the cell...
+    if (indexPath.section == 0 && indexPath.row == 0) {
+        cell = [tableView dequeueReusableCellWithIdentifier:@"RightDetailCell" forIndexPath:indexPath];
+    }
+    else {
+        cell = [tableView dequeueReusableCellWithIdentifier:@"BasicCell" forIndexPath:indexPath];
+    }
+
+    if (indexPath.section == 0) {
+        switch (indexPath.row) {
+            case 0:
+                textLabel = @"Owner";
+                iconIdentifier = @"Person";
+                cell.detailTextLabel.text = self.repo.owner.login;
+                break;
+            case 1:
+                textLabel = @"README";
+                iconIdentifier = @"Book";
+                break;
+        }
+    }
+    else if (indexPath.section == 1) {
+        switch (indexPath.row) {
+            case 0:
+                textLabel = @"Forks";
+                iconIdentifier = @"GitBranch";
+                cell.detailTextLabel.text = self.repo.owner.login;
+                break;
+            case 1:
+                textLabel = @"Releases";
+                iconIdentifier = @"Tag";
+                break;
+            case 2:
+                textLabel = @"Recent Activity";
+                iconIdentifier = @"Rss";
+                break;
+            case 3:
+                textLabel = @"Contributors";
+                iconIdentifier = @"Organization";
+                break;
+            case 4:
+                textLabel = @"Stargazers";
+                iconIdentifier = @"Star";
+                break;
+            case 5:
+                textLabel = @"Pull Requests";
+                iconIdentifier = @"GitPullRequest";
+                break;
+            case 6:
+                textLabel = @"Issues";
+                iconIdentifier = @"IssueOpened";
+                break;
+        }
+    }
+    
+    cell.textLabel.text = textLabel;
+    CGSize size = CGSizeMake(30, 30);
+    UIColor *color = [UIColor grayColor];
+    cell.imageView.image = [UIImage octicon_imageWithIdentifier:iconIdentifier iconColor:color size:size];
+    
+    [cell.contentView setNeedsLayout];
+    [cell.contentView layoutIfNeeded];
     
     return cell;
 }
-*/
+
 
 /*
 #pragma mark - Navigation

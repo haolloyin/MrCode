@@ -19,4 +19,10 @@
     return [UIImage octicon_imageWithIcon:identifier backgroundColor:bgColor iconColor:iconColor iconScale:1.0 andSize:size];
 }
 
++ (UIImage *)octicon_imageWithIdentifier:(NSString *)identifier iconColor:(UIColor *)iconColor size:(CGSize)size
+{
+    UIColor *bgColor   = [UIColor clearColor];
+    return [UIImage octicon_imageWithIcon:identifier backgroundColor:bgColor iconColor:iconColor iconScale:1.0 andSize:size];
+}
+
 @end

@@ -83,7 +83,7 @@
     
     [self.updatedLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.titleLabel);
-        make.top.equalTo(self.titleLabel.mas_bottom).offset(4);
+        make.top.equalTo(self.titleLabel.mas_bottom).offset(2);
     }];
     
     // Buttons

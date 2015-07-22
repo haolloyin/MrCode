@@ -12,4 +12,6 @@
 
 + (UIImage *)octicon_imageWithIdentifier:(NSString *)identifier size:(CGSize)size;
 
++ (UIImage *)octicon_imageWithIdentifier:(NSString *)identifier iconColor:(UIColor *)iconColor size:(CGSize)size;
+
 @end
