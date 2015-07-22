@@ -20,6 +20,7 @@
 
 @property (nonatomic, strong) UIImageView *avatarImageView;
 @property (nonatomic, strong) UILabel     *titleLabel;
+@property (nonatomic, strong) UILabel     *nameLabel;
 @property (nonatomic, strong) UILabel     *bioLabel;
 @property (nonatomic, strong) UIButton    *followersButton;
 @property (nonatomic, strong) UIButton    *repositoriesButton;
@@ -44,6 +45,11 @@
     _titleLabel.font = [UIFont systemFontOfSize:22.f];
     _titleLabel.textColor = [UIColor darkTextColor];
     [self addSubview:_titleLabel];
+
+    _nameLabel = [UILabel new];
+    _nameLabel.font = [UIFont systemFontOfSize:13.f];
+    _nameLabel.textColor = [UIColor grayColor];
+    [self addSubview:_nameLabel];
     
     _bioLabel = [UILabel new];
     _bioLabel.font = [UIFont systemFontOfSize:12.f];
@@ -77,6 +83,11 @@
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.avatarImageView.mas_right).offset(10);
         make.top.equalTo(@18);
+    }];
+    
+    [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.titleLabel.mas_right).offset(8);
+        make.centerY.equalTo(self.titleLabel);
     }];
     
     [self.bioLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -137,6 +148,7 @@
 {
     _user = user;
     self.titleLabel.text = user.login;
+    self.nameLabel.text = [NSString stringWithFormat:@"(%@)", user.name];
     self.bioLabel.text   = user.bio ? : [NSString stringWithFormat:@"Updated %@", user.updatedAt.timeAgoSinceNow];
     
     [self.avatarImageView sd_setImageWithURL:user.avatarURL];

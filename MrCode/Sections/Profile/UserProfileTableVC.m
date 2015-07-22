@@ -33,6 +33,7 @@
         self.headerView = [[UserProfileHeaderView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 130.f)];
         self.tableView.tableHeaderView = self.headerView;
     }
+    self.tableView.sectionHeaderHeight = 30;
     
     [self fetchUserProfile];
 }
@@ -49,7 +50,15 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return section == 0 ? 2 : 4;
+    return section == 0 ? 2 : 3;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    if (section == 1) {
+        return @" ";
+    }
+    return nil;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -63,15 +72,15 @@
     if (indexPath.section == 0) {
         switch (indexPath.row) {
             case 0:
-                titleLabel = @"Name";
-                image = [UIImage octicon_imageWithIdentifier:@"Person" size:size];
-                detailLabel = self.user.name;
+                titleLabel = self.user.location;
+                image = [UIImage octicon_imageWithIdentifier:@"Location" size:size];
                 cell.accessoryType = UITableViewCellAccessoryNone;
                 break;
             case 1:
-                titleLabel = @"Starred Repositories";
-                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-                image = [UIImage octicon_imageWithIdentifier:@"Star" size:size];
+                titleLabel = @"Organization";
+                image = [UIImage octicon_imageWithIdentifier:@"Organization" size:size];
+                cell.detailTextLabel.text = [self.user.organizationsURL absoluteString];
+                cell.accessoryType = UITableViewCellAccessoryNone;
                 break;
         }
     }
@@ -79,26 +88,20 @@
         switch (indexPath.row) {
             case 0:
                 titleLabel = [self.user.blog absoluteString];
+                cell.textLabel.font = [UIFont systemFontOfSize:14];
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                 image = [UIImage octicon_imageWithIdentifier:@"Link" size:size];
                 break;
             case 1:
                 titleLabel = self.user.email;
+                cell.textLabel.font = [UIFont systemFontOfSize:14];
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                 image = [UIImage octicon_imageWithIdentifier:@"Mail" size:size];
                 break;
             case 2:
-                titleLabel = self.user.location;
-                image = [UIImage octicon_imageWithIdentifier:@"Location" size:size];
-                cell.accessoryType = UITableViewCellAccessoryNone;
-                break;
-            case 3:
-                titleLabel = @"Organization";
-                image = [UIImage octicon_imageWithIdentifier:@"Organization" size:size];
-                cell.detailTextLabel.text = [self.user.organizationsURL absoluteString];
-                cell.accessoryType = UITableViewCellAccessoryNone;
-                break;
-            default:
+                titleLabel = @"Starred Repositories";
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                image = [UIImage octicon_imageWithIdentifier:@"Star" size:size];
                 break;
         }
     }
