@@ -20,6 +20,9 @@ PODS:
   - AFNetworking/UIKit (2.5.4):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
+  - ChameleonFramework (1.2.1):
+    - ChameleonFramework/Default (= 1.2.1)
+  - ChameleonFramework/Default (1.2.1)
   - DateTools (1.6.1)
   - Masonry (0.6.1)
   - MJExtension (2.3.7)
@@ -31,6 +34,7 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking
+  - ChameleonFramework
   - DateTools
   - Masonry
   - MJExtension
@@ -40,6 +44,7 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
+  ChameleonFramework: 3476f813ac1615aef0a9a958f05520dfca47e09d
   DateTools: 9bcc89e4f2f9004d8a7a2bd1b49269cf78968e65
   Masonry: 4972309f2f134de9dd312f4dc4a21359b50e6caa
   MJExtension: ab4e7c529b2c7a705e6f78f73e33d97929a42b39

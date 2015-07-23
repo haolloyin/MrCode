@@ -48,6 +48,18 @@
 #define COCOAPODS_VERSION_MINOR_AFNetworking_UIKit 5
 #define COCOAPODS_VERSION_PATCH_AFNetworking_UIKit 4
 
+// ChameleonFramework
+#define COCOAPODS_POD_AVAILABLE_ChameleonFramework
+#define COCOAPODS_VERSION_MAJOR_ChameleonFramework 1
+#define COCOAPODS_VERSION_MINOR_ChameleonFramework 2
+#define COCOAPODS_VERSION_PATCH_ChameleonFramework 1
+
+// ChameleonFramework/Default
+#define COCOAPODS_POD_AVAILABLE_ChameleonFramework_Default
+#define COCOAPODS_VERSION_MAJOR_ChameleonFramework_Default 1
+#define COCOAPODS_VERSION_MINOR_ChameleonFramework_Default 2
+#define COCOAPODS_VERSION_PATCH_ChameleonFramework_Default 1
+
 // DateTools
 #define COCOAPODS_POD_AVAILABLE_DateTools
 #define COCOAPODS_VERSION_MAJOR_DateTools 1

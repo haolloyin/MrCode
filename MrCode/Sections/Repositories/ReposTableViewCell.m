@@ -7,8 +7,10 @@
 //
 
 #import "ReposTableViewCell.h"
+
 #import "Masonry.h"
 #import "UIImage+MRC_Octicons.h"
+#import <ChameleonFramework/Chameleon.h>
 
 static UIImage *_repoIconImage = nil;
 static UIImage *_repoForkedIconImage = nil;
@@ -51,7 +53,6 @@ static UIImage *_repoForkImage = nil;
     
     [self setupImageIcons];
     
-//    NSLog(@"reuseIdentifier: %@", reuseIdentifier);
     self.contentView.translatesAutoresizingMaskIntoConstraints = NO;
     
     self.iconImageView = [UIImageView new];
@@ -63,7 +64,8 @@ static UIImage *_repoForkImage = nil;
     }];
     
     self.titleLabel = [UILabel new];
-    self.titleLabel.font = [UIFont systemFontOfSize:14.f];
+    self.titleLabel.font = [UIFont boldSystemFontOfSize:14.f];
+    self.titleLabel.textColor = [UIColor flatPurpleColorDark];
     [self.contentView addSubview:self.titleLabel];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.iconImageView.mas_right).offset(10);
@@ -72,7 +74,7 @@ static UIImage *_repoForkImage = nil;
     }];
     
     self.descLabel = [UILabel new];
-    self.descLabel.textColor = [UIColor grayColor];
+    self.descLabel.textColor = [UIColor darkGrayColor];
     self.descLabel.font = [UIFont systemFontOfSize:11.f];
     self.descLabel.lineBreakMode = NSLineBreakByWordWrapping;
     self.descLabel.textAlignment = NSTextAlignmentLeft;
@@ -97,6 +99,7 @@ static UIImage *_repoForkImage = nil;
     
     self.starLabel = [UILabel new];
     self.starLabel.font = [UIFont systemFontOfSize:10.f];
+    self.starLabel.textColor = [UIColor flatSkyBlueColorDark];
     self.starLabel.numberOfLines = 1;
     [self.contentView addSubview:self.starLabel];
     [self.starLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -116,6 +119,7 @@ static UIImage *_repoForkImage = nil;
     
     self.forkLabel = [UILabel new];
     self.forkLabel.font = [UIFont systemFontOfSize:10.f];
+    self.forkLabel.textColor = [UIColor flatSkyBlueColorDark];
     self.forkLabel.numberOfLines = 1;
     [self.contentView addSubview:self.forkLabel];
     [self.forkLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -126,7 +130,7 @@ static UIImage *_repoForkImage = nil;
     
     self.languageLabel = [UILabel new];
     self.languageLabel.font = [UIFont systemFontOfSize:9.f];
-    self.languageLabel.textColor = [UIColor darkGrayColor];
+    self.languageLabel.textColor = [UIColor grayColor];
     self.languageLabel.textAlignment = NSTextAlignmentRight;
     self.languageLabel.numberOfLines = 1;
     [self.contentView addSubview:self.languageLabel];

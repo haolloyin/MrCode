@@ -42,6 +42,8 @@
         self.headerView.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), height);
         self.tableView.tableHeaderView = self.headerView;
     }
+    
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
 }
 
 - (void)didReceiveMemoryWarning {

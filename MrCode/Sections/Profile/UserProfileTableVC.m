@@ -11,6 +11,7 @@
 #import "GITUser.h"
 
 #import "UIImage+MRC_Octicons.h"
+#import <ChameleonFramework/Chameleon.h>
 
 @interface UserProfileTableVC ()
 
@@ -33,7 +34,8 @@
         self.headerView = [[UserProfileHeaderView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 130.f)];
         self.tableView.tableHeaderView = self.headerView;
     }
-    self.tableView.sectionHeaderHeight = 30;
+    
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     [self fetchUserProfile];
 }
@@ -55,10 +57,11 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if (section == 1) {
-        return @" ";
-    }
-    return nil;
+//    if (section == 1) {
+//        return @" ";
+//    }
+//    return nil;
+    return @" ";
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -88,10 +91,12 @@
         switch (indexPath.row) {
             case 0:
                 iconIdentifier = @"Link";
+                cell.textLabel.textColor = [UIColor flatSkyBlueColor];
                 titleLabel = [self stringDescription:[self.user.blog absoluteString]];
                 break;
             case 1:
                 iconIdentifier = @"Mail";
+                cell.textLabel.textColor = [UIColor flatSkyBlueColor];
                 titleLabel = [self stringDescription:self.user.email];
                 break;
             case 2:

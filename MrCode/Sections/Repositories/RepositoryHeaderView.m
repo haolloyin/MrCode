@@ -7,9 +7,11 @@
 //
 
 #import "RepositoryHeaderView.h"
+
 #import "Masonry.h"
 #import "UIImage+MRC_Octicons.h"
 #import "NSDate+DateTools.h"
+#import <ChameleonFramework/Chameleon.h>
 
 @interface RepositoryHeaderView ()
 
@@ -37,8 +39,8 @@
     [self addSubview:_iconImageView];
     
     _titleLabel = [UILabel new];
-    _titleLabel.font = [UIFont systemFontOfSize:14.f];
-    _titleLabel.textColor = [UIColor darkTextColor];
+    _titleLabel.font = [UIFont boldSystemFontOfSize:14.f];
+    _titleLabel.textColor = [UIColor flatPurpleColor];
     [self addSubview:_titleLabel];
     
     _updatedLabel = [UILabel new];
@@ -127,13 +129,12 @@
     
     button.layer.cornerRadius = 5;
     button.layer.borderWidth = 0.2;
-    button.layer.borderColor = [[UIColor blackColor] CGColor];
+    button.layer.borderColor = [[UIColor flatSkyBlueColorDark] CGColor];
     
     button.titleLabel.textAlignment = NSTextAlignmentCenter;
     button.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
     button.titleLabel.numberOfLines = 2;
     button.titleLabel.font = [UIFont systemFontOfSize:11];
-    button.backgroundColor = [UIColor greenColor];
     button.enabled = YES;
     [button setUserInteractionEnabled:YES];
     [button setTitleColor:[UIColor darkTextColor] forState:UIControlStateNormal];
