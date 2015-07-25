@@ -15,6 +15,7 @@
 #import "GITUser.h"
 #import "RepositoryDetailTableVC.h"
 #import "UserProfileTableVC.h"
+#import "LanguagesTableVC.h"
 
 #import "UITableView+FDTemplateLayoutCell.h"
 #import "UIImageView+WebCache.h"
@@ -220,41 +221,61 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
         self.isShowingMenu = NO;
     }
     else {
-        CGSize size = CGSizeMake(20, 20);
-        UIColor *iconColor = [UIColor flatWhiteColor];
-        NSArray *menuItems = @[
-            [KxMenuItem menuItem:@" Repositories"
-                          image:[UIImage octicon_imageWithIdentifier:@"Repo" iconColor:iconColor size:size]
-                         target:self
-                         action:@selector(itemSelected:)],
+        NSArray *menuItems = [self setupMenu];
 
-            [KxMenuItem menuItem:@" Developers"
-                          image:[UIImage octicon_imageWithIdentifier:@"Octoface" iconColor:iconColor size:size]
-                         target:self
-                         action:@selector(itemSelected:)],
-
-            [KxMenuItem menuItem:@" Languages"
-                          image:[UIImage octicon_imageWithIdentifier:@"ListUnordered" iconColor:iconColor size:size]
-                         target:self
-                         action:@selector(languagesTapped:)]
-        ];
-        
-        [KxMenu setTitleFont:[UIFont systemFontOfSize:14]];
-        
         KxMenuItem *currentItem = menuItems[self.searchType];
-        currentItem.title = [NSString stringWithFormat:@" %@  √😝", (self.searchType == SearchTypeRepository ? @"Repositories" : @"Developers")];
+        currentItem.title = [NSString stringWithFormat:@"%@  √", (self.searchType == SearchTypeRepository ? @"Repositories" : @"Developers")];
         currentItem.foreColor = [UIColor flatYellowColor];
         
         UIView *rightButtonView = (UIView *)[self.navigationItem.rightBarButtonItem performSelector:@selector(view)];
-        CGRect fromFrame = rightButtonView.frame;
-        fromFrame.origin.y = fromFrame.origin.y + fromFrame.size.height;
+        CGRect fromFrame        = rightButtonView.frame;
+        fromFrame.origin.y      = fromFrame.origin.y + fromFrame.size.height;
         //FIXME: 这里的 topLayoutGuide＝64 还是偏低，可能是 KxMenu 又另外计算
         //fromFrame.origin.y = self.topLayoutGuide.length;
         //NSLogRect(fromFrame);
+        
+        [KxMenu setTitleFont:[UIFont systemFontOfSize:14]];
         [KxMenu showMenuInView:self.view fromRect:fromFrame menuItems:menuItems];
         
         self.isShowingMenu = YES;
     }
+}
+
+- (NSArray *)setupMenu
+{
+    NSMutableArray *menuItems = [NSMutableArray array];
+    
+    KxMenuItem *reposItem   = [self menuItemWithTitle:@"Repositories" identifier:@"Repo" action:@selector(itemSelected:)];
+    KxMenuItem *devItem     = [self menuItemWithTitle:@"Developers" identifier:@"Person" action:@selector(itemSelected:)];
+    KxMenuItem *settingItem = [self menuItemWithTitle:@"Languages Setting" identifier:@"ListUnordered" action:@selector(languagesTapped:)];
+    
+    [menuItems addObject:reposItem];
+    [menuItems addObject:devItem];
+    
+    NSArray *favouriteLanguages = [LanguagesTableVC favouriteLanguages];
+    if (favouriteLanguages && [favouriteLanguages count] > 0) {
+        [menuItems addObject:[KxMenuItem menuItem:@"😝😝😝😝😝😝😝😝😝" image:nil target:nil action:nil]];
+        [menuItems addObject:settingItem];
+
+        for (NSString *language in favouriteLanguages) {
+            KxMenuItem *item = [self menuItemWithTitle:language identifier:@"FileCode" action:@selector(languagesTapped:)];
+            [menuItems addObject:item];
+        }
+    }
+    else {
+        [menuItems addObject:settingItem];
+    }
+    
+    return [menuItems copy];
+}
+
+- (KxMenuItem *)menuItemWithTitle:(NSString *)title identifier:(NSString *)identifier action:(SEL)action
+{
+    CGSize size = CGSizeMake(20, 20);
+    UIColor *iconColor = [UIColor flatWhiteColor];
+    UIImage *image = [UIImage octicon_imageWithIdentifier:identifier iconColor:iconColor size:size];
+    
+    return [KxMenuItem menuItem:title image:image target:self action:action];
 }
 
 - (void)segmentedControlChanged
@@ -309,7 +330,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 
 - (void)itemSelected:(KxMenuItem *)item
 {
-    self.searchType = ([item.title isEqualToString:@" Repositories"] ? SearchTypeRepository : SearchTypeDeveloper);
+    self.searchType = ([item.title isEqualToString:@"Repositories"] ? SearchTypeRepository : SearchTypeDeveloper);
     self.isShowingMenu = NO;
     
     [self updateSeearchBarPlaceholder];

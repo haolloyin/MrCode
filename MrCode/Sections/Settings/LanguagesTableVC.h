@@ -10,6 +10,6 @@
 
 @interface LanguagesTableVC : UITableViewController
 
-+ (NSString *)favouriteLanguages;
++ (NSArray *)favouriteLanguages;
 
 @end

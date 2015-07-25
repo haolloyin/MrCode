@@ -160,21 +160,22 @@
 
 #pragma mark - Public
 
-+ (NSString *)favouriteLanguages
++ (NSArray *)favouriteLanguages
 {
     NSDictionary *languagesDictionary = [[NSUserDefaults standardUserDefaults] objectForKey:@"MrCode_Languages_Setting"];
     if (!languagesDictionary) {
         return nil;
     }
  
+    NSMutableArray *languages = [NSMutableArray array];
     for (NSString *key in languagesDictionary) {
         NSString *value = languagesDictionary[key];
         if ([value isEqualToString:@"YES"]) {
-            return value;
+            [languages addObject:key];
         }
     }
 
-    return nil;
+    return [languages copy];
 }
 
 @end
