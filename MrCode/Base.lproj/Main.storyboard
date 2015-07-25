@@ -393,8 +393,8 @@
                             <rect key="frame" x="81" y="7" width="159" height="31"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <segments>
-                                <segment title="Repository"/>
-                                <segment title="Developer"/>
+                                <segment title="Trending"/>
+                                <segment title="Search"/>
                             </segments>
                         </segmentedControl>
                     </navigationItem>
@@ -454,7 +454,7 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="a08-hr-d3G"/>
-        <segue reference="tBB-ju-T8Q"/>
+        <segue reference="rRJ-Zw-Ha6"/>
+        <segue reference="Gc8-A6-8Vw"/>
     </inferredMetricsTieBreakers>
 </document>

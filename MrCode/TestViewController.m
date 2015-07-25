@@ -10,12 +10,16 @@
 #import "Masonry.h"
 #import "GITEvent.h"
 
+#import "KxMenu.h"
+
 @interface TestViewController ()
 
 @property (nonatomic, strong) UIView *superView;
 @property (nonatomic, strong) UIView *v1;
 @property (nonatomic, strong) UIView *v2;
 @property (nonatomic, strong) UILabel *l1;
+
+@property (nonatomic, strong) UIButton *button1;
 
 @end
 
@@ -36,7 +40,7 @@
     _superView.backgroundColor = [UIColor greenColor];
     [self.view addSubview:_superView];
     [_superView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(300, 70));
+        make.size.mas_equalTo(CGSizeMake(300, 100));
         make.center.equalTo(self.view);
     }];
     
@@ -72,12 +76,23 @@
     }];
     
     // GITEvent
-    [GITEvent eventsOfUser:nil success:^(NSArray *events) {
-        for (GITEvent *event in events) {
-            NSLog(@"event: %@", event.createdAt);
-        }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
+//    [GITEvent eventsOfUser:nil success:^(NSArray *events) {
+//        for (GITEvent *event in events) {
+//            NSLog(@"event: %@", event.createdAt);
+//        }
+//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//        
+//    }];
+
+    
+    _button1 = [UIButton new];
+    _button1.backgroundColor = [UIColor greenColor];
+    [_button1 addTarget:self action:@selector(showMenu:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:_button1];
+    [_button1 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.size.mas_equalTo(CGSizeMake(30, 30));
+        make.centerX.equalTo(self.view);
+        make.top.equalTo(@20);
     }];
 }
 
@@ -95,5 +110,57 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+#pragma mark - Private
+
+- (void)showMenu:(UIButton *)sender
+{
+    NSArray *menuItems =
+    @[
+      
+      [KxMenuItem menuItem:@"ACTION MENU 1234456"
+                     image:nil
+                    target:nil
+                    action:NULL],
+      
+      [KxMenuItem menuItem:@"Share this"
+                     image:[UIImage imageNamed:@"action_icon"]
+                    target:self
+                    action:@selector(pushMenuItem:)],
+      
+      [KxMenuItem menuItem:@"Check this menu"
+                     image:nil
+                    target:self
+                    action:@selector(pushMenuItem:)],
+      
+      [KxMenuItem menuItem:@"Reload page"
+                     image:[UIImage imageNamed:@"reload"]
+                    target:self
+                    action:@selector(pushMenuItem:)],
+      
+      [KxMenuItem menuItem:@"Search"
+                     image:[UIImage imageNamed:@"search_icon"]
+                    target:self
+                    action:@selector(pushMenuItem:)],
+      
+      [KxMenuItem menuItem:@"Go home"
+                     image:[UIImage imageNamed:@"home_icon"]
+                    target:self
+                    action:@selector(pushMenuItem:)],
+      ];
+    
+    KxMenuItem *first = menuItems[0];
+    first.foreColor = [UIColor colorWithRed:47/255.0f green:112/255.0f blue:225/255.0f alpha:1.0];
+    first.alignment = NSTextAlignmentCenter;
+    
+    [KxMenu showMenuInView:self.view
+                  fromRect:sender.frame
+                 menuItems:menuItems];
+}
+
+- (void) pushMenuItem:(id)sender
+{
+    NSLog(@"%@", sender);
+}
 
 @end

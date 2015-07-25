@@ -37,6 +37,7 @@
 		3FBFD28C1B4AD68800BDC00F /* UIImage+MRC_Octicons.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD28B1B4AD68800BDC00F /* UIImage+MRC_Octicons.m */; };
 		3FBFD28F1B4C1C0900BDC00F /* RepositoryDetailTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD28E1B4C1C0900BDC00F /* RepositoryDetailTableVC.m */; };
 		3FBFD2921B4C1C3500BDC00F /* RepositoryHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD2911B4C1C3500BDC00F /* RepositoryHeaderView.m */; };
+		3FCF7CEF1B635337002CE5D5 /* KxMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCF7CEE1B635337002CE5D5 /* KxMenu.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -109,6 +110,8 @@
 		3FBFD28E1B4C1C0900BDC00F /* RepositoryDetailTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepositoryDetailTableVC.m; sourceTree = "<group>"; };
 		3FBFD2901B4C1C3500BDC00F /* RepositoryHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoryHeaderView.h; sourceTree = "<group>"; };
 		3FBFD2911B4C1C3500BDC00F /* RepositoryHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepositoryHeaderView.m; sourceTree = "<group>"; };
+		3FCF7CED1B635337002CE5D5 /* KxMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KxMenu.h; sourceTree = "<group>"; };
+		3FCF7CEE1B635337002CE5D5 /* KxMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KxMenu.m; sourceTree = "<group>"; };
 		AB24770223FEE1F449EAD4FD /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		C003DD33F5E02E04E4EEC24D /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		E8E792D13A526B5E88944E2D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -156,6 +159,7 @@
 		3F2547401B45A0060012CDD6 /* MrCode */ = {
 			isa = PBXGroup;
 			children = (
+				3FCF7CEB1B635324002CE5D5 /* Vendors */,
 				3F25476A1B45A1DE0012CDD6 /* GitHubAPIClient */,
 				3F2547811B47F3D40012CDD6 /* Sections */,
 				3FBFD2891B4AD67800BDC00F /* Helpers */,
@@ -326,6 +330,23 @@
 				3F0006F11B4D7C6C00503F50 /* NSString+ToNSDate.m */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		3FCF7CEB1B635324002CE5D5 /* Vendors */ = {
+			isa = PBXGroup;
+			children = (
+				3FCF7CEC1B635324002CE5D5 /* KxMenu */,
+			);
+			path = Vendors;
+			sourceTree = "<group>";
+		};
+		3FCF7CEC1B635324002CE5D5 /* KxMenu */ = {
+			isa = PBXGroup;
+			children = (
+				3FCF7CED1B635337002CE5D5 /* KxMenu.h */,
+				3FCF7CEE1B635337002CE5D5 /* KxMenu.m */,
+			);
+			path = KxMenu;
 			sourceTree = "<group>";
 		};
 		8E4F274592BE737AB4EBFF48 /* Frameworks */ = {
@@ -505,6 +526,7 @@
 				3F2547931B4842C80012CDD6 /* ReposTableViewCell.m in Sources */,
 				3F25477A1B45A1DE0012CDD6 /* GITRepository.m in Sources */,
 				3F2547781B45A1DE0012CDD6 /* GITNotification.m in Sources */,
+				3FCF7CEF1B635337002CE5D5 /* KxMenu.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

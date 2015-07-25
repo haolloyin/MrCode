@@ -19,7 +19,8 @@
 #import "UITableView+FDTemplateLayoutCell.h"
 #import "UIImageView+WebCache.h"
 #import "UIImage+MRC_Octicons.h"
-
+#import <ChameleonFramework/Chameleon.h>
+#import "KxMenu.h"
 
 @interface SearchTableVC () <UISearchBarDelegate>
 
@@ -52,6 +53,11 @@
     
     self.searchBar.delegate = self;
     
+    UIImage *settingImage = [UIImage octicon_imageWithIdentifier:@"Gear" size:CGSizeMake(20, 20)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:settingImage
+                                                                              style:UIBarButtonItemStylePlain
+                                                                             target:self
+                                                                             action:@selector(showMenu:)];
     if (self.segmentedControl.selectedSegmentIndex == 0) {
         self.searchBar.placeholder = @"Repository";
     }
@@ -209,6 +215,48 @@
     });
     
     return _placehodlerImage;
+}
+
+- (void)showMenu:(UINavigationItem *)sender
+{
+    CGSize size = CGSizeMake(20, 20);
+    UIColor *iconColor = [UIColor flatWhiteColor];
+    NSArray *menuItems = @[
+      [KxMenuItem menuItem:@" Repositories"
+                     image:[UIImage octicon_imageWithIdentifier:@"Repo" iconColor:iconColor size:size]
+                    target:self
+                    action:@selector(itemSelected:)],
+      
+      [KxMenuItem menuItem:@" Developers"
+                     image:[UIImage octicon_imageWithIdentifier:@"Octoface" iconColor:iconColor size:size]
+                    target:self
+                    action:@selector(itemSelected:)],
+      
+      [KxMenuItem menuItem:@" Languages"
+                     image:[UIImage octicon_imageWithIdentifier:@"ListUnordered" iconColor:iconColor size:size]
+                    target:self
+                    action:@selector(languagesTapped:)]
+    ];
+    
+    [KxMenu setTitleFont:[UIFont systemFontOfSize:14]];
+    
+    UIView *rightButtonView = (UIView *)[self.navigationItem.rightBarButtonItem performSelector:@selector(view)];
+    CGRect fromFrame = rightButtonView.frame;
+    //FIXME: 这里的 topLayoutGuide＝64 还是偏低，可能是 KxMenu 又另外计算
+//    fromFrame.origin.y = self.topLayoutGuide.length - 28;
+    fromFrame.origin.y = fromFrame.origin.y + fromFrame.size.height;
+    NSLogRect(fromFrame);
+    [KxMenu showMenuInView:self.view fromRect:fromFrame menuItems:menuItems];
+}
+
+- (void)itemSelected:(id)sender
+{
+    NSLog(@"%@", sender);
+}
+
+- (void)languagesTapped:(id)sender
+{
+    NSLog(@"%@", sender);
 }
 
 @end
