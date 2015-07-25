@@ -22,14 +22,28 @@
 #import <ChameleonFramework/Chameleon.h>
 #import "KxMenu.h"
 
+typedef NS_ENUM(NSUInteger, SearchType) {
+    SearchTypeRepository = 0,
+    SearchTypeDeveloper = 1
+};
+
+typedef NS_ENUM(NSUInteger, CurrentTargetType) {
+    CurrentTargetTypeTrending = 0,
+    CurrentTargetTypeSearch = 1
+};
+
 @interface SearchTableVC () <UISearchBarDelegate>
 
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
+
 @property (nonatomic, strong) NSMutableArray *repositories;
 @property (nonatomic, strong) NSMutableArray *developers;
 @property (nonatomic, strong) NSString *keyword;
 @property (nonatomic, strong) UIImage *placehodlerImage;
+
+@property (nonatomic, assign) SearchType searchType;
+@property (nonatomic, assign) CurrentTargetType currentTargetType;
 
 @end
 
@@ -58,12 +72,10 @@
                                                                               style:UIBarButtonItemStylePlain
                                                                              target:self
                                                                              action:@selector(showMenu:)];
-    if (self.segmentedControl.selectedSegmentIndex == 0) {
-        self.searchBar.placeholder = @"Repository";
-    }
-    else if (self.segmentedControl.selectedSegmentIndex == 1) {
-        self.searchBar.placeholder = @"Developer";
-    }
+    
+    [self.segmentedControl addTarget:self action:@selector(segmentedControlTapped) forControlEvents:UIControlEventValueChanged];
+
+    self.searchBar.placeholder = (self.searchType == SearchTypeRepository ? @"Repositories" : @"Developers");
     
     _repositories = [NSMutableArray array];
     _developers = [NSMutableArray array];
@@ -91,7 +103,6 @@
     return count;
 }
 
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self.segmentedControl.selectedSegmentIndex == 0) {
         ReposTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([ReposTableViewCell class])
@@ -105,7 +116,6 @@
 
         SearchDeveloperCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([SearchDeveloperCell class])
                                                                     forIndexPath:indexPath];
-        
 //        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SearchBasicCell" forIndexPath:indexPath];
 //        cell.textLabel.text = user.login;
 //        [cell.imageView sd_setImageWithURL:user.avatarURL placeholderImage:self.placehodlerImage];
@@ -183,29 +193,47 @@
     }
 }
 
-#pragma mark - Private
+#pragma mark - IBAction
 
-- (void)loadData
+- (void)showMenu:(UINavigationItem *)sender
 {
-    if (self.segmentedControl.selectedSegmentIndex == 0 && [self.repositories count] == 0) {
-        [GITSearch searchRepositoriesWith:self.keyword language:nil sortBy:nil success:^(NSArray *array) {
-            [self.repositories addObjectsFromArray:array];
-            
-            [self.tableView reloadData];
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            
-        }];
-    }
-    else if (self.segmentedControl.selectedSegmentIndex == 1) {
-        [GITSearch searchDevelopersWith:self.keyword sortBy:nil success:^(NSArray *array) {
-            [self.developers addObjectsFromArray:array];
-            
-            [self.tableView reloadData];
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            
-        }];
-    }
+    CGSize size = CGSizeMake(20, 20);
+    UIColor *iconColor = [UIColor flatWhiteColor];
+    NSArray *menuItems = @[
+                           [KxMenuItem menuItem:@" Repositories"
+                                          image:[UIImage octicon_imageWithIdentifier:@"Repo" iconColor:iconColor size:size]
+                                         target:self
+                                         action:@selector(itemSelected:)],
+                           
+                           [KxMenuItem menuItem:@" Developers"
+                                          image:[UIImage octicon_imageWithIdentifier:@"Octoface" iconColor:iconColor size:size]
+                                         target:self
+                                         action:@selector(itemSelected:)],
+                           
+                           [KxMenuItem menuItem:@" Languages"
+                                          image:[UIImage octicon_imageWithIdentifier:@"ListUnordered" iconColor:iconColor size:size]
+                                         target:self
+                                         action:@selector(languagesTapped:)]
+                           ];
+    
+    [KxMenu setTitleFont:[UIFont systemFontOfSize:14]];
+    
+    UIView *rightButtonView = (UIView *)[self.navigationItem.rightBarButtonItem performSelector:@selector(view)];
+    CGRect fromFrame = rightButtonView.frame;
+    //FIXME: 这里的 topLayoutGuide＝64 还是偏低，可能是 KxMenu 又另外计算
+    //    fromFrame.origin.y = self.topLayoutGuide.length;
+    fromFrame.origin.y = fromFrame.origin.y + fromFrame.size.height;
+//    NSLogRect(fromFrame);
+    [KxMenu showMenuInView:self.view fromRect:fromFrame menuItems:menuItems];
 }
+
+- (void)segmentedControlTapped
+{
+    self.currentTargetType = self.segmentedControl.selectedSegmentIndex;
+    self.keyword = @"";
+}
+
+#pragma mark - Property
 
 - (UIImage *)placehodlerImage
 {
@@ -217,41 +245,32 @@
     return _placehodlerImage;
 }
 
-- (void)showMenu:(UINavigationItem *)sender
+#pragma mark - Private
+
+- (void)loadData
 {
-    CGSize size = CGSizeMake(20, 20);
-    UIColor *iconColor = [UIColor flatWhiteColor];
-    NSArray *menuItems = @[
-      [KxMenuItem menuItem:@" Repositories"
-                     image:[UIImage octicon_imageWithIdentifier:@"Repo" iconColor:iconColor size:size]
-                    target:self
-                    action:@selector(itemSelected:)],
-      
-      [KxMenuItem menuItem:@" Developers"
-                     image:[UIImage octicon_imageWithIdentifier:@"Octoface" iconColor:iconColor size:size]
-                    target:self
-                    action:@selector(itemSelected:)],
-      
-      [KxMenuItem menuItem:@" Languages"
-                     image:[UIImage octicon_imageWithIdentifier:@"ListUnordered" iconColor:iconColor size:size]
-                    target:self
-                    action:@selector(languagesTapped:)]
-    ];
-    
-    [KxMenu setTitleFont:[UIFont systemFontOfSize:14]];
-    
-    UIView *rightButtonView = (UIView *)[self.navigationItem.rightBarButtonItem performSelector:@selector(view)];
-    CGRect fromFrame = rightButtonView.frame;
-    //FIXME: 这里的 topLayoutGuide＝64 还是偏低，可能是 KxMenu 又另外计算
-//    fromFrame.origin.y = self.topLayoutGuide.length - 28;
-    fromFrame.origin.y = fromFrame.origin.y + fromFrame.size.height;
-    NSLogRect(fromFrame);
-    [KxMenu showMenuInView:self.view fromRect:fromFrame menuItems:menuItems];
+    if (self.searchType == SearchTypeRepository && [self.repositories count] == 0) {
+        [GITSearch searchRepositoriesWith:self.keyword language:nil sortBy:nil success:^(NSArray *array) {
+            [self.repositories addObjectsFromArray:array];
+            [self.tableView reloadData];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+        }];
+    }
+    else if (self.searchType == SearchTypeDeveloper) {
+        [GITSearch searchDevelopersWith:self.keyword sortBy:nil success:^(NSArray *array) {
+            [self.developers addObjectsFromArray:array];
+            [self.tableView reloadData];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+        }];
+    }
 }
 
-- (void)itemSelected:(id)sender
+- (void)itemSelected:(KxMenuItem *)item
 {
-    NSLog(@"%@", sender);
+    NSLog(@"%@", item);
+    self.searchType = ([item.title isEqualToString:@" Repositories"] ? SearchTypeRepository : SearchTypeDeveloper);
 }
 
 - (void)languagesTapped:(id)sender
