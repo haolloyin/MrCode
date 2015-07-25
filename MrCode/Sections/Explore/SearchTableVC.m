@@ -67,6 +67,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     self.tableView.estimatedRowHeight = 80.0;
     
     [self initial];
+    [self updateSeearchBarPlaceholder];
     
     _repositories = [NSMutableArray array];
     _developers = [NSMutableArray array];
@@ -92,7 +93,10 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
                                                                              action:@selector(showMenu:)];
     
     [self.segmentedControl addTarget:self action:@selector(segmentedControlChanged) forControlEvents:UIControlEventValueChanged];
-    
+}
+
+- (void)updateSeearchBarPlaceholder
+{
     self.searchBar.placeholder = (self.searchType == SearchTypeRepository ? @"Repositories" : @"Developers");
 }
 
@@ -307,6 +311,8 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 {
     self.searchType = ([item.title isEqualToString:@" Repositories"] ? SearchTypeRepository : SearchTypeDeveloper);
     self.isShowingMenu = NO;
+    
+    [self updateSeearchBarPlaceholder];
     
     NSLog(@"%@, %@", item, @(self.searchType));
 }
