@@ -115,7 +115,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
         count = [self.developers count];
     }
     
-    NSLog(@"%@", @(count));
+    NSLog(@"section: %@, count: %@", @(section), @(count));
     
     return count;
 }
@@ -321,6 +321,8 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 {
     NSLog(@"%@", sender);
     self.isShowingMenu = NO;
+    
+    [self performSegueWithIdentifier:@"Search2Languages" sender:nil];
 }
 
 @end
