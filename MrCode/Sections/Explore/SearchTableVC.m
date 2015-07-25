@@ -44,6 +44,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 
 @property (nonatomic, assign) SearchType searchType;
 @property (nonatomic, assign) CurrentTargetType currentTargetType;
+@property (nonatomic, assign) BOOL isShowingMenu;
 
 @end
 
@@ -65,17 +66,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 80.0;
     
-    self.searchBar.delegate = self;
-    
-    UIImage *settingImage = [UIImage octicon_imageWithIdentifier:@"Gear" size:CGSizeMake(20, 20)];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:settingImage
-                                                                              style:UIBarButtonItemStylePlain
-                                                                             target:self
-                                                                             action:@selector(showMenu:)];
-    
-    [self.segmentedControl addTarget:self action:@selector(segmentedControlTapped) forControlEvents:UIControlEventValueChanged];
-
-    self.searchBar.placeholder = (self.searchType == SearchTypeRepository ? @"Repositories" : @"Developers");
+    [self initial];
     
     _repositories = [NSMutableArray array];
     _developers = [NSMutableArray array];
@@ -86,6 +77,25 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     // Dispose of any resources that can be recreated.
 }
 
+- (void)initial
+{
+    self.searchType = SearchTypeRepository;
+    self.currentTargetType = CurrentTargetTypeTrending;
+    self.isShowingMenu = NO;
+    
+    self.searchBar.delegate = self;
+    
+    UIImage *settingImage = [UIImage octicon_imageWithIdentifier:@"Gear" size:CGSizeMake(20, 20)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:settingImage
+                                                                              style:UIBarButtonItemStylePlain
+                                                                             target:self
+                                                                             action:@selector(showMenu:)];
+    
+    [self.segmentedControl addTarget:self action:@selector(segmentedControlChanged) forControlEvents:UIControlEventValueChanged];
+    
+    self.searchBar.placeholder = (self.searchType == SearchTypeRepository ? @"Repositories" : @"Developers");
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -94,17 +104,21 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSInteger count = 0;
-    if (self.segmentedControl.selectedSegmentIndex == 0) {
+    if (self.searchType == SearchTypeRepository) {
         count = [self.repositories count];
-    } else if (self.segmentedControl.selectedSegmentIndex == 1) {
+    }
+    else if (self.searchType == SearchTypeDeveloper) {
         count = [self.developers count];
     }
+    
+    NSLog(@"%@", @(count));
     
     return count;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.segmentedControl.selectedSegmentIndex == 0) {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (self.searchType == SearchTypeRepository) {
         ReposTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([ReposTableViewCell class])
                                                                    forIndexPath:indexPath];
         GITRepository *repo = self.repositories[indexPath.row];
@@ -112,7 +126,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
         
         return cell;
     }
-    else if (self.segmentedControl.selectedSegmentIndex == 1) {
+    else if (self.searchType == SearchTypeDeveloper) {
 
         SearchDeveloperCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([SearchDeveloperCell class])
                                                                     forIndexPath:indexPath];
@@ -134,7 +148,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 {
     CGFloat height = 43;
     
-    if (self.segmentedControl.selectedSegmentIndex == 0) {
+    if (self.searchType == SearchTypeRepository) {
         height = [tableView fd_heightForCellWithIdentifier:NSStringFromClass([ReposTableViewCell class]) configuration:^(id cell) {
             GITRepository *repo = self.repositories[indexPath.row];
             [cell configWithRepository:repo];
@@ -146,10 +160,10 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.segmentedControl.selectedSegmentIndex == 0) {
+    if (self.searchType == SearchTypeRepository) {
         [self performSegueWithIdentifier:@"SearchVC2RepositoryDetail" sender:self.repositories[indexPath.row]];
     }
-    else if (self.segmentedControl.selectedSegmentIndex == 1) {
+    else if (self.searchType == SearchTypeDeveloper) {
         [self performSegueWithIdentifier:@"Search2UserProfile" sender:self.developers[indexPath.row]];
     }
 
@@ -197,40 +211,62 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 
 - (void)showMenu:(UINavigationItem *)sender
 {
-    CGSize size = CGSizeMake(20, 20);
-    UIColor *iconColor = [UIColor flatWhiteColor];
-    NSArray *menuItems = @[
-                           [KxMenuItem menuItem:@" Repositories"
-                                          image:[UIImage octicon_imageWithIdentifier:@"Repo" iconColor:iconColor size:size]
-                                         target:self
-                                         action:@selector(itemSelected:)],
-                           
-                           [KxMenuItem menuItem:@" Developers"
-                                          image:[UIImage octicon_imageWithIdentifier:@"Octoface" iconColor:iconColor size:size]
-                                         target:self
-                                         action:@selector(itemSelected:)],
-                           
-                           [KxMenuItem menuItem:@" Languages"
-                                          image:[UIImage octicon_imageWithIdentifier:@"ListUnordered" iconColor:iconColor size:size]
-                                         target:self
-                                         action:@selector(languagesTapped:)]
-                           ];
-    
-    [KxMenu setTitleFont:[UIFont systemFontOfSize:14]];
-    
-    UIView *rightButtonView = (UIView *)[self.navigationItem.rightBarButtonItem performSelector:@selector(view)];
-    CGRect fromFrame = rightButtonView.frame;
-    //FIXME: 这里的 topLayoutGuide＝64 还是偏低，可能是 KxMenu 又另外计算
-    //    fromFrame.origin.y = self.topLayoutGuide.length;
-    fromFrame.origin.y = fromFrame.origin.y + fromFrame.size.height;
-//    NSLogRect(fromFrame);
-    [KxMenu showMenuInView:self.view fromRect:fromFrame menuItems:menuItems];
+    if (self.isShowingMenu) {
+        [KxMenu dismissMenu];
+        self.isShowingMenu = NO;
+    }
+    else {
+        CGSize size = CGSizeMake(20, 20);
+        UIColor *iconColor = [UIColor flatWhiteColor];
+        NSArray *menuItems = @[
+            [KxMenuItem menuItem:@" Repositories"
+                          image:[UIImage octicon_imageWithIdentifier:@"Repo" iconColor:iconColor size:size]
+                         target:self
+                         action:@selector(itemSelected:)],
+
+            [KxMenuItem menuItem:@" Developers"
+                          image:[UIImage octicon_imageWithIdentifier:@"Octoface" iconColor:iconColor size:size]
+                         target:self
+                         action:@selector(itemSelected:)],
+
+            [KxMenuItem menuItem:@" Languages"
+                          image:[UIImage octicon_imageWithIdentifier:@"ListUnordered" iconColor:iconColor size:size]
+                         target:self
+                         action:@selector(languagesTapped:)]
+        ];
+        
+        [KxMenu setTitleFont:[UIFont systemFontOfSize:14]];
+        
+        KxMenuItem *currentItem = menuItems[self.searchType];
+        currentItem.title = [NSString stringWithFormat:@" %@  √😝", (self.searchType == SearchTypeRepository ? @"Repositories" : @"Developers")];
+        currentItem.foreColor = [UIColor flatYellowColor];
+        
+        UIView *rightButtonView = (UIView *)[self.navigationItem.rightBarButtonItem performSelector:@selector(view)];
+        CGRect fromFrame = rightButtonView.frame;
+        fromFrame.origin.y = fromFrame.origin.y + fromFrame.size.height;
+        //FIXME: 这里的 topLayoutGuide＝64 还是偏低，可能是 KxMenu 又另外计算
+        //fromFrame.origin.y = self.topLayoutGuide.length;
+        //NSLogRect(fromFrame);
+        [KxMenu showMenuInView:self.view fromRect:fromFrame menuItems:menuItems];
+        
+        self.isShowingMenu = YES;
+    }
 }
 
-- (void)segmentedControlTapped
+- (void)segmentedControlChanged
 {
+    NSLog(@"BEFORE, currentTargetType: %@, keyword: %@", @(self.currentTargetType), self.keyword);
+    
+    [_repositories removeAllObjects];
+    [_developers removeAllObjects];
+    [self.tableView reloadData];
+    
     self.currentTargetType = self.segmentedControl.selectedSegmentIndex;
-    self.keyword = @"";
+    self.keyword = nil;
+    self.searchBar.text = nil;
+    self.searchBar.placeholder = (self.searchType == SearchTypeRepository ? @"Repositories" : @"Developers");
+    
+    NSLog(@"AFTER, currentTargetType: %@, keyword: %@", @(self.currentTargetType), self.keyword);
 }
 
 #pragma mark - Property
@@ -269,13 +305,16 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 
 - (void)itemSelected:(KxMenuItem *)item
 {
-    NSLog(@"%@", item);
     self.searchType = ([item.title isEqualToString:@" Repositories"] ? SearchTypeRepository : SearchTypeDeveloper);
+    self.isShowingMenu = NO;
+    
+    NSLog(@"%@, %@", item, @(self.searchType));
 }
 
 - (void)languagesTapped:(id)sender
 {
     NSLog(@"%@", sender);
+    self.isShowingMenu = NO;
 }
 
 @end
