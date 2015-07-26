@@ -23,13 +23,13 @@
 #import <ChameleonFramework/Chameleon.h>
 #import "KxMenu.h"
 
-//搜索 Repos 或 Developer
+// 搜索 Repos 或 Developer
 typedef NS_ENUM(NSUInteger, SearchType) {
     SearchTypeRepository = 0,
     SearchTypeDeveloper = 1
 };
 
-//当前时排行榜还是搜索
+// 当前时排行榜还是搜索
 typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     CurrentTargetTypeTrending = 0,
     CurrentTargetTypeSearch = 1
@@ -40,8 +40,12 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 
-@property (nonatomic, strong) NSMutableArray *repositories;
-@property (nonatomic, strong) NSMutableArray *developers;
+@property (nonatomic, strong) NSArray *data;
+@property (nonatomic, strong) NSMutableArray *trendingReposCache; // Repo 排行榜 cache
+@property (nonatomic, strong) NSMutableArray *trendingDevelopersCache; // Repo 排行榜 cache
+@property (nonatomic, strong) NSMutableArray *searchReposCache; // Repos 搜索 cache
+@property (nonatomic, strong) NSMutableArray *searchDevelopersCache; // 开发者搜索 cache
+
 @property (nonatomic, copy) NSString *keyword;
 @property (nonatomic, strong) UIImage *placehodlerImage;
 
@@ -72,8 +76,11 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     [self initial];
     [self updateSeearchBarPlaceholder];
     
-    _repositories = [NSMutableArray array];
-    _developers = [NSMutableArray array];
+    _data                    = [NSArray array];
+    _trendingReposCache      = [NSMutableArray array];
+    _trendingDevelopersCache = [NSMutableArray array];
+    _searchReposCache        = [NSMutableArray array];
+    _searchDevelopersCache   = [NSMutableArray array];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -121,16 +128,10 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSInteger count = 0;
-    if (self.searchType == SearchTypeRepository) {
-        count = [self.repositories count];
-    }
-    else if (self.searchType == SearchTypeDeveloper) {
-        count = [self.developers count];
-    }
-    
+
+    NSInteger count = [_data count];
     //FIXME: 为啥这里调用了4次？
-    //NSLog(@"section: %@, count: %@", @(section), @(count));
+    NSLog(@"section: %@, count: %@", @(section), @(count));
     
     return count;
 }
@@ -140,7 +141,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     if (self.searchType == SearchTypeRepository) {
         ReposTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([ReposTableViewCell class])
                                                                    forIndexPath:indexPath];
-        GITRepository *repo = self.repositories[indexPath.row];
+        GITRepository *repo = _data[indexPath.row];
         [cell configWithRepository:repo];
         
         return cell;
@@ -153,7 +154,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 //        cell.textLabel.text = user.login;
 //        [cell.imageView sd_setImageWithURL:user.avatarURL placeholderImage:self.placehodlerImage];
         
-        GITUser *user = self.developers[indexPath.row];
+        GITUser *user = _data[indexPath.row];
         cell.accessoryType = UITableViewRowActionStyleNormal;
         cell.nameLabel.text = user.login;
         [cell.avatarImageView sd_setImageWithURL:user.avatarURL placeholderImage:self.placehodlerImage];
@@ -169,7 +170,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     
     if (self.searchType == SearchTypeRepository) {
         height = [tableView fd_heightForCellWithIdentifier:NSStringFromClass([ReposTableViewCell class]) configuration:^(id cell) {
-            GITRepository *repo = self.repositories[indexPath.row];
+            GITRepository *repo = _data[indexPath.row];
             [cell configWithRepository:repo];
         }];
     }
@@ -179,13 +180,16 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    
     if (self.searchType == SearchTypeRepository) {
-        [self performSegueWithIdentifier:@"SearchVC2RepositoryDetail" sender:self.repositories[indexPath.row]];
+        [self performSegueWithIdentifier:@"SearchVC2RepositoryDetail" sender:_data[indexPath.row]];
     }
     else if (self.searchType == SearchTypeDeveloper) {
-        [self performSegueWithIdentifier:@"Search2UserProfile" sender:self.developers[indexPath.row]];
+        [self performSegueWithIdentifier:@"Search2UserProfile" sender:_data[indexPath.row]];
     }
-
+    
+    [cell setSelected:NO];
 }
 
 #pragma mark - UISearchBarDelegate
@@ -202,7 +206,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     
     self.keyword = searchBar.text;
     [searchBar resignFirstResponder];
-    [self loadData];
+    [self reloadData];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
@@ -333,14 +337,12 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 {
     NSLog(@"BEFORE, currentTargetType: %@, keyword: %@", @(self.currentTargetType), self.keyword);
     
-    [_repositories removeAllObjects];
-    [_developers removeAllObjects];
-    [self.tableView reloadData];
-    
     self.currentTargetType = self.segmentedControl.selectedSegmentIndex;
     self.keyword = nil;
     self.searchBar.text = nil;
     self.searchBar.placeholder = (self.searchType == SearchTypeRepository ? @"Repositories" : @"Developers");
+    
+    [self reloadData];
     
     NSLog(@"AFTER, currentTargetType: %@, keyword: %@", @(self.currentTargetType), self.keyword);
 }
@@ -359,26 +361,6 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 
 #pragma mark - Private
 
-- (void)loadData
-{
-    if (self.searchType == SearchTypeRepository && [self.repositories count] == 0) {
-        [GITSearch searchRepositoriesWith:self.keyword language:nil sortBy:nil success:^(NSArray *array) {
-            [self.repositories addObjectsFromArray:array];
-            [self.tableView reloadData];
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"%@", error);
-        }];
-    }
-    else if (self.searchType == SearchTypeDeveloper) {
-        [GITSearch searchDevelopersWith:self.keyword sortBy:nil success:^(NSArray *array) {
-            [self.developers addObjectsFromArray:array];
-            [self.tableView reloadData];
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"%@", error);
-        }];
-    }
-}
-
 - (void)saveCurrentSelectedLanguage
 {
     if (self.selectedLanguage) {
@@ -391,6 +373,104 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 {
     NSString *language = [[NSUserDefaults standardUserDefaults] objectForKey:@"MrCode_CurrentSelectedLanguage"];
     self.selectedLanguage = language;
+}
+
+- (void)reloadData
+{
+    if (_searchType == SearchTypeRepository) {
+        [self loadRepos];
+    }
+    else if (_searchType == SearchTypeDeveloper) {
+        [self loadDevelopers];
+    }
+}
+
+
+- (void)loadRepos
+{
+    if (_currentTargetType == CurrentTargetTypeTrending) {
+        if ([_trendingReposCache count] == 0) {
+            [self fetchRepos];
+        }
+        else {
+            [self refreshWithData:_trendingReposCache];
+        }
+    }
+    else if (_currentTargetType == CurrentTargetTypeSearch) {
+        if ([_searchReposCache count] == 0) {
+            [self fetchRepos];
+        }
+        else {
+            [self refreshWithData:_searchReposCache];
+        }
+    }
+}
+
+- (void)loadDevelopers
+{
+    if (_currentTargetType == CurrentTargetTypeTrending) {
+        if ([_trendingDevelopersCache count] == 0) {
+            [self fetchDevelopers];
+        }
+        else {
+            [self refreshWithData:_trendingDevelopersCache];
+        }
+    }
+    else if (_currentTargetType == CurrentTargetTypeSearch) {
+        if ([_searchDevelopersCache count] == 0) {
+            [self fetchDevelopers];
+        }
+        else {
+            [self refreshWithData:_searchDevelopersCache];
+        }
+    }
+}
+
+- (void)fetchRepos
+{
+    if (_currentTargetType == CurrentTargetTypeTrending) {
+        [GITSearch searchRepositoriesWith:nil language:nil sortBy:nil success:^(NSArray *array) {
+            [_trendingReposCache addObjectsFromArray:array];
+            [self refreshWithData:_trendingReposCache];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+        }];
+    }
+    else if (_currentTargetType == CurrentTargetTypeSearch) {
+        [GITSearch searchRepositoriesWith:self.keyword language:nil sortBy:nil success:^(NSArray *array) {
+            [_searchReposCache addObjectsFromArray:array];
+            [self refreshWithData:_searchReposCache];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+        }];
+    }
+}
+
+- (void)fetchDevelopers
+{
+    if (_currentTargetType == CurrentTargetTypeTrending) {
+        [GITSearch searchDevelopersWith:nil sortBy:nil success:^(NSArray *array) {
+            [_trendingDevelopersCache addObjectsFromArray:array];
+            [self refreshWithData:_trendingDevelopersCache];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+        }];
+    }
+    else if (_currentTargetType == CurrentTargetTypeSearch) {
+        [GITSearch searchRepositoriesWith:self.keyword language:nil sortBy:nil success:^(NSArray *array) {
+            [_searchDevelopersCache addObjectsFromArray:array];
+            [self refreshWithData:_searchDevelopersCache];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+        }];
+    }
+}
+
+- (void)refreshWithData:(NSMutableArray *)array
+{
+    NSLog(@"");
+    _data = [array copy];
+    [self.tableView reloadData];
 }
 
 @end
