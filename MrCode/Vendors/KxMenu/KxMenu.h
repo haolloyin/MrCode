@@ -52,6 +52,8 @@
 
 @interface KxMenu : NSObject
 
+@property (nonatomic, assign) BOOL isShowing;
+
 + (void) showMenuInView:(UIView *)view
                fromRect:(CGRect)rect
               menuItems:(NSArray *)menuItems;
@@ -63,5 +65,7 @@
 
 + (UIFont *) titleFont;
 + (void) setTitleFont: (UIFont *) titleFont;
+
++ (BOOL)isShowing;
 
 @end

@@ -161,6 +161,7 @@ typedef enum {
     CGFloat                     _arrowPosition;
     UIView                      *_contentView;
     NSArray                     *_menuItems;
+    BOOL                        _isShowing;
 }
 
 - (id)init
@@ -185,6 +186,7 @@ typedef enum {
 - (void) setupFrameInView:(UIView *)view
                  fromRect:(CGRect)fromRect
 {
+    _isShowing = NO;
     const CGSize contentSize = _contentView.frame.size;
     
     const CGFloat outerWidth = view.bounds.size.width;
@@ -342,7 +344,7 @@ typedef enum {
                      } completion:^(BOOL completed) {
                          _contentView.hidden = NO;
                      }];
-    
+    _isShowing = YES;
 }
 
 - (void)dismissMenu:(BOOL) animated
@@ -374,6 +376,7 @@ typedef enum {
             [self removeFromSuperview];
         }
     }
+    _isShowing = NO;
 }
 
 - (void)performAction:(id)sender
@@ -763,6 +766,11 @@ typedef enum {
     CGGradientRelease(gradient);
 }
 
+- (BOOL)isShowing
+{
+    return _isShowing;
+}
+
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -814,7 +822,7 @@ static UIFont *gTitleFont;
     
     if (_menuView) {
         
-        [_menuView dismissMenu:NO];
+        [_menuView dismissMenu:YES];
         _menuView = nil;
     }
     
@@ -831,13 +839,15 @@ static UIFont *gTitleFont;
     
     _menuView = [[KxMenuView alloc] init];
     [_menuView showMenuInView:view fromRect:rect menuItems:menuItems];
+    
+    _isShowing = _menuView;
 }
 
 - (void) dismissMenu
 {
     if (_menuView) {
         
-        [_menuView dismissMenu:NO];
+        [_menuView dismissMenu:YES];
         _menuView = nil;
     }
     
@@ -846,6 +856,18 @@ static UIFont *gTitleFont;
         _observing = NO;
         [[NSNotificationCenter defaultCenter] removeObserver:self];
     }
+    
+    _isShowing = NO;
+}
+
+/**
+ *  弹出框是否已弹出
+ *
+ *  @return <#return value description#>
+ */
+- (BOOL)isMenuViewShowing
+{
+    return [_menuView isShowing];
 }
 
 - (void) orientationWillChange: (NSNotification *) n
@@ -887,6 +909,16 @@ static UIFont *gTitleFont;
     if (titleFont != gTitleFont) {
         gTitleFont = titleFont;
     }
+}
+
+/**
+ *  弹出框是否已弹出
+ *
+ *  @return <#return value description#>
+ */
++ (BOOL)isShowing
+{
+    return [[self sharedMenu] isMenuViewShowing];
 }
 
 @end

@@ -47,7 +47,6 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 
 @property (nonatomic, assign) SearchType searchType;
 @property (nonatomic, assign) CurrentTargetType currentTargetType;
-@property (nonatomic, assign) BOOL isShowingMenu;
 @property (nonatomic, copy) NSString *selectedLanguage; //当前选中的语言
 
 @end
@@ -98,7 +97,6 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 {
     self.searchType = SearchTypeRepository;
     self.currentTargetType = CurrentTargetTypeTrending;
-    self.isShowingMenu = NO;
     
     self.searchBar.delegate = self;
     
@@ -232,9 +230,8 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 
 - (void)showMenu:(UINavigationItem *)sender
 {
-    if (self.isShowingMenu) {
+    if ([KxMenu isShowing]) {
         [KxMenu dismissMenu];
-        self.isShowingMenu = NO;
     }
     else {
         NSArray *menuItems = [self setupMenu];
@@ -254,8 +251,6 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
         
         [KxMenu setTitleFont:[UIFont systemFontOfSize:12]];
         [KxMenu showMenuInView:self.view fromRect:fromFrame menuItems:menuItems];
-        
-        self.isShowingMenu = YES;
     }
 }
 
@@ -306,7 +301,6 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 - (void)itemSelected:(KxMenuItem *)item
 {
     self.searchType = ([item.title isEqualToString:@"Repositories"] ? SearchTypeRepository : SearchTypeDeveloper);
-    self.isShowingMenu = NO;
     
     [self updateSeearchBarPlaceholder];
     
@@ -316,7 +310,6 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 - (void)languagesSetting:(KxMenuItem *)item
 {
     NSLog(@"%@", item);
-    self.isShowingMenu = NO;
     
     [self performSegueWithIdentifier:@"Search2Languages" sender:nil];
 }
