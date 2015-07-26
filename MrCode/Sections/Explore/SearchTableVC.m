@@ -77,6 +77,18 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     _developers = [NSMutableArray array];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    NSLog(@"");
+    [self restoreCurrentSelectedLanguage];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    NSLog(@"");
+    [self saveCurrentSelectedLanguage];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -119,7 +131,8 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
         count = [self.developers count];
     }
     
-    NSLog(@"section: %@, count: %@", @(section), @(count));
+    //FIXME: 为啥这里调用了4次？
+    //NSLog(@"section: %@, count: %@", @(section), @(count));
     
     return count;
 }
@@ -310,7 +323,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 
 - (void)languageTapped:(KxMenuItem *)item
 {
-    NSLog(@"Tapped: %@, CurrentSelected: %@", item.title, self.selectedLanguage);
+    NSLog(@"CurrentSelected: %@, Tapped: %@", self.selectedLanguage, item.title);
     
     if (!self.selectedLanguage) {
         self.selectedLanguage = item.title;
@@ -371,6 +384,20 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
             NSLog(@"%@", error);
         }];
     }
+}
+
+- (void)saveCurrentSelectedLanguage
+{
+    if (self.selectedLanguage) {
+        [[NSUserDefaults standardUserDefaults] setObject:self.selectedLanguage forKey:@"MrCode_CurrentSelectedLanguage"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+}
+
+- (void)restoreCurrentSelectedLanguage
+{
+    NSString *language = [[NSUserDefaults standardUserDefaults] objectForKey:@"MrCode_CurrentSelectedLanguage"];
+    self.selectedLanguage = language;
 }
 
 @end
