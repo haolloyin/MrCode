@@ -23,11 +23,13 @@
 #import <ChameleonFramework/Chameleon.h>
 #import "KxMenu.h"
 
+//搜索 Repos 或 Developer
 typedef NS_ENUM(NSUInteger, SearchType) {
     SearchTypeRepository = 0,
     SearchTypeDeveloper = 1
 };
 
+//当前时排行榜还是搜索
 typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     CurrentTargetTypeTrending = 0,
     CurrentTargetTypeSearch = 1
@@ -40,12 +42,13 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 
 @property (nonatomic, strong) NSMutableArray *repositories;
 @property (nonatomic, strong) NSMutableArray *developers;
-@property (nonatomic, strong) NSString *keyword;
+@property (nonatomic, copy) NSString *keyword;
 @property (nonatomic, strong) UIImage *placehodlerImage;
 
 @property (nonatomic, assign) SearchType searchType;
 @property (nonatomic, assign) CurrentTargetType currentTargetType;
 @property (nonatomic, assign) BOOL isShowingMenu;
+@property (nonatomic, copy) NSString *selectedLanguage; //当前选中的语言
 
 @end
 
@@ -223,10 +226,12 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     else {
         NSArray *menuItems = [self setupMenu];
 
+        // 把当前用户选中的高亮一下
         KxMenuItem *currentItem = menuItems[self.searchType];
         currentItem.title = [NSString stringWithFormat:@"%@  √", (self.searchType == SearchTypeRepository ? @"Repositories" : @"Developers")];
         currentItem.foreColor = [UIColor flatYellowColor];
         
+        // 计算弹出框的位置
         UIView *rightButtonView = (UIView *)[self.navigationItem.rightBarButtonItem performSelector:@selector(view)];
         CGRect fromFrame        = rightButtonView.frame;
         fromFrame.origin.y      = fromFrame.origin.y + fromFrame.size.height;
@@ -234,7 +239,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
         //fromFrame.origin.y = self.topLayoutGuide.length;
         //NSLogRect(fromFrame);
         
-        [KxMenu setTitleFont:[UIFont systemFontOfSize:14]];
+        [KxMenu setTitleFont:[UIFont systemFontOfSize:12]];
         [KxMenu showMenuInView:self.view fromRect:fromFrame menuItems:menuItems];
         
         self.isShowingMenu = YES;
@@ -247,7 +252,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     
     KxMenuItem *reposItem   = [self menuItemWithTitle:@"Repositories" identifier:@"Repo" action:@selector(itemSelected:)];
     KxMenuItem *devItem     = [self menuItemWithTitle:@"Developers" identifier:@"Person" action:@selector(itemSelected:)];
-    KxMenuItem *settingItem = [self menuItemWithTitle:@"Languages Setting" identifier:@"ListUnordered" action:@selector(languagesTapped:)];
+    KxMenuItem *settingItem = [self menuItemWithTitle:@"Languages Setting" identifier:@"ListUnordered" action:@selector(languagesSetting:)];
     
     [menuItems addObject:reposItem];
     [menuItems addObject:devItem];
@@ -258,7 +263,14 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
         [menuItems addObject:settingItem];
 
         for (NSString *language in favouriteLanguages) {
-            KxMenuItem *item = [self menuItemWithTitle:language identifier:@"FileCode" action:@selector(languagesTapped:)];
+            KxMenuItem *item = [self menuItemWithTitle:language identifier:@"FileCode" action:@selector(languageTapped:)];
+            
+            // 高亮用户当前选中的语言
+            if (self.selectedLanguage && [language isEqualToString:self.selectedLanguage]) {
+                item.title = [NSString stringWithFormat:@"%@  √", item.title];
+                item.foreColor = [UIColor flatYellowColor];
+            }
+            
             [menuItems addObject:item];
         }
     }
@@ -276,6 +288,39 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     UIImage *image = [UIImage octicon_imageWithIdentifier:identifier iconColor:iconColor size:size];
     
     return [KxMenuItem menuItem:title image:image target:self action:action];
+}
+
+- (void)itemSelected:(KxMenuItem *)item
+{
+    self.searchType = ([item.title isEqualToString:@"Repositories"] ? SearchTypeRepository : SearchTypeDeveloper);
+    self.isShowingMenu = NO;
+    
+    [self updateSeearchBarPlaceholder];
+    
+    NSLog(@"%@, %@", item, @(self.searchType));
+}
+
+- (void)languagesSetting:(KxMenuItem *)item
+{
+    NSLog(@"%@", item);
+    self.isShowingMenu = NO;
+    
+    [self performSegueWithIdentifier:@"Search2Languages" sender:nil];
+}
+
+- (void)languageTapped:(KxMenuItem *)item
+{
+    NSLog(@"Tapped: %@, CurrentSelected: %@", item.title, self.selectedLanguage);
+    
+    if (!self.selectedLanguage) {
+        self.selectedLanguage = item.title;
+    }
+    else if ([item.title isEqualToString:self.selectedLanguage]) {
+        self.selectedLanguage = nil;
+    }
+    else {
+        self.selectedLanguage = item.title;
+    }
 }
 
 - (void)segmentedControlChanged
@@ -326,24 +371,6 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
             NSLog(@"%@", error);
         }];
     }
-}
-
-- (void)itemSelected:(KxMenuItem *)item
-{
-    self.searchType = ([item.title isEqualToString:@"Repositories"] ? SearchTypeRepository : SearchTypeDeveloper);
-    self.isShowingMenu = NO;
-    
-    [self updateSeearchBarPlaceholder];
-    
-    NSLog(@"%@, %@", item, @(self.searchType));
-}
-
-- (void)languagesTapped:(id)sender
-{
-    NSLog(@"%@", sender);
-    self.isShowingMenu = NO;
-    
-    [self performSegueWithIdentifier:@"Search2Languages" sender:nil];
 }
 
 @end
