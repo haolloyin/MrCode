@@ -12,13 +12,13 @@
 
 @implementation GITSearch
 
-+ (AFHTTPRequestOperation *)searchRepositoriesWith:(NSString *)keyword
-                                          language:(NSString *)language
-                                            sortBy:(NSString *)sortBy
-                                           success:(void (^)(NSArray *))success
-                                           failure:(GitHubClientFailureBlock)failure
++ (AFHTTPRequestOperation *)repositoriesWithKeyword:(NSString *)keyword
+                                           language:(NSString *)language
+                                             sortBy:(NSString *)sortBy
+                                            success:(void (^)(NSArray *))success
+                                            failure:(GitHubClientFailureBlock)failure
 {
-    NSMutableString *url = [NSMutableString stringWithFormat:@"/search/repositories?q=%@", keyword];
+    NSMutableString *url = [NSMutableString stringWithFormat:@"/search/repositories?q=%@", keyword ?: @""];
     if (language) {
         [url appendFormat:@"+language:%@", language];
     }
@@ -40,12 +40,12 @@
     }];
 }
 
-+ (AFHTTPRequestOperation *)searchDevelopersWith:(NSString *)keyword
-                                          sortBy:(NSString *)sortBy
-                                         success:(void (^)(NSArray *))success
-                                         failure:(GitHubClientFailureBlock)failure
++ (AFHTTPRequestOperation *)developersWithKeyword:(NSString *)keyword
+                                           sortBy:(NSString *)sortBy
+                                          success:(void (^)(NSArray *))success
+                                          failure:(GitHubClientFailureBlock)failure
 {
-    NSMutableString *url = [NSMutableString stringWithFormat:@"/search/users?q=%@", keyword];
+    NSMutableString *url = [NSMutableString stringWithFormat:@"/search/users?q=%@", keyword ?: @""];
     if (sortBy) {
         [url appendFormat:@"&sort=%@", sortBy];
     }

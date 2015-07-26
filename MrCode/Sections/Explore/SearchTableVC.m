@@ -81,6 +81,8 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     _trendingDevelopersCache = [NSMutableArray array];
     _searchReposCache        = [NSMutableArray array];
     _searchDevelopersCache   = [NSMutableArray array];
+    
+    [self reloadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -131,7 +133,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 
     NSInteger count = [_data count];
     //FIXME: 为啥这里调用了4次？
-    NSLog(@"section: %@, count: %@", @(section), @(count));
+//    NSLog(@"section: %@, count: %@", @(section), @(count));
     
     return count;
 }
@@ -428,16 +430,18 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 
 - (void)fetchRepos
 {
+    // 排行榜
     if (_currentTargetType == CurrentTargetTypeTrending) {
-        [GITSearch searchRepositoriesWith:nil language:nil sortBy:nil success:^(NSArray *array) {
+        [GITSearch repositoriesWithKeyword:nil language:@"objectivec" sortBy:@"stars&created:2015-07-26" success:^(NSArray *array) {
             [_trendingReposCache addObjectsFromArray:array];
             [self refreshWithData:_trendingReposCache];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
         }];
     }
+    // 搜索
     else if (_currentTargetType == CurrentTargetTypeSearch) {
-        [GITSearch searchRepositoriesWith:self.keyword language:nil sortBy:nil success:^(NSArray *array) {
+        [GITSearch repositoriesWithKeyword:self.keyword language:nil sortBy:nil success:^(NSArray *array) {
             [_searchReposCache addObjectsFromArray:array];
             [self refreshWithData:_searchReposCache];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -448,16 +452,18 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 
 - (void)fetchDevelopers
 {
+    // 排行榜
     if (_currentTargetType == CurrentTargetTypeTrending) {
-        [GITSearch searchDevelopersWith:nil sortBy:nil success:^(NSArray *array) {
+        [GITSearch developersWithKeyword:nil sortBy:nil success:^(NSArray *array) {
             [_trendingDevelopersCache addObjectsFromArray:array];
             [self refreshWithData:_trendingDevelopersCache];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
         }];
     }
+    // 搜索
     else if (_currentTargetType == CurrentTargetTypeSearch) {
-        [GITSearch searchRepositoriesWith:self.keyword language:nil sortBy:nil success:^(NSArray *array) {
+        [GITSearch developersWithKeyword:self.keyword sortBy:nil success:^(NSArray *array) {
             [_searchDevelopersCache addObjectsFromArray:array];
             [self refreshWithData:_searchDevelopersCache];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
