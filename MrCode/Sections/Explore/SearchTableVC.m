@@ -35,10 +35,11 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     CurrentTargetTypeSearch = 1
 };
 
-@interface SearchTableVC () <UISearchBarDelegate>
+@interface SearchTableVC () <UISearchBarDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
+@property (strong, nonatomic) UIPickerView *pickerView;
 
 @property (nonatomic, strong) NSArray *data;
 @property (nonatomic, strong) NSMutableArray *trendingReposCache; // Repo 排行榜 cache
@@ -192,6 +193,67 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     }
     
     [cell setSelected:NO];
+}
+
+//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+//{
+//    NSLog(@"");
+//    return self.pickerView;
+//}
+
+#pragma mark - UIPickerView delegate & data source
+
+
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 3;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    NSLog(@"component=%@", @(component));
+    NSInteger count = 2;
+    if (component == 0) {
+        count = 2;
+    }
+    else if (component == 1) {
+        count = 3;
+    }
+    else if (component == 3) {
+        return [[LanguagesTableVC favouriteLanguages] count];
+    }
+    return count;
+}
+
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    NSString *title = @"";
+    NSArray *targets = @[@"Repository", @"Developer"];
+    NSArray *datePeriod = @[@"Tody", @"This Week", @"This Month"];
+    
+    switch (component) {
+        case 0:
+            title = targets[row];
+            break;
+        case 1:
+            title = datePeriod[row];
+            break;
+        case 2:
+            title = [LanguagesTableVC favouriteLanguages][row];
+            break;
+    }
+    return title;
+}
+
+- (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component
+{
+    return 100;
+}
+
+- (CGFloat)pickerView:(UIPickerView *)pickerView rowHeightForComponent:(NSInteger)component
+{
+    return 30;
 }
 
 #pragma mark - UISearchBarDelegate
@@ -359,6 +421,16 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     });
     
     return _placehodlerImage;
+}
+
+- (UIPickerView *)pickerView
+{
+    if (!_pickerView) {
+        _pickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 30)];
+        _pickerView.delegate = self;
+        _pickerView.dataSource = self;
+    }
+    return _pickerView;
 }
 
 #pragma mark - Private
