@@ -430,6 +430,10 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 
 - (void)segmentedControlChanged
 {
+    if ([KxMenu isShowing]) {
+        [KxMenu dismissMenu];
+    }
+    
     NSLog(@"BEFORE, currentTargetType: %@, keyword: %@", @(self.currentTargetType), self.keyword);
     
     self.currentTargetType = self.segmentedControl.selectedSegmentIndex;
