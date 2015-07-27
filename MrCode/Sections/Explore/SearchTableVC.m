@@ -53,6 +53,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 @property (nonatomic, assign) SearchType searchType;
 @property (nonatomic, assign) CurrentTargetType currentTargetType;
 @property (nonatomic, copy) NSString *selectedLanguage; //当前选中的语言
+@property (nonatomic, copy) NSString *selectedDatePeriod; //当前选中日期范围，有 Today，This Week，This month
 
 @end
 
@@ -328,15 +329,36 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     
     KxMenuItem *reposItem   = [self menuItemWithTitle:@"Repositories" identifier:@"Repo" action:@selector(itemSelected:)];
     KxMenuItem *devItem     = [self menuItemWithTitle:@"Developers" identifier:@"Person" action:@selector(itemSelected:)];
-    KxMenuItem *settingItem = [self menuItemWithTitle:@"Languages Setting" identifier:@"ListUnordered" action:@selector(languagesSetting:)];
-    
     [menuItems addObject:reposItem];
     [menuItems addObject:devItem];
     
+    if (_currentTargetType == CurrentTargetTypeTrending) {
+        NSArray *datePeriods = @[@"Today", @"This week", @"This month"];
+        
+        BOOL hasDatePeriod = NO;
+        for (NSString *period in datePeriods) {
+            KxMenuItem *item = [self menuItemWithTitle:period identifier:@"Calendar" action:@selector(datePeriodTapped:)];
+            if ([period isEqualToString:_selectedDatePeriod]) {
+                item.title = [NSString stringWithFormat:@"%@  √", item.title];
+                item.foreColor = [UIColor flatYellowColor];
+                hasDatePeriod = YES;
+            }
+            [menuItems addObject:item];
+        }
+        
+        if (!hasDatePeriod) {
+            _selectedDatePeriod = @"Today";
+            KxMenuItem *todayItem = menuItems[2];
+            todayItem.title = [NSString stringWithFormat:@"%@  √", todayItem.title];
+            todayItem.foreColor = [UIColor flatYellowColor];
+        }
+    }
+    
+    [menuItems addObject:[self menuItemWithTitle:@"Languages Setting" identifier:@"ListUnordered" action:@selector(languagesSetting:)]];
+    
     NSArray *favouriteLanguages = [LanguagesTableVC favouriteLanguages];
     if (favouriteLanguages && [favouriteLanguages count] > 0) {
-        [menuItems addObject:[KxMenuItem menuItem:@"😝😝😝😝😝😝😝😝😝" image:nil target:nil action:nil]];
-        [menuItems addObject:settingItem];
+
 
         for (NSString *language in favouriteLanguages) {
             KxMenuItem *item = [self menuItemWithTitle:language identifier:@"FileCode" action:@selector(languageTapped:)];
@@ -349,9 +371,6 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
             
             [menuItems addObject:item];
         }
-    }
-    else {
-        [menuItems addObject:settingItem];
     }
     
     return [menuItems copy];
@@ -394,6 +413,18 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     }
     else {
         self.selectedLanguage = item.title;
+    }
+}
+
+- (void)datePeriodTapped:(KxMenuItem *)item
+{
+    NSLog(@"CurrentSelected: %@, Tapped: %@", self.selectedDatePeriod, item.title);
+    
+    if (!self.selectedDatePeriod) {
+        self.selectedDatePeriod = item.title;
+    }
+    else {
+        self.selectedDatePeriod = item.title;
     }
 }
 
