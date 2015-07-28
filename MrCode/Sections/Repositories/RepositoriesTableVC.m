@@ -159,36 +159,23 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
 {
     NSLog(@"_segmentedControl.selectedSegmentIndex=%@", @(_segmentedControl.selectedSegmentIndex));
     
-    if (_isAuthenticatedUser) {
-        if (_segmentedControl.selectedSegmentIndex == 0) {
-            if ([self.ownedReposCache count] > 0) {
-                self.repos = self.ownedReposCache;
-                [self.tableView reloadData];
-                return;
-            }
-            
-            [GITRepository myRepositoriesWithSuccess:^(NSArray *repos) {
-                self.ownedReposCache = repos;
-                self.repos = self.ownedReposCache;
-                [self.tableView reloadData];
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                
-            }];
-        } else if (_segmentedControl.selectedSegmentIndex == 1) {
-            if ([self.starredReposCache count] > 0) {
-                self.repos = self.starredReposCache;
-                [self.tableView reloadData];
-                return;
-            }
-            
-            [GITRepository starredRepositoriesByUser:_user success:^(NSArray * repos) {
-                self.starredReposCache = repos;
-                self.repos = self.starredReposCache;
-                [self.tableView reloadData];
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                
-            }];
+    if (_segmentedControl && _segmentedControl.selectedSegmentIndex == 0) {
+        if ([self.ownedReposCache count] > 0) {
+            self.repos = self.ownedReposCache;
+            [self.tableView reloadData];
+            return;
         }
+        
+        [self loadReposOfUser:_user];
+    }
+    else if (_segmentedControl && _segmentedControl.selectedSegmentIndex == 1) {
+        if ([self.starredReposCache count] > 0) {
+            self.repos = self.starredReposCache;
+            [self.tableView reloadData];
+            return;
+        }
+        
+        [self loadStarredReposOfUser:_user];
     }
     else {
         if (_reposType == RepositoriesTableVCReposTypePublic) {
