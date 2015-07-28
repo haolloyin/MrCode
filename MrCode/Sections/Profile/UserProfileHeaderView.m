@@ -143,6 +143,8 @@
 - (void)tapButton:(UIButton *)button
 {
     NSLog(@"%@", @(button.tag));
+    
+    [self.delegate tapUserProfileHeaderViewButton:button];
 }
 
 - (void)setUser:(GITUser *)user

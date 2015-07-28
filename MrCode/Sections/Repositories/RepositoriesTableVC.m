@@ -10,6 +10,7 @@
 #import "GITRepository.h"
 #import "ReposTableViewCell.h"
 #import "RepositoryDetailTableVC.h"
+#import "GITUser.h"
 
 #import "UIImage+Octions.h"
 #import "UITableView+FDTemplateLayoutCell.h"
@@ -19,12 +20,14 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
 
 @interface RepositoriesTableVC ()
 
-@property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 
 @property (nonatomic, copy) NSString *cachedUser;
 @property (nonatomic, strong) NSArray *repos;
 @property (nonatomic, strong) NSArray *ownedReposCache;
 @property (nonatomic, strong) NSArray *starredReposCache;
+
+@property (nonatomic, assign) BOOL isAuthenticatedUser;
 
 @end
 
@@ -43,11 +46,21 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 80.0;
     
+    NSLog(@"_user=%@, [GITUser username]=%@", _user, [GITUser username]);
+    
     _repos             = [NSArray array];
     _ownedReposCache   = [NSArray array];
     _starredReposCache = [NSArray array];
-    _segmentedControl.selectedSegmentIndex = 0;
-    [_segmentedControl addTarget:self action:@selector(loadData) forControlEvents:UIControlEventValueChanged];
+    
+    if ([_user isEqualToString:[GITUser username]]) {
+        _isAuthenticatedUser = YES;
+        self.navigationItem.titleView = self.segmentedControl;
+    }
+    else {
+//        self.navigationItem.title = [NSString stringWithFormat:@"%@'s starred repos", _user];
+        self.navigationItem.title = @"Repos";
+        _isAuthenticatedUser = NO;
+    }
     
     [self loadData];
 }
@@ -108,6 +121,20 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     }
 }
 
+#pragma mark - Property
+
+- (UISegmentedControl *)segmentedControl
+{
+    NSLog(@"");
+    if (!_segmentedControl) {
+        _segmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"Starred", @"Owned"]];
+        _segmentedControl.selectedSegmentIndex = 0;
+        [_segmentedControl addTarget:self action:@selector(loadData) forControlEvents:UIControlEventValueChanged];
+    }
+    
+    return _segmentedControl;
+}
+
 #pragma mark - Private
 
 - (void)configCell:(UITableViewCell *)cell withRepo:(GITRepository *)repo
@@ -130,13 +157,52 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
 
 - (void)loadData
 {
-    if (_segmentedControl.selectedSegmentIndex == 0) {
-        if ([self.ownedReposCache count] > 0) {
-            self.repos = self.ownedReposCache;
-            [self.tableView reloadData];
-            return;
+    NSLog(@"_segmentedControl.selectedSegmentIndex=%@", @(_segmentedControl.selectedSegmentIndex));
+    
+    if (_isAuthenticatedUser) {
+        if (_segmentedControl.selectedSegmentIndex == 0) {
+            if ([self.ownedReposCache count] > 0) {
+                self.repos = self.ownedReposCache;
+                [self.tableView reloadData];
+                return;
+            }
+            
+            [GITRepository myRepositoriesWithSuccess:^(NSArray *repos) {
+                self.ownedReposCache = repos;
+                self.repos = self.ownedReposCache;
+                [self.tableView reloadData];
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                
+            }];
+        } else if (_segmentedControl.selectedSegmentIndex == 1) {
+            if ([self.starredReposCache count] > 0) {
+                self.repos = self.starredReposCache;
+                [self.tableView reloadData];
+                return;
+            }
+            
+            [GITRepository starredRepositoriesByUser:_user success:^(NSArray * repos) {
+                self.starredReposCache = repos;
+                self.repos = self.starredReposCache;
+                [self.tableView reloadData];
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                
+            }];
         }
-        
+    }
+    else {
+        if (_reposType == RepositoriesTableVCReposTypePublic) {
+            [self loadReposOfUser:_user];
+        }
+        else if (_reposType == RepositoriesTableVCReposTypeStarred) {
+            [self loadStarredReposOfUser:_user];
+        }
+    }
+}
+
+- (void)loadReposOfUser:(NSString *)user
+{
+    if (_isAuthenticatedUser) {
         [GITRepository myRepositoriesWithSuccess:^(NSArray *repos) {
             self.ownedReposCache = repos;
             self.repos = self.ownedReposCache;
@@ -144,21 +210,27 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             
         }];
-    } else if (_segmentedControl.selectedSegmentIndex == 1) {
-        if ([self.starredReposCache count] > 0) {
-            self.repos = self.starredReposCache;
-            [self.tableView reloadData];
-            return;
-        }
-        
-        [GITRepository starredRepositoriesByUser:@"haolloyin" success:^(NSArray * repos) {
-            self.starredReposCache = repos;
-            self.repos = self.starredReposCache;
+    }
+    else {
+        [GITRepository repositoriesOfUser:user success:^(NSArray *repos) {
+            self.ownedReposCache = repos;
+            self.repos = self.ownedReposCache;
             [self.tableView reloadData];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             
         }];
     }
+}
+
+- (void)loadStarredReposOfUser:(NSString *)user
+{
+    [GITRepository starredRepositoriesByUser:user success:^(NSArray * repos) {
+        self.starredReposCache = repos;
+        self.repos = self.starredReposCache;
+        [self.tableView reloadData];
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
 }
 
 @end

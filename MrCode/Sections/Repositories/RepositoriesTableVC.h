@@ -8,8 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSUInteger, RepositoriesTableVCReposType) {
+    RepositoriesTableVCReposTypePublic = 0,
+    RepositoriesTableVCReposTypeStarred = 1,
+    RepositoriesTableVCReposTypeForked = 2
+};
+
 @interface RepositoriesTableVC : UITableViewController
 
 @property (nonatomic, copy) NSString *user;
+@property (nonatomic, assign) RepositoriesTableVCReposType reposType;
 
 @end

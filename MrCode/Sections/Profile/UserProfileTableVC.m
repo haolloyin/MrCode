@@ -9,11 +9,12 @@
 #import "UserProfileTableVC.h"
 #import "UserProfileHeaderView.h"
 #import "GITUser.h"
+#import "RepositoriesTableVC.h"
 
 #import "UIImage+MRC_Octicons.h"
 #import <ChameleonFramework/Chameleon.h>
 
-@interface UserProfileTableVC ()
+@interface UserProfileTableVC () <UserProfileHeaderViewDelegate>
 
 @property (nonatomic, strong) UserProfileHeaderView *headerView;
 
@@ -32,6 +33,7 @@
     
     if (!self.tableView.tableHeaderView) {
         self.headerView = [[UserProfileHeaderView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 130.f)];
+        self.headerView.delegate = self;
         self.tableView.tableHeaderView = self.headerView;
     }
     
@@ -115,15 +117,32 @@
     return cell;
 }
 
-/*
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    NSString *identifier = segue.identifier;
+    if ([identifier isEqualToString:@"UserProfile2ReposTableVC"]) {
+        RepositoriesTableVC *controller = (RepositoriesTableVC *)segue.destinationViewController;
+        controller.user = (NSString *)sender;
+        controller.reposType = RepositoriesTableVCReposTypePublic;
+    }
 }
-*/
+
+#pragma mark - UserProfileHeaderViewDelegate
+
+- (void)tapUserProfileHeaderViewButton:(UIButton *)button
+{
+    NSLog(@"button.tag=%@", @(button.tag));
+    switch (button.tag) {
+        case 101:
+            break;
+        case 102:
+            [self performSegueWithIdentifier:@"UserProfile2ReposTableVC" sender:self.user.login];
+            break;
+        case 103:
+            break;
+    }
+}
 
 #pragma mark - Private
 

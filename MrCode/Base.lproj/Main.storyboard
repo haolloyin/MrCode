@@ -15,10 +15,10 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
                     <connections>
+                        <segue destination="fzm-pv-y3d" kind="relationship" relationship="viewControllers" id="P7n-1L-Vo7"/>
                         <segue destination="z9Q-ov-zKb" kind="relationship" relationship="viewControllers" id="f6G-Mn-iOS"/>
                         <segue destination="Cq6-y5-SbT" kind="relationship" relationship="viewControllers" id="pMR-rl-pBt"/>
                         <segue destination="JhY-XZ-Ycj" kind="relationship" relationship="viewControllers" id="GQ3-f2-x8W"/>
-                        <segue destination="fzm-pv-y3d" kind="relationship" relationship="viewControllers" id="P7n-1L-Vo7"/>
                         <segue destination="V56-aY-A6c" kind="relationship" relationship="viewControllers" id="fBv-jS-GYu"/>
                     </connections>
                 </tabBarController>
@@ -107,17 +107,8 @@
                     </tableView>
                     <navigationItem key="navigationItem" id="6J3-62-Dsz">
                         <nil key="title"/>
-                        <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="bCo-xW-pWa">
-                            <rect key="frame" x="85" y="7" width="151" height="31"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <segments>
-                                <segment title="Owned"/>
-                                <segment title="Starred"/>
-                            </segments>
-                        </segmentedControl>
                     </navigationItem>
                     <connections>
-                        <outlet property="segmentedControl" destination="bCo-xW-pWa" id="Ef2-6w-PXl"/>
                         <segue destination="Zsf-ip-eNN" kind="push" identifier="RepositoriesTableVC2RepoDetail" id="KTK-uX-86O"/>
                     </connections>
                 </tableViewController>
@@ -221,6 +212,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="User Profile" id="A22-cO-EBZ"/>
+                    <connections>
+                        <segue destination="pbu-Ix-DVe" kind="push" identifier="UserProfile2ReposTableVC" id="7dy-Qc-ohM"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RVO-t7-RhY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -444,7 +438,8 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="rRJ-Zw-Ha6"/>
         <segue reference="Gc8-A6-8Vw"/>
+        <segue reference="7dy-Qc-ohM"/>
+        <segue reference="KTK-uX-86O"/>
     </inferredMetricsTieBreakers>
 </document>

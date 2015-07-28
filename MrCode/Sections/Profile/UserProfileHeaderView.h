@@ -10,8 +10,15 @@
 
 @class GITUser;
 
+@protocol UserProfileHeaderViewDelegate <NSObject>
+
+- (void)tapUserProfileHeaderViewButton:(UIButton *)button;
+
+@end
+
 @interface UserProfileHeaderView : UIView
 
 @property (nonatomic, strong) GITUser *user;
+@property (nonatomic, weak) id<UserProfileHeaderViewDelegate> delegate;
 
 @end
