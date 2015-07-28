@@ -151,7 +151,7 @@
 {
     _user = user;
     self.titleLabel.text = user.login;
-    self.nameLabel.text = [NSString stringWithFormat:@"%@", user.name];
+    self.nameLabel.text = user.name ? : @"";
     self.bioLabel.text   = user.bio ? : [NSString stringWithFormat:@"Updated %@", user.updatedAt.timeAgoSinceNow];
     
     [self.avatarImageView sd_setImageWithURL:user.avatarURL];
