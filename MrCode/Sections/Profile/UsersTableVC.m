@@ -10,6 +10,7 @@
 #import "SearchDeveloperCell.h"
 #import "GITUser.h"
 #import "GITRepository.h"
+#import "UserProfileTableVC.h"
 
 #import "UIImageView+WebCache.h"
 #import "UIImage+MRC_Octicons.h"
@@ -73,18 +74,19 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
+    GITUser *user = _users[indexPath.row];
+    [self performSegueWithIdentifier:@"UsersTableVC2UserProfile" sender:user];
 }
 
-/*
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"UsersTableVC2UserProfile"]) {
+        UserProfileTableVC *controller = (UserProfileTableVC *)segue.destinationViewController;
+        controller.user = (GITUser *)sender;
+    }
 }
-*/
 
 #pragma mark - Property
 

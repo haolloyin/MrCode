@@ -205,10 +205,13 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="10J-UU-Ejj"/>
+                    <connections>
+                        <segue destination="t2G-KY-Cq4" kind="push" identifier="UsersTableVC2UserProfile" id="x8q-h4-3md"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gw9-XQ-12p" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2089" y="-329"/>
+            <point key="canvasLocation" x="2048" y="-332"/>
         </scene>
         <!--User Profile-->
         <scene sceneID="DEF-TA-8ce">
@@ -475,7 +478,7 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="rRJ-Zw-Ha6"/>
-        <segue reference="Gc8-A6-8Vw"/>
         <segue reference="7dy-Qc-ohM"/>
+        <segue reference="x8q-h4-3md"/>
     </inferredMetricsTieBreakers>
 </document>
