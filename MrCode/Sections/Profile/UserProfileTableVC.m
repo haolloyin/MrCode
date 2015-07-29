@@ -117,14 +117,30 @@
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == 1 && indexPath.row == 2) {
+        [self performSegueWithIdentifier:@"UserProfile2ReposTableVC" sender:@"starred"];
+    }
+}
+
 #pragma mark - Navigation
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
     NSString *identifier = segue.identifier;
     if ([identifier isEqualToString:@"UserProfile2ReposTableVC"]) {
         RepositoriesTableVC *controller = (RepositoriesTableVC *)segue.destinationViewController;
-        controller.user = (NSString *)sender;
-        controller.reposType = RepositoriesTableVCReposTypePublic;
+        controller.user = _user.login;
+        
+        NSString *reposType = (NSString *)sender;
+        if ([sender isEqualToString:@"public"]) {
+            controller.reposType = RepositoriesTableVCReposTypePublic;
+        }
+        else if ([reposType isEqualToString:@"starred"]) {
+            controller.reposType = RepositoriesTableVCReposTypeStarred;
+        }
+
     }
 }
 
@@ -137,7 +153,7 @@
         case 101:
             break;
         case 102:
-            [self performSegueWithIdentifier:@"UserProfile2ReposTableVC" sender:self.user.login];
+            [self performSegueWithIdentifier:@"UserProfile2ReposTableVC" sender:@"public"];
             break;
         case 103:
             break;

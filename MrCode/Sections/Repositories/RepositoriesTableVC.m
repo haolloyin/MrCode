@@ -57,9 +57,14 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
         self.navigationItem.titleView = self.segmentedControl;
     }
     else {
-//        self.navigationItem.title = [NSString stringWithFormat:@"%@'s starred repos", _user];
-        self.navigationItem.title = @"Repos";
         _isAuthenticatedUser = NO;
+        
+        if (_reposType == RepositoriesTableVCReposTypePublic) {
+            self.navigationItem.title = @"Public Repos";
+        }
+        else if (_reposType == RepositoriesTableVCReposTypeStarred) {
+            self.navigationItem.title = @"Starred Repos";
+        }
     }
     
     [self loadData];
