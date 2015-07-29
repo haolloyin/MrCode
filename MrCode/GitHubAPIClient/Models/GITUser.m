@@ -81,4 +81,36 @@
     } failure:failure];
 }
 
++ (AFHTTPRequestOperation *)followersOfUser:(NSString *)user
+                                    success:(void (^)(NSArray *))success
+                                    failure:(GitHubClientFailureBlock)failure
+{
+    GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
+    NSString *url = [NSString stringWithFormat:@"/users/%@/followers", user];
+    return [client getWithURL:url parameters:nil success:^(AFHTTPRequestOperation *operation, id obj) {
+        NSMutableArray *mutableArray = [NSMutableArray array];
+        for (NSDictionary *dict in obj) {
+            GITUser *item = [GITUser objectWithKeyValues:dict];
+            [mutableArray addObject:item];
+        }
+        success([mutableArray copy]);
+    } failure:failure];
+}
+
++ (AFHTTPRequestOperation *)followingOfUser:(NSString *)user
+                                    success:(void (^)(NSArray *))success
+                                    failure:(GitHubClientFailureBlock)failure
+{
+    GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
+    NSString *url = [NSString stringWithFormat:@"/users/%@/following", user];
+    return [client getWithURL:url parameters:nil success:^(AFHTTPRequestOperation *operation, id obj) {
+        NSMutableArray *mutableArray = [NSMutableArray array];
+        for (NSDictionary *dict in obj) {
+            GITUser *item = [GITUser objectWithKeyValues:dict];
+            [mutableArray addObject:item];
+        }
+        success([mutableArray copy]);
+    } failure:failure];
+}
+
 @end
