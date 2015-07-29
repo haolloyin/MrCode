@@ -32,7 +32,7 @@
     _avatarImageView = [UIImageView new];
     [self.contentView addSubview:_avatarImageView];
     [_avatarImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.size.mas_equalTo(CGSizeMake(20, 20));
+        make.size.mas_equalTo(CGSizeMake(30, 30));
         make.centerY.equalTo(self.contentView);
         make.left.equalTo(@10);
     }];

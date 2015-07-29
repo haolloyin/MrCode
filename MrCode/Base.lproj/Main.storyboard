@@ -175,6 +175,41 @@
             </objects>
             <point key="canvasLocation" x="1491" y="322"/>
         </scene>
+        <!--Users TableVC-->
+        <scene sceneID="Ohv-Vg-neC">
+            <objects>
+                <tableViewController id="wTD-eO-FW2" customClass="UsersTableVC" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="zfq-5l-y6x">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="BasicUserCell" textLabel="kn2-9v-mwF" style="IBUITableViewCellStyleDefault" id="UKY-ee-phO">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="UKY-ee-phO" id="biX-cB-6M8">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="kn2-9v-mwF">
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="wTD-eO-FW2" id="e1V-ak-2fY"/>
+                            <outlet property="delegate" destination="wTD-eO-FW2" id="zqV-kl-v5q"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="10J-UU-Ejj"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Gw9-XQ-12p" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2089" y="-329"/>
+        </scene>
         <!--User Profile-->
         <scene sceneID="DEF-TA-8ce">
             <objects>
@@ -214,6 +249,7 @@
                     <navigationItem key="navigationItem" title="User Profile" id="A22-cO-EBZ"/>
                     <connections>
                         <segue destination="pbu-Ix-DVe" kind="push" identifier="UserProfile2ReposTableVC" id="7dy-Qc-ohM"/>
+                        <segue destination="wTD-eO-FW2" kind="push" identifier="UserProfile2UsersTableVC" id="eBJ-1q-r8W"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RVO-t7-RhY" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -438,8 +474,8 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="rRJ-Zw-Ha6"/>
+        <segue reference="Gc8-A6-8Vw"/>
         <segue reference="7dy-Qc-ohM"/>
-        <segue reference="tBB-ju-T8Q"/>
-        <segue reference="KTK-uX-86O"/>
     </inferredMetricsTieBreakers>
 </document>

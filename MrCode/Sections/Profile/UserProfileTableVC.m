@@ -10,6 +10,7 @@
 #import "UserProfileHeaderView.h"
 #import "GITUser.h"
 #import "RepositoriesTableVC.h"
+#import "UsersTableVC.h"
 
 #import "UIImage+MRC_Octicons.h"
 #import <ChameleonFramework/Chameleon.h>
@@ -140,7 +141,18 @@
         else if ([reposType isEqualToString:@"starred"]) {
             controller.reposType = RepositoriesTableVCReposTypeStarred;
         }
-
+    }
+    else if ([identifier isEqualToString:@"UserProfile2UsersTableVC"]) {
+        UsersTableVC *controller = (UsersTableVC *)segue.destinationViewController;
+        controller.user = _user.login;
+        
+        NSString *userType = (NSString *)sender;
+        if ([sender isEqualToString:@"followers"]) {
+            controller.userType = UsersTableVCUserTypeFollower;
+        }
+        else if ([userType isEqualToString:@"following"]) {
+            controller.userType = UsersTableVCUserTypeFollowing;
+        }
     }
 }
 
@@ -151,11 +163,13 @@
     NSLog(@"button.tag=%@", @(button.tag));
     switch (button.tag) {
         case 101:
+            [self performSegueWithIdentifier:@"UserProfile2UsersTableVC" sender:@"followers"];
             break;
         case 102:
             [self performSegueWithIdentifier:@"UserProfile2ReposTableVC" sender:@"public"];
             break;
         case 103:
+            [self performSegueWithIdentifier:@"UserProfile2UsersTableVC" sender:@"following"];
             break;
     }
 }

@@ -7,8 +7,17 @@
 //
 
 #import "UsersTableVC.h"
+#import "SearchDeveloperCell.h"
+#import "GITUser.h"
+#import "GITRepository.h"
+
+#import "UIImageView+WebCache.h"
+#import "UIImage+MRC_Octicons.h"
 
 @interface UsersTableVC ()
+
+@property (nonatomic, strong) UIImage *placehodlerImage;
+@property (nonatomic, strong) NSArray *users;
 
 @end
 
@@ -22,6 +31,17 @@
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
+    self.navigationItem.title = _userType == UsersTableVCUserTypeFollowing ? @"Following" : @"Followers";
+    
+    [self.tableView registerClass:[SearchDeveloperCell class] forCellReuseIdentifier:NSStringFromClass([SearchDeveloperCell class])];
+    
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.estimatedRowHeight = 80.0;
+    
+    _users = [NSArray array];
+    
+    [self reloadData];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -32,60 +52,29 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-#warning Potentially incomplete method implementation.
-    // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 0;
+    return [_users count];
 }
 
-/*
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    SearchDeveloperCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([SearchDeveloperCell class])
+                                                                forIndexPath:indexPath];
     
-    // Configure the cell...
-    
+    GITUser *user = _users[indexPath.row];
+    cell.accessoryType = UITableViewRowActionStyleNormal;
+    cell.nameLabel.text = user.login;
+    [cell.avatarImageView sd_setImageWithURL:user.avatarURL placeholderImage:self.placehodlerImage];
     return cell;
 }
-*/
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
 }
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 /*
 #pragma mark - Navigation
@@ -96,5 +85,40 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+#pragma mark - Property
+
+- (UIImage *)placehodlerImage
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _placehodlerImage = [UIImage octicon_imageWithIdentifier:@"Octoface" size:CGSizeMake(20, 20)];
+    });
+    
+    return _placehodlerImage;
+}
+
+#pragma mark - Private
+
+- (void)reloadData
+{
+    NSLog(@"");
+    if (_userType == UsersTableVCUserTypeFollower) {
+        [GITUser followersOfUser:_user success:^(NSArray *users) {
+            _users = users;
+            [self.tableView reloadData];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+        }];
+    }
+    else if (_userType == UsersTableVCUserTypeFollowing) {
+        [GITUser followingOfUser:_user success:^(NSArray *users) {
+            _users = users;
+            [self.tableView reloadData];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+        }];
+    }
+}
 
 @end

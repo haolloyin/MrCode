@@ -38,6 +38,7 @@
 		3FCF7CF91B63865B002CE5D5 /* SearchRepositoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCF7CF51B63865B002CE5D5 /* SearchRepositoryCell.m */; };
 		3FCF7CFA1B63865B002CE5D5 /* SearchTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCF7CF71B63865B002CE5D5 /* SearchTableVC.m */; };
 		3FCF7D001B63B43B002CE5D5 /* LanguagesTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCF7CFF1B63B43B002CE5D5 /* LanguagesTableVC.m */; };
+		3FDB8D251B692B38004694B4 /* UsersTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FDB8D241B692B38004694B4 /* UsersTableVC.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -112,6 +113,8 @@
 		3FCF7CF71B63865B002CE5D5 /* SearchTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchTableVC.m; sourceTree = "<group>"; };
 		3FCF7CFE1B63B43B002CE5D5 /* LanguagesTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LanguagesTableVC.h; sourceTree = "<group>"; };
 		3FCF7CFF1B63B43B002CE5D5 /* LanguagesTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LanguagesTableVC.m; sourceTree = "<group>"; };
+		3FDB8D231B692B38004694B4 /* UsersTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UsersTableVC.h; sourceTree = "<group>"; };
+		3FDB8D241B692B38004694B4 /* UsersTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UsersTableVC.m; sourceTree = "<group>"; };
 		AB24770223FEE1F449EAD4FD /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		C003DD33F5E02E04E4EEC24D /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		E8E792D13A526B5E88944E2D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -288,6 +291,8 @@
 				3F4149051B5B5EE30025B708 /* UserProfileTableVC.m */,
 				3F4149071B5B8E2B0025B708 /* UserProfileHeaderView.h */,
 				3F4149081B5B8E2B0025B708 /* UserProfileHeaderView.m */,
+				3FDB8D231B692B38004694B4 /* UsersTableVC.h */,
+				3FDB8D241B692B38004694B4 /* UsersTableVC.m */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -496,6 +501,7 @@
 				3F25478E1B47F6FF0012CDD6 /* RepositoriesTableVC.m in Sources */,
 				3F2547771B45A1DE0012CDD6 /* GitHubOAuthClient.m in Sources */,
 				3FBFD28C1B4AD68800BDC00F /* UIImage+MRC_Octicons.m in Sources */,
+				3FDB8D251B692B38004694B4 /* UsersTableVC.m in Sources */,
 				3FBFD2921B4C1C3500BDC00F /* RepositoryHeaderView.m in Sources */,
 				3F2547441B45A0060012CDD6 /* main.m in Sources */,
 				3F29DF371B52485B002257DF /* GITSearch.m in Sources */,

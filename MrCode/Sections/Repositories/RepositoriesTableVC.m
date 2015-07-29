@@ -58,7 +58,6 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     }
     else {
         _isAuthenticatedUser = NO;
-        
         if (_reposType == RepositoriesTableVCReposTypePublic) {
             self.navigationItem.title = @"Public Repos";
         }

@@ -8,6 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSUInteger, UsersTableVCUserType) {
+    UsersTableVCUserTypeFollowing = 0,
+    UsersTableVCUserTypeFollower = 1
+};
+
 @interface UsersTableVC : UITableViewController
+
+@property (nonatomic, copy) NSString *user;
+@property (nonatomic, assign) UsersTableVCUserType userType;
 
 @end
