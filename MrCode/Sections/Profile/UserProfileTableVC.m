@@ -11,6 +11,7 @@
 #import "GITUser.h"
 #import "RepositoriesTableVC.h"
 #import "UsersTableVC.h"
+#import "WebViewController.h"
 
 #import "UIImage+MRC_Octicons.h"
 #import <ChameleonFramework/Chameleon.h>
@@ -120,8 +121,13 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    
     if (indexPath.section == 1 && indexPath.row == 2) {
         [self performSegueWithIdentifier:@"UserProfile2ReposTableVC" sender:@"starred"];
+    }
+    else if (indexPath.section == 1 && indexPath.row == 0) {
+        [self performSegueWithIdentifier:@"UserProfile2WebView" sender:cell.textLabel.text];
     }
 }
 
@@ -153,6 +159,10 @@
         else if ([userType isEqualToString:@"following"]) {
             controller.userType = UsersTableVCUserTypeFollowing;
         }
+    }
+    else if ([identifier isEqualToString:@"UserProfile2WebView"]) {
+        WebViewController *controller = (WebViewController *)segue.destinationViewController;
+        controller.url = [NSURL URLWithString:sender];
     }
 }
 
