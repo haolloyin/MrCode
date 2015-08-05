@@ -34,7 +34,6 @@
 		3FBFD28F1B4C1C0900BDC00F /* RepositoryDetailTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD28E1B4C1C0900BDC00F /* RepositoryDetailTableVC.m */; };
 		3FBFD2921B4C1C3500BDC00F /* RepositoryHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD2911B4C1C3500BDC00F /* RepositoryHeaderView.m */; };
 		3FCF7CEF1B635337002CE5D5 /* KxMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCF7CEE1B635337002CE5D5 /* KxMenu.m */; };
-		3FCF7CF91B63865B002CE5D5 /* SearchRepositoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCF7CF51B63865B002CE5D5 /* SearchRepositoryCell.m */; };
 		3FCF7CFA1B63865B002CE5D5 /* SearchTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCF7CF71B63865B002CE5D5 /* SearchTableVC.m */; };
 		3FCF7D001B63B43B002CE5D5 /* LanguagesTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCF7CFF1B63B43B002CE5D5 /* LanguagesTableVC.m */; };
 		3FDB8D251B692B38004694B4 /* UsersTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FDB8D241B692B38004694B4 /* UsersTableVC.m */; };
@@ -105,8 +104,6 @@
 		3FBFD2911B4C1C3500BDC00F /* RepositoryHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepositoryHeaderView.m; sourceTree = "<group>"; };
 		3FCF7CED1B635337002CE5D5 /* KxMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KxMenu.h; sourceTree = "<group>"; };
 		3FCF7CEE1B635337002CE5D5 /* KxMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KxMenu.m; sourceTree = "<group>"; };
-		3FCF7CF41B63865B002CE5D5 /* SearchRepositoryCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchRepositoryCell.h; sourceTree = "<group>"; };
-		3FCF7CF51B63865B002CE5D5 /* SearchRepositoryCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchRepositoryCell.m; sourceTree = "<group>"; };
 		3FCF7CF61B63865B002CE5D5 /* SearchTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchTableVC.h; sourceTree = "<group>"; };
 		3FCF7CF71B63865B002CE5D5 /* SearchTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchTableVC.m; sourceTree = "<group>"; };
 		3FCF7CFE1B63B43B002CE5D5 /* LanguagesTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LanguagesTableVC.h; sourceTree = "<group>"; };
@@ -330,8 +327,6 @@
 		3FCF7CF01B63865B002CE5D5 /* Explore */ = {
 			isa = PBXGroup;
 			children = (
-				3FCF7CF41B63865B002CE5D5 /* SearchRepositoryCell.h */,
-				3FCF7CF51B63865B002CE5D5 /* SearchRepositoryCell.m */,
 				3FCF7CF61B63865B002CE5D5 /* SearchTableVC.h */,
 				3FCF7CF71B63865B002CE5D5 /* SearchTableVC.m */,
 			);
@@ -507,7 +502,6 @@
 				3F29DF371B52485B002257DF /* GITSearch.m in Sources */,
 				3F2547871B47F41D0012CDD6 /* NotificationsTableVC.m in Sources */,
 				3F25477B1B45A1DE0012CDD6 /* GITUser.m in Sources */,
-				3FCF7CF91B63865B002CE5D5 /* SearchRepositoryCell.m in Sources */,
 				3FCF7D001B63B43B002CE5D5 /* LanguagesTableVC.m in Sources */,
 				3F29DF1B1B4D8A6D002257DF /* GITBaseModel.m in Sources */,
 				3F2547961B4900960012CDD6 /* TestViewController.m in Sources */,

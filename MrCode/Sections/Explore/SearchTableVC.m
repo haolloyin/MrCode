@@ -7,7 +7,6 @@
 //
 
 #import "SearchTableVC.h"
-#import "SearchRepositoryCell.h"
 #import "UserTableViewCell.h"
 #import "ReposTableViewCell.h"
 #import "GITSearch.h"
@@ -68,7 +67,6 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-    [self.tableView registerClass:[SearchRepositoryCell class] forCellReuseIdentifier:NSStringFromClass([SearchRepositoryCell class])];
     [self.tableView registerClass:[UserTableViewCell class] forCellReuseIdentifier:NSStringFromClass([UserTableViewCell class])];
     [self.tableView registerClass:[ReposTableViewCell class] forCellReuseIdentifier:NSStringFromClass([ReposTableViewCell class])];
     
