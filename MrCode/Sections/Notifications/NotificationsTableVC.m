@@ -9,8 +9,10 @@
 #import "NotificationsTableVC.h"
 #import "GITNotification.h"
 #import "NotificationTableViewCell.h"
-#import "UITableView+FDTemplateLayoutCell.h"
 #import "RepositoryDetailTableVC.h"
+#import "WebViewController.h"
+
+#import "UITableView+FDTemplateLayoutCell.h"
 
 static NSString *kNotificationCellIdentifier = @"NotificationCellIdentifier";
 
@@ -83,6 +85,12 @@ static NSString *kNotificationCellIdentifier = @"NotificationCellIdentifier";
     return height;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    GITNotification *notification = _notifications[indexPath.row];
+    [self performSegueWithIdentifier:@"Notification2WebView" sender:notification];
+}
+
 #pragma mark - Navigation
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -91,6 +99,11 @@ static NSString *kNotificationCellIdentifier = @"NotificationCellIdentifier";
         RepositoryDetailTableVC *controller = (RepositoryDetailTableVC *)segue.destinationViewController;
         GITNotification *notification = (GITNotification *)sender;
         controller.repo = notification.repository;
+    }
+    else if ([identifier isEqualToString:@"Notification2WebView"]) {
+        WebViewController *controller = (WebViewController *)segue.destinationViewController;
+        GITNotification *notification = (GITNotification *)sender;
+        controller.url = notification.htmlURL;
     }
 }
 

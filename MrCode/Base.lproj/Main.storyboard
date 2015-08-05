@@ -64,6 +64,7 @@
                     <navigationItem key="navigationItem" title="Notifications" id="mq5-8h-Z1Z"/>
                     <connections>
                         <segue destination="Zsf-ip-eNN" kind="push" identifier="NotificationCell2RepositoryDetail" id="a08-hr-d3G"/>
+                        <segue destination="OBL-bN-xyv" kind="push" identifier="Notification2WebView" id="qtj-7x-pCD"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aFr-2z-Omz" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -213,6 +214,34 @@
             </objects>
             <point key="canvasLocation" x="2048" y="-332"/>
         </scene>
+        <!--Web View Controller-->
+        <scene sceneID="B9i-o7-SNI">
+            <objects>
+                <viewController id="OBL-bN-xyv" customClass="WebViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Y5n-8e-GHG"/>
+                        <viewControllerLayoutGuide type="bottom" id="svw-3T-0kr"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="YIJ-gK-cQ7">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sW8-Jw-Nf8">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </webView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="nVE-Zv-1Vd"/>
+                    <connections>
+                        <outlet property="webView" destination="sW8-Jw-Nf8" id="u0W-Zh-RrS"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="o4U-oB-rmp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2048" y="322"/>
+        </scene>
         <!--User Profile-->
         <scene sceneID="DEF-TA-8ce">
             <objects>
@@ -253,6 +282,7 @@
                     <connections>
                         <segue destination="pbu-Ix-DVe" kind="push" identifier="UserProfile2ReposTableVC" id="7dy-Qc-ohM"/>
                         <segue destination="wTD-eO-FW2" kind="push" identifier="UserProfile2UsersTableVC" id="eBJ-1q-r8W"/>
+                        <segue destination="OBL-bN-xyv" kind="push" identifier="UserProfile2WebView" id="C0F-bt-AMl"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RVO-t7-RhY" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -477,8 +507,9 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="rRJ-Zw-Ha6"/>
+        <segue reference="a08-hr-d3G"/>
         <segue reference="7dy-Qc-ohM"/>
         <segue reference="x8q-h4-3md"/>
+        <segue reference="C0F-bt-AMl"/>
     </inferredMetricsTieBreakers>
 </document>

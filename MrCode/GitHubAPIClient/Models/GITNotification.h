@@ -46,4 +46,6 @@
                                          success:(void (^)(BOOL))success
                                          failure:(GitHubClientFailureBlock)failure;
 
+- (NSURL *)htmlURL;
+
 @end
