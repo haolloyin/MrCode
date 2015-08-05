@@ -6,11 +6,11 @@
 //  Copyright (c) 2015 hao. All rights reserved.
 //
 
-#import "SearchDeveloperCell.h"
+#import "UserTableViewCell.h"
 
 #import "Masonry.h"
 
-@implementation SearchDeveloperCell
+@implementation UserTableViewCell
 
 - (void)awakeFromNib {
     // Initialization code

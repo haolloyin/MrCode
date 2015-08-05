@@ -34,11 +34,11 @@
 		3FBFD28F1B4C1C0900BDC00F /* RepositoryDetailTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD28E1B4C1C0900BDC00F /* RepositoryDetailTableVC.m */; };
 		3FBFD2921B4C1C3500BDC00F /* RepositoryHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD2911B4C1C3500BDC00F /* RepositoryHeaderView.m */; };
 		3FCF7CEF1B635337002CE5D5 /* KxMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCF7CEE1B635337002CE5D5 /* KxMenu.m */; };
-		3FCF7CF81B63865B002CE5D5 /* SearchDeveloperCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCF7CF31B63865B002CE5D5 /* SearchDeveloperCell.m */; };
 		3FCF7CF91B63865B002CE5D5 /* SearchRepositoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCF7CF51B63865B002CE5D5 /* SearchRepositoryCell.m */; };
 		3FCF7CFA1B63865B002CE5D5 /* SearchTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCF7CF71B63865B002CE5D5 /* SearchTableVC.m */; };
 		3FCF7D001B63B43B002CE5D5 /* LanguagesTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCF7CFF1B63B43B002CE5D5 /* LanguagesTableVC.m */; };
 		3FDB8D251B692B38004694B4 /* UsersTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FDB8D241B692B38004694B4 /* UsersTableVC.m */; };
+		3FDB8D281B725E5D004694B4 /* UserTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FDB8D271B725E5D004694B4 /* UserTableViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,8 +105,6 @@
 		3FBFD2911B4C1C3500BDC00F /* RepositoryHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepositoryHeaderView.m; sourceTree = "<group>"; };
 		3FCF7CED1B635337002CE5D5 /* KxMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KxMenu.h; sourceTree = "<group>"; };
 		3FCF7CEE1B635337002CE5D5 /* KxMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KxMenu.m; sourceTree = "<group>"; };
-		3FCF7CF21B63865B002CE5D5 /* SearchDeveloperCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchDeveloperCell.h; sourceTree = "<group>"; };
-		3FCF7CF31B63865B002CE5D5 /* SearchDeveloperCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchDeveloperCell.m; sourceTree = "<group>"; };
 		3FCF7CF41B63865B002CE5D5 /* SearchRepositoryCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchRepositoryCell.h; sourceTree = "<group>"; };
 		3FCF7CF51B63865B002CE5D5 /* SearchRepositoryCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchRepositoryCell.m; sourceTree = "<group>"; };
 		3FCF7CF61B63865B002CE5D5 /* SearchTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchTableVC.h; sourceTree = "<group>"; };
@@ -115,6 +113,8 @@
 		3FCF7CFF1B63B43B002CE5D5 /* LanguagesTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LanguagesTableVC.m; sourceTree = "<group>"; };
 		3FDB8D231B692B38004694B4 /* UsersTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UsersTableVC.h; sourceTree = "<group>"; };
 		3FDB8D241B692B38004694B4 /* UsersTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UsersTableVC.m; sourceTree = "<group>"; };
+		3FDB8D261B725E5D004694B4 /* UserTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserTableViewCell.h; sourceTree = "<group>"; };
+		3FDB8D271B725E5D004694B4 /* UserTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserTableViewCell.m; sourceTree = "<group>"; };
 		AB24770223FEE1F449EAD4FD /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		C003DD33F5E02E04E4EEC24D /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		E8E792D13A526B5E88944E2D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -293,6 +293,8 @@
 				3F4149081B5B8E2B0025B708 /* UserProfileHeaderView.m */,
 				3FDB8D231B692B38004694B4 /* UsersTableVC.h */,
 				3FDB8D241B692B38004694B4 /* UsersTableVC.m */,
+				3FDB8D261B725E5D004694B4 /* UserTableViewCell.h */,
+				3FDB8D271B725E5D004694B4 /* UserTableViewCell.m */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -328,8 +330,6 @@
 		3FCF7CF01B63865B002CE5D5 /* Explore */ = {
 			isa = PBXGroup;
 			children = (
-				3FCF7CF21B63865B002CE5D5 /* SearchDeveloperCell.h */,
-				3FCF7CF31B63865B002CE5D5 /* SearchDeveloperCell.m */,
 				3FCF7CF41B63865B002CE5D5 /* SearchRepositoryCell.h */,
 				3FCF7CF51B63865B002CE5D5 /* SearchRepositoryCell.m */,
 				3FCF7CF61B63865B002CE5D5 /* SearchTableVC.h */,
@@ -491,8 +491,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				3F4149061B5B5EE30025B708 /* UserProfileTableVC.m in Sources */,
-				3FCF7CF81B63865B002CE5D5 /* SearchDeveloperCell.m in Sources */,
 				3F2547791B45A1DE0012CDD6 /* GITOrganization.m in Sources */,
+				3FDB8D281B725E5D004694B4 /* UserTableViewCell.m in Sources */,
 				3FCF7CFA1B63865B002CE5D5 /* SearchTableVC.m in Sources */,
 				3F4149091B5B8E2B0025B708 /* UserProfileHeaderView.m in Sources */,
 				3F29DF241B516804002257DF /* GITEvent.m in Sources */,

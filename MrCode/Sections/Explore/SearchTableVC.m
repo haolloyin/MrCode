@@ -8,7 +8,7 @@
 
 #import "SearchTableVC.h"
 #import "SearchRepositoryCell.h"
-#import "SearchDeveloperCell.h"
+#import "UserTableViewCell.h"
 #import "ReposTableViewCell.h"
 #import "GITSearch.h"
 #import "GITRepository.h"
@@ -69,7 +69,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
     [self.tableView registerClass:[SearchRepositoryCell class] forCellReuseIdentifier:NSStringFromClass([SearchRepositoryCell class])];
-    [self.tableView registerClass:[SearchDeveloperCell class] forCellReuseIdentifier:NSStringFromClass([SearchDeveloperCell class])];
+    [self.tableView registerClass:[UserTableViewCell class] forCellReuseIdentifier:NSStringFromClass([UserTableViewCell class])];
     [self.tableView registerClass:[ReposTableViewCell class] forCellReuseIdentifier:NSStringFromClass([ReposTableViewCell class])];
     
     self.tableView.rowHeight = UITableViewAutomaticDimension;
@@ -152,7 +152,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     }
     else if (self.searchType == SearchTypeDeveloper) {
 
-        SearchDeveloperCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([SearchDeveloperCell class])
+        UserTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([UserTableViewCell class])
                                                                     forIndexPath:indexPath];
 //        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SearchBasicCell" forIndexPath:indexPath];
 //        cell.textLabel.text = user.login;

@@ -7,7 +7,7 @@
 //
 
 #import "UsersTableVC.h"
-#import "SearchDeveloperCell.h"
+#import "UserTableViewCell.h"
 #import "GITUser.h"
 #import "GITRepository.h"
 #import "UserProfileTableVC.h"
@@ -35,7 +35,7 @@
     
     self.navigationItem.title = _userType == UsersTableVCUserTypeFollowing ? @"Following" : @"Followers";
     
-    [self.tableView registerClass:[SearchDeveloperCell class] forCellReuseIdentifier:NSStringFromClass([SearchDeveloperCell class])];
+    [self.tableView registerClass:[UserTableViewCell class] forCellReuseIdentifier:NSStringFromClass([UserTableViewCell class])];
     
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 80.0;
@@ -62,7 +62,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    SearchDeveloperCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([SearchDeveloperCell class])
+    UserTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([UserTableViewCell class])
                                                                 forIndexPath:indexPath];
     
     GITUser *user = _users[indexPath.row];
