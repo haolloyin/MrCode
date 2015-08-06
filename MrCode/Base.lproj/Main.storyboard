@@ -217,7 +217,7 @@
         <!--Web View Controller-->
         <scene sceneID="B9i-o7-SNI">
             <objects>
-                <viewController id="OBL-bN-xyv" customClass="WebViewController" sceneMemberID="viewController">
+                <viewController hidesBottomBarWhenPushed="YES" id="OBL-bN-xyv" customClass="WebViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Y5n-8e-GHG"/>
                         <viewControllerLayoutGuide type="bottom" id="svw-3T-0kr"/>
@@ -226,16 +226,23 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <webView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sW8-Jw-Nf8">
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sW8-Jw-Nf8">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES"/>
                             </webView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="sW8-Jw-Nf8" firstAttribute="width" secondItem="YIJ-gK-cQ7" secondAttribute="width" id="PCL-og-fPk"/>
+                            <constraint firstItem="sW8-Jw-Nf8" firstAttribute="top" secondItem="Y5n-8e-GHG" secondAttribute="bottom" constant="-20" id="hb2-oY-rDx"/>
+                            <constraint firstItem="svw-3T-0kr" firstAttribute="top" secondItem="sW8-Jw-Nf8" secondAttribute="bottom" id="n7N-3A-2dA"/>
+                            <constraint firstAttribute="centerX" secondItem="sW8-Jw-Nf8" secondAttribute="centerX" id="rNH-SF-oMx"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="nVE-Zv-1Vd"/>
                     <connections>
-                        <outlet property="webView" destination="sW8-Jw-Nf8" id="u0W-Zh-RrS"/>
+                        <outlet property="webView" destination="sW8-Jw-Nf8" id="Gcy-T8-8HW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="o4U-oB-rmp" userLabel="First Responder" sceneMemberID="firstResponder"/>

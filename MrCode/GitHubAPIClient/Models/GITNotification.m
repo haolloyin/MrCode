@@ -102,9 +102,8 @@
 
 - (NSURL *)htmlURL
 {
-//    https://api.github.com/repos/lifesinger/lifesinger.github.com/issues/198
-//    https://github.com/lifesinger/lifesinger.github.com/issues/198#issuecomment-115503870
-    NSString *tmpSring = [self.subjectURL.absoluteString stringByReplacingOccurrencesOfString:@"https://api.github.com/repos" withString:@"https://github.com"];
+    NSString *tmpSring = [self.subjectURL.absoluteString stringByReplacingOccurrencesOfString:@"https://api.github.com/repos"
+                                                                                   withString:@"https://github.com"];
     return [NSURL URLWithString:tmpSring];
 }
 

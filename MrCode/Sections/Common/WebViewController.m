@@ -8,6 +8,8 @@
 
 #import "WebViewController.h"
 
+#import "Masonry.h"
+
 @interface WebViewController () <UIWebViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
@@ -20,11 +22,12 @@
     [super viewDidLoad];
 
     self.navigationController.navigationBar.translucent = NO;
+    self.tabBarController.tabBar.translucent = NO;
     
-    self.webView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.webView.delegate = self;
-    self.webView.scalesPageToFit = YES;
-    
+    _webView.translatesAutoresizingMaskIntoConstraints = NO;
+    _webView.delegate = self;
+    _webView.scalesPageToFit = YES;
+        
     [self.webView loadRequest:[NSURLRequest requestWithURL:self.url]];
 }
 
