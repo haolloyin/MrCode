@@ -227,7 +227,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sW8-Jw-Nf8">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <rect key="frame" x="0.0" y="20" width="320" height="548"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES"/>
                             </webView>
@@ -235,7 +235,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="sW8-Jw-Nf8" firstAttribute="width" secondItem="YIJ-gK-cQ7" secondAttribute="width" id="PCL-og-fPk"/>
-                            <constraint firstItem="sW8-Jw-Nf8" firstAttribute="top" secondItem="Y5n-8e-GHG" secondAttribute="bottom" constant="-20" id="hb2-oY-rDx"/>
+                            <constraint firstItem="sW8-Jw-Nf8" firstAttribute="top" secondItem="Y5n-8e-GHG" secondAttribute="bottom" id="hb2-oY-rDx"/>
                             <constraint firstItem="svw-3T-0kr" firstAttribute="top" secondItem="sW8-Jw-Nf8" secondAttribute="bottom" id="n7N-3A-2dA"/>
                             <constraint firstAttribute="centerX" secondItem="sW8-Jw-Nf8" secondAttribute="centerX" id="rNH-SF-oMx"/>
                         </constraints>
