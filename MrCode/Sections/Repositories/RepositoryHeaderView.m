@@ -159,8 +159,9 @@
     self.descriptionLabel.text = self.repo.desc;
     // FIXME: 调用 https://developer.github.com/v3/repos/ 获取到的 Repos updated 时间好像是错的。
 //    NSLog(@"NSDate: %@, formate: %@", self.repo.updatedAt, self.repo.updatedAt.timeAgoSinceNow);
-    
-    [self.starButton setTitle:[NSString stringWithFormat:@"%@\nStar", @(self.repo.stargazersCount)] forState:UIControlStateNormal];
+    BOOL isStarred = [GITRepository isStarredRepo:self.repo];
+    [self.starButton setTitle:[NSString stringWithFormat:(isStarred ? @"%@\nUnstar" : @"%@\nStar"),
+                               @(self.repo.stargazersCount)] forState:UIControlStateNormal];
     [self.forkButton setTitle:[NSString stringWithFormat:@"%@\nFork", @(self.repo.forksCount)] forState:UIControlStateNormal];
     [self.watchButton setTitle:[NSString stringWithFormat:@"%@\nWatch", @(self.repo.watchersCount)] forState:UIControlStateNormal];
 }

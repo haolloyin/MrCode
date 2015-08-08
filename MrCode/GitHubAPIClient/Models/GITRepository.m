@@ -50,6 +50,45 @@
              };
 }
 
+#pragma mark - Public
+
++ (BOOL)isStarredRepo:(GITRepository *)repo
+{
+    NSArray *starredRepos = [GITRepository myStarredRepositories];
+    for (GITRepository *item in starredRepos) {
+        if ([repo.fullName isEqualToString:item.fullName]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
++ (NSArray *)myStarredRepositories
+{
+    NSArray *jsonArray = [[NSUserDefaults standardUserDefaults] objectForKey:@"MrCode_MyStarredRepositories"];
+    
+    NSMutableArray *repos = [NSMutableArray array];
+    for (NSDictionary *item in jsonArray) {
+        [repos addObject:[GITRepository objectWithKeyValues:item]];
+    }
+    return [repos copy];
+}
+
++ (void)updateMyStarredRepositories:(NSArray *)repos
+{
+    if (repos) {
+        // 先转化成 Json 字典再持久化
+        NSMutableArray *jsonArray = [NSMutableArray array];
+        for (GITRepository *item in repos) {
+            NSDictionary *jsonDict = item.keyValues;
+            [jsonArray addObject:jsonDict];
+        }
+
+        [[NSUserDefaults standardUserDefaults] setObject:jsonArray forKey:@"MrCode_MyStarredRepositories"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+}
+
 #pragma mark - Private
 
 - (NSString *)repositoryTypeToString:(JGHRepositoryType)type
@@ -120,7 +159,11 @@
                                               failure:(GitHubClientFailureBlock)failure
 {
     NSString *url = [NSString stringWithFormat:@"/users/%@/starred?sort=created", user];
-    return [GITRepository repositoriesOfUrl:url success:success failure:failure];
+    return [GITRepository repositoriesOfUrl:url
+                                    success:^(NSArray *repos) {
+                                        [GITRepository updateMyStarredRepositories:repos]; // 保存
+                                        success(repos);
+                                    }failure:failure];
 }
 
 + (AFHTTPRequestOperation *)starRepository:(GITRepository *)repo

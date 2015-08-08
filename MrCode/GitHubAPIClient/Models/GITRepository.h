@@ -68,6 +68,12 @@ typedef NS_ENUM(NSUInteger, JGHRepositoryOrderBy) {
 @property (nonatomic, readonly, copy  ) NSDate     *createdAt;
 @property (nonatomic, readonly, copy  ) NSDate     *pushedAt;
 
++ (BOOL)isStarredRepo:(GITRepository *)repo;
+
++ (NSMutableArray *)myStarredRepositories;
+
++ (void)updateMyStarredRepositories:(NSArray *)repos;
+
 + (AFHTTPRequestOperation *)myRepositoriesWithSuccess:(void (^)(NSArray *))success
                                               failure:(GitHubClientFailureBlock)failure;
 
