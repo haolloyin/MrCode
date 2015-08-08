@@ -9,8 +9,8 @@
 #import <UIKit/UIKit.h>
 
 typedef NS_ENUM(NSUInteger, RepositoriesTableVCReposType) {
-    RepositoriesTableVCReposTypePublic = 0,
-    RepositoriesTableVCReposTypeStarred = 1,
+    RepositoriesTableVCReposTypeStarred = 0,
+    RepositoriesTableVCReposTypePublic = 1,
     RepositoriesTableVCReposTypeForked = 2
 };
 

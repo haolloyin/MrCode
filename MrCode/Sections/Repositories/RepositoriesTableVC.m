@@ -47,7 +47,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 80.0;
     
-    NSLog(@"_user=%@, [GITUser username]=%@", _user, [GITUser username]);
+    NSLog(@"_user=%@, [GITUser username]=%@, _reposType=%@", _user, [GITUser username], @(_reposType));
     self.navigationItem.titleView = self.segmentedControl;
     
     _repos             = [NSArray array];
@@ -117,10 +117,10 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
 
 - (UISegmentedControl *)segmentedControl
 {
-    NSLog(@"");
     if (!_segmentedControl) {
         _segmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"Starred", @"Owned"]];
-        _segmentedControl.selectedSegmentIndex = (self.isAuthenticatedUser ? 0 : 1);
+        _segmentedControl.selectedSegmentIndex = _reposType; // 根据资源库类型设定是 starred 还是 public
+        
         [_segmentedControl addTarget:self action:@selector(loadData) forControlEvents:UIControlEventValueChanged];
     }
     
@@ -159,7 +159,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
 
 - (void)loadData
 {
-    NSLog(@"_segmentedControl.selectedSegmentIndex=%@", @(_segmentedControl.selectedSegmentIndex));
+//    NSLog(@"_segmentedControl.selectedSegmentIndex=%@", @(_segmentedControl.selectedSegmentIndex));
     
     // 有 _segmentedControl，说明是查看本人资源库
     if (_segmentedControl && _segmentedControl.selectedSegmentIndex == 0) {
