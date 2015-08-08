@@ -9,8 +9,15 @@
 #import <UIKit/UIKit.h>
 #import "GITRepository.h"
 
+@protocol RepositoryHeaderViewDelegate <NSObject>
+
+- (void)tapRepositoryHeaderViewButton:(UIButton *)button;
+
+@end
+
 @interface RepositoryHeaderView : UIView
 
 @property (nonatomic, strong) GITRepository *repo;
+@property (nonatomic, weak) id<RepositoryHeaderViewDelegate> delegate;
 
 @end

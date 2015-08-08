@@ -12,7 +12,7 @@
 
 #import "UIImage+MRC_Octicons.h"
 
-@interface RepositoryDetailTableVC ()
+@interface RepositoryDetailTableVC () <RepositoryHeaderViewDelegate>
 
 @property (nonatomic, strong) RepositoryHeaderView *headerView;
 
@@ -34,6 +34,7 @@
     if (!self.tableView.tableHeaderView) {
         self.headerView = [[RepositoryHeaderView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 150.f)];
         self.headerView.repo = self.repo;
+        self.headerView.delegate = self;
         
         [self.headerView setNeedsLayout];
         [self.headerView layoutIfNeeded];
@@ -151,6 +152,25 @@
     }
 }
 
+#pragma mark - RepositoryHeaderViewDelegate
+
+- (void)tapRepositoryHeaderViewButton:(UIButton *)button
+{
+    NSLog(@"button.tag=%@", @(button.tag));
+    
+    switch (button.tag) {
+        case 101:
+            [self starRepository];
+            break;
+        case 102:
+            [self forkRepository];
+            break;
+        case 103:
+            [self watchRepository];
+            break;
+    }
+}
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -164,5 +184,27 @@
 
 #pragma mark - Private
 
+- (void)starRepository
+{
+    [GITRepository starRepository:self.repo success:^(BOOL ok) {
+        NSLog(@"OK");
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+}
+
+- (void)forkRepository
+{
+    NSLog(@"");
+}
+
+- (void)watchRepository
+{
+    [GITRepository watchRepository:self.repo success:^(BOOL ok) {
+        NSLog(@"OK");
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+}
 
 @end

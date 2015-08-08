@@ -123,5 +123,64 @@
     return [GITRepository repositoriesOfUrl:url success:success failure:failure];
 }
 
++ (AFHTTPRequestOperation *)starRepository:(GITRepository *)repo
+                                   success:(void (^)(BOOL))success
+                                   failure:(GitHubClientFailureBlock)failure
+{
+    NSString *url = [NSString stringWithFormat:@"/user/starred/%@/%@", repo.owner.login, repo.name];
+    GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
+    
+    return [client putWithURL:url parameters:nil success:^(AFHTTPRequestOperation *operation, id obj) {
+        // See https://developer.github.com/v3/activity/starring/#response-2
+        if (operation.response.statusCode == 204) {
+            success(YES);
+        }
+    } failure:failure];
+}
+
++ (AFHTTPRequestOperation *)unstarRepository:(GITRepository *)repo
+                                     success:(void (^)(BOOL))success
+                                     failure:(GitHubClientFailureBlock)failure
+{
+    NSString *url = [NSString stringWithFormat:@"/user/starred/%@/%@", repo.owner.login, repo.name];
+    GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
+    
+    return [client deleteWithURL:url parameters:nil success:^(AFHTTPRequestOperation *operation, id obj) {
+        // See https://developer.github.com/v3/activity/starring/#response-2
+        if (operation.response.statusCode == 204) {
+            success(YES);
+        }
+    } failure:failure];
+}
+
++ (AFHTTPRequestOperation *)watchRepository:(GITRepository *)repo
+                                    success:(void (^)(BOOL))success
+                                    failure:(GitHubClientFailureBlock)failure
+{
+    NSString *url = [NSString stringWithFormat:@"/user/subscriptions/%@/%@", repo.owner.login, repo.name];
+    GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
+    
+    return [client putWithURL:url parameters:nil success:^(AFHTTPRequestOperation *operation, id obj) {
+        // See https://developer.github.com/v3/activity/watching/#response-4
+        if (operation.response.statusCode == 204) {
+            success(YES);
+        }
+    } failure:failure];
+}
+
++ (AFHTTPRequestOperation *)unwatchRepository:(GITRepository *)repo
+                                      success:(void (^)(BOOL))success
+                                      failure:(GitHubClientFailureBlock)failure
+{
+    NSString *url = [NSString stringWithFormat:@"/user/subscriptions/%@/%@", repo.owner.login, repo.name];
+    GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
+    
+    return [client deleteWithURL:url parameters:nil success:^(AFHTTPRequestOperation *operation, id obj) {
+        // See https://developer.github.com/v3/activity/watching/#response-5
+        if (operation.response.statusCode == 204) {
+            success(YES);
+        }
+    } failure:failure];
+}
 
 @end

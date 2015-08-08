@@ -146,7 +146,7 @@
 
 - (void)tapButton:(UIButton *)button
 {
-    NSLog(@"%@", @(button.tag));
+    [self.delegate tapRepositoryHeaderViewButton:button];
 }
 
 #pragma mark - Property

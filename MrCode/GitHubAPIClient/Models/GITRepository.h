@@ -94,4 +94,24 @@ typedef NS_ENUM(NSUInteger, JGHRepositoryOrderBy) {
                                               success:(void (^)(NSArray *))success
                                               failure:(GitHubClientFailureBlock)failure;
 
++ (AFHTTPRequestOperation *)starRepository:(GITRepository *)repo
+                                   success:(void (^)(BOOL))success
+                                   failure:(GitHubClientFailureBlock)failure;
+
++ (AFHTTPRequestOperation *)unstarRepository:(GITRepository *)repo
+                                     success:(void (^)(BOOL))success
+                                     failure:(GitHubClientFailureBlock)failure;
+
++ (AFHTTPRequestOperation *)watchRepository:(GITRepository *)repo
+                                    success:(void (^)(BOOL))success
+                                    failure:(GitHubClientFailureBlock)failure;
+
++ (AFHTTPRequestOperation *)unwatchRepository:(GITRepository *)repo
+                                    success:(void (^)(BOOL))success
+                                    failure:(GitHubClientFailureBlock)failure;
+
+//+ (AFHTTPRequestOperation *)forkRepository:(GITRepository *)repo
+//                                   success:(void (^)(NSArray *))success
+//                                   failure:(GitHubClientFailureBlock)failure;
+
 @end
