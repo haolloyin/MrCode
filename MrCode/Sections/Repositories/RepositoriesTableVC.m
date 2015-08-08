@@ -41,30 +41,18 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    self.navigationController.navigationBar.topItem.title = _user;
     
     [self.tableView registerClass:[ReposTableViewCell class] forCellReuseIdentifier:kCustomReposCellIdentifier];
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 80.0;
     
     NSLog(@"_user=%@, [GITUser username]=%@", _user, [GITUser username]);
+    self.navigationItem.titleView = self.segmentedControl;
     
     _repos             = [NSArray array];
     _ownedReposCache   = [NSArray array];
     _starredReposCache = [NSArray array];
-    
-    if ([_user isEqualToString:[GITUser username]]) {
-        _isAuthenticatedUser = YES;
-        self.navigationItem.titleView = self.segmentedControl;
-    }
-    else {
-        _isAuthenticatedUser = NO;
-        if (_reposType == RepositoriesTableVCReposTypePublic) {
-            self.navigationItem.title = @"Public Repos";
-        }
-        else if (_reposType == RepositoriesTableVCReposTypeStarred) {
-            self.navigationItem.title = @"Starred Repos";
-        }
-    }
     
     [self loadData];
 }
@@ -132,7 +120,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     NSLog(@"");
     if (!_segmentedControl) {
         _segmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"Starred", @"Owned"]];
-        _segmentedControl.selectedSegmentIndex = 0;
+        _segmentedControl.selectedSegmentIndex = (self.isAuthenticatedUser ? 0 : 1);
         [_segmentedControl addTarget:self action:@selector(loadData) forControlEvents:UIControlEventValueChanged];
     }
     
@@ -159,20 +147,22 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
                                                   andSize:CGSizeMake(30.0f, 30.0f)];
 }
 
+- (BOOL)isAuthenticatedUser
+{
+    NSString *authenticatedUser = [GITUser username];
+    if (!_user || [_user isEqualToString:authenticatedUser]) {
+        _user = authenticatedUser;
+        return YES;
+    }
+    return NO;
+}
+
 - (void)loadData
 {
     NSLog(@"_segmentedControl.selectedSegmentIndex=%@", @(_segmentedControl.selectedSegmentIndex));
     
+    // 有 _segmentedControl，说明是查看本人资源库
     if (_segmentedControl && _segmentedControl.selectedSegmentIndex == 0) {
-        if ([self.ownedReposCache count] > 0) {
-            self.repos = self.ownedReposCache;
-            [self.tableView reloadData];
-            return;
-        }
-        
-        [self loadReposOfUser:_user];
-    }
-    else if (_segmentedControl && _segmentedControl.selectedSegmentIndex == 1) {
         if ([self.starredReposCache count] > 0) {
             self.repos = self.starredReposCache;
             [self.tableView reloadData];
@@ -181,6 +171,16 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
         
         [self loadStarredReposOfUser:_user];
     }
+    else if (_segmentedControl && _segmentedControl.selectedSegmentIndex == 1) {
+        if ([self.ownedReposCache count] > 0) {
+            self.repos = self.ownedReposCache;
+            [self.tableView reloadData];
+            return;
+        }
+        
+        [self loadReposOfUser:_user];
+    }
+    // 没有 _segmentedControl，说明是查看他人资源库
     else {
         if (_reposType == RepositoriesTableVCReposTypePublic) {
             [self loadReposOfUser:_user];
@@ -193,7 +193,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
 
 - (void)loadReposOfUser:(NSString *)user
 {
-    if (_isAuthenticatedUser) {
+    if (self.isAuthenticatedUser) {
         [GITRepository myRepositoriesWithSuccess:^(NSArray *repos) {
             self.ownedReposCache = repos;
             self.repos = self.ownedReposCache;
