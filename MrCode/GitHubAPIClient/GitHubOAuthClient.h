@@ -70,4 +70,9 @@ typedef NS_ENUM(NSUInteger, GitHubOAuthClienAPIStatus) {
                               parameters:(NSDictionary *)parameters
                                  success:(void(^)(AFHTTPRequestOperation *operation, id obj))success
                                  failure:(void(^)(AFHTTPRequestOperation *operation, NSError *error))failure;
+
+- (AFHTTPRequestOperation *)deleteWithURL:(NSString *)url
+                               parameters:(NSDictionary *)parameters
+                                  success:(void(^)(AFHTTPRequestOperation *operation, id obj))success
+                                  failure:(void(^)(AFHTTPRequestOperation *operation, NSError *error))failure;
 @end

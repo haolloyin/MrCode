@@ -243,6 +243,18 @@ static NSString *kTOKEN_STORE_IDENTIFIER = @"GitHubOAuthClient_TOKEN_STORE_IDENT
                                       NSLog(@"error: %@", error);
                                       failure(operation, error);
                                   }];
+    } else if ([method isEqualToString:@"DELETE"]) {
+        return [self.requestManager DELETE:urlString
+                                parameters:parameters
+                                   success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                       NSLog(@"response: %@, %@,", [responseObject class], responseObject);
+                                       success(operation, responseObject);
+                                       
+                                   } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                       [self removeTokenIfUnauthorizedWithOperation:operation];
+                                       NSLog(@"error: %@", error);
+                                       failure(operation, error);
+                                   }];
     }
     return nil;
 }
@@ -279,6 +291,14 @@ static NSString *kTOKEN_STORE_IDENTIFIER = @"GitHubOAuthClient_TOKEN_STORE_IDENT
                                  failure:(void(^)(AFHTTPRequestOperation *operation, NSError *error))failure
 {
     return [self requestUrl:url method:@"PATCH" parameters:parameters success:success failure:failure];
+}
+
+- (AFHTTPRequestOperation *)deleteWithURL:(NSString *)url
+                               parameters:(NSDictionary *)parameters
+                                  success:(void(^)(AFHTTPRequestOperation *operation, id obj))success
+                                  failure:(void(^)(AFHTTPRequestOperation *operation, NSError *error))failure
+{
+    return [self requestUrl:url method:@"DELETE" parameters:parameters success:success failure:failure];
 }
 
 #pragma mark - NSCoding
