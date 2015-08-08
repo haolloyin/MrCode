@@ -27,7 +27,7 @@
     _webView.translatesAutoresizingMaskIntoConstraints = NO;
     _webView.delegate = self;
     _webView.scalesPageToFit = YES;
-        
+    
     [self.webView loadRequest:[NSURLRequest requestWithURL:self.url]];
 }
 
