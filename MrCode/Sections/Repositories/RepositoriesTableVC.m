@@ -175,8 +175,6 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
 
 - (void)loadData
 {
-//    NSLog(@"_segmentedControl.selectedSegmentIndex=%@", @(_segmentedControl.selectedSegmentIndex));
-    
     // 有 _segmentedControl，说明是查看本人资源库
     if (_segmentedControl && _segmentedControl.selectedSegmentIndex == 0) {
         if ([self.starredReposCache count] > 0) {
@@ -240,13 +238,31 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
 
 - (void)loadStarredReposOfUser:(NSString *)user
 {
-    [GITRepository starredRepositoriesByUser:user success:^(NSArray * repos) {
-        self.starredReposCache = repos;
-        self.repos = self.starredReposCache;
-        [self.tableView reloadData];
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
-    }];
+    if (self.isAuthenticatedUser) {
+        NSArray *cachedStarredRepos = [GITRepository myStarredRepositories];
+        if (!cachedStarredRepos) {
+            [GITRepository starredRepositoriesByUser:user success:^(NSArray * repos) {
+                self.starredReposCache = repos;
+                self.repos = self.starredReposCache;
+                [self.tableView reloadData];
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                
+            }];
+        }
+        else {
+            self.repos = cachedStarredRepos;
+            [self.tableView reloadData];
+        }
+    }
+    else {
+        [GITRepository starredRepositoriesByUser:user success:^(NSArray * repos) {
+            self.starredReposCache = repos;
+            self.repos = self.starredReposCache;
+            [self.tableView reloadData];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+        }];
+    }
 }
 
 @end
