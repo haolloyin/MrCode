@@ -170,6 +170,7 @@
                     <navigationItem key="navigationItem" title="Reopsitory Detail" id="HMM-mz-31X"/>
                     <connections>
                         <segue destination="t2G-KY-Cq4" kind="push" identifier="RepositoryDetail2UserProfile" id="tBB-ju-T8Q"/>
+                        <segue destination="pbu-Ix-DVe" kind="push" identifier="ReposDetail2ReposTableVC" id="hP2-ir-aXF"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8aQ-Zx-MoC" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -514,9 +515,9 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="tBB-ju-T8Q"/>
         <segue reference="a08-hr-d3G"/>
-        <segue reference="7dy-Qc-ohM"/>
-        <segue reference="x8q-h4-3md"/>
+        <segue reference="hP2-ir-aXF"/>
         <segue reference="C0F-bt-AMl"/>
     </inferredMetricsTieBreakers>
 </document>

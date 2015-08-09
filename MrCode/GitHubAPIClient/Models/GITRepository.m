@@ -169,6 +169,22 @@
                                     }failure:failure];
 }
 
+//+ (AFHTTPRequestOperation *)forksOfRepository:(GITRepository *)repo
+//                                      success:(void (^)(NSArray *))success
+//                                      failure:(GitHubClientFailureBlock)failure
+//{
+//    NSString *url = [NSString stringWithFormat:@"/repos/%@/%@/forks?sort=newest", repo.owner.login, repo.name];
+//    return [GITRepository repositoriesOfUrl:url success:success failure:failure];
+//}
+
++ (AFHTTPRequestOperation *)forksOfRepository:(GITRepository *)repoName
+                                      success:(void (^)(NSArray *))success
+                                      failure:(GitHubClientFailureBlock)failure
+{
+    NSString *url = [NSString stringWithFormat:@"/repos/%@/forks?sort=newest", repoName];
+    return [GITRepository repositoriesOfUrl:url success:success failure:failure];
+}
+
 + (AFHTTPRequestOperation *)starRepository:(GITRepository *)repo
                                    success:(void (^)(BOOL))success
                                    failure:(GitHubClientFailureBlock)failure

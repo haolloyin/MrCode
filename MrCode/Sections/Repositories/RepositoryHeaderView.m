@@ -24,6 +24,7 @@
 @property (nonatomic, strong) UILabel     *descriptionLabel;
 
 @property (nonatomic, assign) NSUInteger starCount;
+@property (nonatomic, assign) NSUInteger watchingCount;
 
 @end
 
@@ -176,7 +177,6 @@
 
 - (void)updateStarButtonWithStar:(BOOL)isStarred
 {
-//    NSUInteger count = _starCount;
     if (_isStarred != isStarred) {
         _starCount += (isStarred ? 1 : -1);
         _isStarred = isStarred;
@@ -185,6 +185,18 @@
     
     [self.starButton setTitleColor:(_isStarred ? [UIColor flatBlueColorDark] : [UIColor darkTextColor]) forState:UIControlStateNormal];
     [self.starButton setTitle:title forState:UIControlStateNormal];
+}
+
+- (void)updateWatchButtonWithWatch:(BOOL)isWatching
+{
+    if (_isWatching != isWatching) {
+        _watchingCount += (isWatching ? 1 : -1);
+        _watchingCount = isWatching;
+    }
+    NSString *title = [NSString stringWithFormat:(_isWatching ? @"%@\nWatch √" : @"%@\nWatch"), @(_starCount)];
+    
+    [self.watchButton setTitleColor:(_isWatching ? [UIColor flatBlueColorDark] : [UIColor darkTextColor]) forState:UIControlStateNormal];
+    [self.watchButton setTitle:title forState:UIControlStateNormal];
 }
 
 @end

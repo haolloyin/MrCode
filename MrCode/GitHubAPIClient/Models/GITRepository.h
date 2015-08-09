@@ -100,6 +100,17 @@ typedef NS_ENUM(NSUInteger, JGHRepositoryOrderBy) {
                                               success:(void (^)(NSArray *))success
                                               failure:(GitHubClientFailureBlock)failure;
 
+// https://developer.github.com/v3/repos/forks/#list-forks
+//+ (AFHTTPRequestOperation *)forksOfRepository:(GITRepository *)repo
+//                                      success:(void (^)(NSArray *))success
+//                                      failure:(GitHubClientFailureBlock)failure;
+
+// https://developer.github.com/v3/repos/forks/#list-forks
++ (AFHTTPRequestOperation *)forksOfRepository:(NSString *)repoName
+                                      success:(void (^)(NSArray *))success
+                                      failure:(GitHubClientFailureBlock)failure;
+
+
 + (AFHTTPRequestOperation *)starRepository:(GITRepository *)repo
                                    success:(void (^)(BOOL))success
                                    failure:(GitHubClientFailureBlock)failure;

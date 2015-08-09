@@ -48,7 +48,13 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     self.tableView.estimatedRowHeight = 80.0;
     
     NSLog(@"_user=%@, [GITUser username]=%@, _reposType=%@", _user, [GITUser username], @(_reposType));
-    self.navigationItem.titleView = self.segmentedControl;
+
+    if (_reposType == RepositoriesTableVCReposTypeForks) {
+        self.navigationItem.title = @"Forks";
+    }
+    else {
+        self.navigationItem.titleView = self.segmentedControl;
+    }
     
     _repos             = [NSArray array];
     _ownedReposCache   = [NSArray array];
@@ -79,7 +85,12 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
 //    [self configCell:cell withRepo:repo];
     
     ReposTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCustomReposCellIdentifier forIndexPath:indexPath];
-    [cell configWithRepository:repo];
+    if (_reposType == RepositoriesTableVCReposTypeForks) {
+        [cell configForksWithRepository:repo];
+    }
+    else {
+        [cell configWithRepository:repo];
+    }
     
     return cell;
 }
@@ -137,7 +148,12 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     } else {
         detailText = [NSString stringWithFormat:@"%@ stars, %@ forks", @(repo.stargazersCount), @(repo.forksCount)];
     }
-    cell.textLabel.text            = repo.name;
+
+    cell.textLabel.text = repo.name;
+    if (_reposType == RepositoriesTableVCReposTypeForks) {
+        cell.textLabel.text = repo.fullName;
+    }
+
     cell.detailTextLabel.text      = detailText;
     cell.detailTextLabel.textColor = [UIColor grayColor];
     cell.imageView.image = [UIImage octicon_imageWithIcon:repo.isForked ? @"RepoForked" : @"Repo"
@@ -179,6 +195,15 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
         }
         
         [self loadReposOfUser:_user];
+    }
+    // 列出某个 Repo 被 fork 的列表
+    else if (_reposType == RepositoriesTableVCReposTypeForks) {
+        [GITRepository forksOfRepository:_user success:^(NSArray *repos) {
+            self.repos = repos;
+            [self.tableView reloadData];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+        }];
     }
     // 没有 _segmentedControl，说明是查看他人资源库
     else {

@@ -158,12 +158,10 @@ static UIImage *_repoForkImage = nil;
     });
 }
 
-#pragma mark - Public
-
-- (void)configWithRepository:(GITRepository *)repo
+- (void)configWithRepository:(GITRepository *)repo isForks:(BOOL)isForks
 {
     self.repo = repo;
-    self.titleLabel.text = self.repo.name;
+    self.titleLabel.text = isForks ? self.repo.fullName : self.repo.name;
     self.descLabel.text  = self.repo.desc;
     self.iconImageView.image = repo.isForked ? _repoForkedIconImage : _repoIconImage;
     self.starImageView.image = _repoStarImage;
@@ -171,7 +169,18 @@ static UIImage *_repoForkImage = nil;
     self.starLabel.text = [NSString stringWithFormat:@"%@", @(self.repo.stargazersCount)];
     self.forkLabel.text = [NSString stringWithFormat:@"%@", @(self.repo.forksCount)];
     self.languageLabel.text = self.repo.language;
-    
+}
+
+#pragma mark - Public
+
+- (void)configWithRepository:(GITRepository *)repo
+{
+    [self configWithRepository:repo isForks:NO];
+}
+
+- (void)configForksWithRepository:(GITRepository *)repo
+{
+    [self configWithRepository:repo isForks:YES];
 }
 
 - (void)layoutSubviews

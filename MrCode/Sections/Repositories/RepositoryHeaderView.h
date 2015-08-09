@@ -23,5 +23,6 @@
 @property (nonatomic, assign) BOOL isWatching;
 
 - (void)updateStarButtonWithStar:(BOOL)isStarred;
+- (void)updateWatchButtonWithWatch:(BOOL)isWatching;
 
 @end

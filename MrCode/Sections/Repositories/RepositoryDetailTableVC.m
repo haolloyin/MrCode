@@ -9,6 +9,7 @@
 #import "RepositoryDetailTableVC.h"
 #import "RepositoryHeaderView.h"
 #import "UserProfileTableVC.h"
+#import "RepositoriesTableVC.h"
 
 #import "UIImage+MRC_Octicons.h"
 
@@ -150,6 +151,16 @@
                 break;
         }
     }
+    else if (indexPath.section == 1) {
+        switch (indexPath.row) {
+            case 0:
+                [self performSegueWithIdentifier:@"ReposDetail2ReposTableVC" sender:self.repo];
+                break;
+                
+            default:
+                break;
+        }
+    }
 }
 
 #pragma mark - RepositoryHeaderViewDelegate
@@ -179,6 +190,11 @@
     if ([identifier isEqualToString:@"RepositoryDetail2UserProfile"]) {
         UserProfileTableVC *controller = (UserProfileTableVC *)segue.destinationViewController;
         controller.user = self.repo.owner;
+    }
+    else if ([identifier isEqualToString:@"ReposDetail2ReposTableVC"]) {
+        RepositoriesTableVC *controller = (RepositoriesTableVC *)segue.destinationViewController;
+        controller.user = [NSString stringWithFormat:@"%@/%@", self.repo.owner.login, self.repo.name];
+        controller.reposType = RepositoriesTableVCReposTypeForks;
     }
 }
 
@@ -211,11 +227,12 @@
 
 - (void)watchRepository
 {
-    [GITRepository watchRepository:self.repo success:^(BOOL ok) {
-        NSLog(@"OK");
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
-    }];
+    // TODO: 暂时先不做，因为要缓存 watch 的资源库，似乎不是很必要
+//    [GITRepository watchRepository:self.repo success:^(BOOL ok) {
+//        NSLog(@"OK");
+//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//        
+//    }];
 }
 
 @end

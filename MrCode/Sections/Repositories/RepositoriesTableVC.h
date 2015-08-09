@@ -11,7 +11,8 @@
 typedef NS_ENUM(NSUInteger, RepositoriesTableVCReposType) {
     RepositoriesTableVCReposTypeStarred = 0,
     RepositoriesTableVCReposTypePublic = 1,
-    RepositoriesTableVCReposTypeForked = 2
+    RepositoriesTableVCReposTypeForked = 2,
+    RepositoriesTableVCReposTypeForks = 3
 };
 
 @interface RepositoriesTableVC : UITableViewController

@@ -15,4 +15,6 @@
 
 - (void)configWithRepository:(GITRepository *)repo;
 
+- (void)configForksWithRepository:(GITRepository *)repo;
+
 @end
