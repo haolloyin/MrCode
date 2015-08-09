@@ -70,7 +70,7 @@ typedef NS_ENUM(NSUInteger, JGHRepositoryOrderBy) {
 
 + (BOOL)isStarredRepo:(GITRepository *)repo;
 
-+ (NSMutableArray *)myStarredRepositories;
++ (NSArray *)myStarredRepositories;
 
 + (void)updateMyStarredRepositories:(NSArray *)repos;
 

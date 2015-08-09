@@ -71,6 +71,7 @@
     for (NSDictionary *item in jsonArray) {
         [repos addObject:[GITRepository objectWithKeyValues:item]];
     }
+    NSLog(@"return total starred repos=%@", @(repos.count));
     return [repos copy];
 }
 
@@ -86,6 +87,8 @@
 
         [[NSUserDefaults standardUserDefaults] setObject:jsonArray forKey:@"MrCode_MyStarredRepositories"];
         [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        NSLog(@"update total starred repos=%@", @(repos.count));
     }
 }
 
@@ -176,6 +179,13 @@
     return [client putWithURL:url parameters:nil success:^(AFHTTPRequestOperation *operation, id obj) {
         // See https://developer.github.com/v3/activity/starring/#response-2
         if (operation.response.statusCode == 204) {
+            
+            // 保存新增的 star
+            NSArray *starredRepos = [GITRepository myStarredRepositories];
+            NSMutableArray *newStarredRepos = [NSMutableArray arrayWithArray:starredRepos];
+            [newStarredRepos addObject:repo];
+            [GITRepository updateMyStarredRepositories:newStarredRepos];
+            
             success(YES);
         }
     } failure:failure];
@@ -191,6 +201,17 @@
     return [client deleteWithURL:url parameters:nil success:^(AFHTTPRequestOperation *operation, id obj) {
         // See https://developer.github.com/v3/activity/starring/#response-2
         if (operation.response.statusCode == 204) {
+            
+            NSArray *starredRepos = [GITRepository myStarredRepositories];
+            NSMutableArray *newStarredRepos = [NSMutableArray array];
+            
+            for (GITRepository *item in starredRepos) {
+                if (![item.fullName isEqualToString:repo.fullName]) {
+                    [newStarredRepos addObject:item];
+                }
+            }
+            [GITRepository updateMyStarredRepositories:newStarredRepos];
+            
             success(YES);
         }
     } failure:failure];

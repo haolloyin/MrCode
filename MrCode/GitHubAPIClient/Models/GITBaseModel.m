@@ -21,7 +21,7 @@
         NSString *newString = [oldValue stringByReplacingOccurrencesOfString:@"T" withString:@" "];
         newString = [newString stringByReplacingOccurrencesOfString:@"Z" withString:@""];
         
-        NSLog(@"oldValue: %@, newValue: %@, class: %@", oldValue, newString, [oldValue class]);
+//        NSLog(@"oldValue: %@, newValue: %@, class: %@", oldValue, newString, [oldValue class]);
         
         NSDate *date = [oldValue toNSDate];
         return date;

@@ -186,11 +186,22 @@
 
 - (void)starRepository
 {
-    [GITRepository starRepository:self.repo success:^(BOOL ok) {
-        NSLog(@"OK");
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
-    }];
+    if (self.headerView.isStarred) {
+        [GITRepository unstarRepository:self.repo success:^(BOOL ok) {
+            NSLog(@"unstar OK");
+            [self.headerView updateStarButtonWithStar:NO];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+        }];
+    }
+    else {
+        [GITRepository starRepository:self.repo success:^(BOOL ok) {
+            NSLog(@"star OK");
+            [self.headerView updateStarButtonWithStar:YES];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+        }];
+    }
 }
 
 - (void)forkRepository

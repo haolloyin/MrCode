@@ -19,5 +19,9 @@
 
 @property (nonatomic, strong) GITRepository *repo;
 @property (nonatomic, weak) id<RepositoryHeaderViewDelegate> delegate;
+@property (nonatomic, assign) BOOL isStarred;
+@property (nonatomic, assign) BOOL isWatching;
+
+- (void)updateStarButtonWithStar:(BOOL)isStarred;
 
 @end

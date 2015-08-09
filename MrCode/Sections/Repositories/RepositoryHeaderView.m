@@ -23,6 +23,8 @@
 @property (nonatomic, strong) UIButton    *watchButton;
 @property (nonatomic, strong) UILabel     *descriptionLabel;
 
+@property (nonatomic, assign) NSUInteger starCount;
+
 @end
 
 @implementation RepositoryHeaderView
@@ -159,11 +161,30 @@
     self.descriptionLabel.text = self.repo.desc;
     // FIXME: 调用 https://developer.github.com/v3/repos/ 获取到的 Repos updated 时间好像是错的。
 //    NSLog(@"NSDate: %@, formate: %@", self.repo.updatedAt, self.repo.updatedAt.timeAgoSinceNow);
-    BOOL isStarred = [GITRepository isStarredRepo:self.repo];
-    [self.starButton setTitle:[NSString stringWithFormat:(isStarred ? @"%@\nUnstar" : @"%@\nStar"),
-                               @(self.repo.stargazersCount)] forState:UIControlStateNormal];
+    
+    _isStarred = [GITRepository isStarredRepo:self.repo];
+    _isWatching = NO;
+
+    _starCount = self.repo.stargazersCount;
+    [self updateStarButtonWithStar:_isStarred];
+    
     [self.forkButton setTitle:[NSString stringWithFormat:@"%@\nFork", @(self.repo.forksCount)] forState:UIControlStateNormal];
     [self.watchButton setTitle:[NSString stringWithFormat:@"%@\nWatch", @(self.repo.watchersCount)] forState:UIControlStateNormal];
+}
+
+#pragma mark - Public
+
+- (void)updateStarButtonWithStar:(BOOL)isStarred
+{
+//    NSUInteger count = _starCount;
+    if (_isStarred != isStarred) {
+        _starCount += (isStarred ? 1 : -1);
+        _isStarred = isStarred;
+    }
+    NSString *title = [NSString stringWithFormat:(_isStarred ? @"%@\nStar √" : @"%@\nStar"), @(_starCount)];
+    
+    [self.starButton setTitleColor:(_isStarred ? [UIColor flatBlueColorDark] : [UIColor darkTextColor]) forState:UIControlStateNormal];
+    [self.starButton setTitle:title forState:UIControlStateNormal];
 }
 
 @end
