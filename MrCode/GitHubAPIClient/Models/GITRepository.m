@@ -9,6 +9,9 @@
 #import "GITRepository.h"
 #import "NSString+ToNSDate.h"
 
+static NSString *MyStarredRepositories = @"MrCode_MyStarredRepositories";
+static NSString *MyOwnedRepositories = @"MrCode_MyOwnedRepositories";
+
 @implementation GITRepository
 
 + (NSDictionary *)replacedKeyFromPropertyName
@@ -65,7 +68,7 @@
 
 + (NSArray *)myStarredRepositories
 {
-    NSArray *jsonArray = [[NSUserDefaults standardUserDefaults] objectForKey:@"MrCode_MyStarredRepositories"];
+    NSArray *jsonArray = [[NSUserDefaults standardUserDefaults] objectForKey:MyStarredRepositories];
     
     NSMutableArray *repos = [NSMutableArray array];
     for (NSDictionary *item in jsonArray) {
@@ -85,10 +88,39 @@
             [jsonArray addObject:jsonDict];
         }
 
-        [[NSUserDefaults standardUserDefaults] setObject:jsonArray forKey:@"MrCode_MyStarredRepositories"];
+        [[NSUserDefaults standardUserDefaults] setObject:jsonArray forKey:MyStarredRepositories];
         [[NSUserDefaults standardUserDefaults] synchronize];
         
         NSLog(@"update total starred repos=%@", @(repos.count));
+    }
+}
+
++ (NSArray *)myOwnedRepositories
+{
+    NSArray *jsonArray = [[NSUserDefaults standardUserDefaults] objectForKey:MyOwnedRepositories];
+    
+    NSMutableArray *repos = [NSMutableArray array];
+    for (NSDictionary *item in jsonArray) {
+        [repos addObject:[GITRepository objectWithKeyValues:item]];
+    }
+    NSLog(@"return total owned repos=%@", @(repos.count));
+    return [repos copy];
+}
+
++ (void)updateMyOwnedRepositories:(NSArray *)repos
+{
+    if (repos) {
+        // 先转化成 Json 字典再持久化
+        NSMutableArray *jsonArray = [NSMutableArray array];
+        for (GITRepository *item in repos) {
+            NSDictionary *jsonDict = item.keyValues;
+            [jsonArray addObject:jsonDict];
+        }
+        
+        [[NSUserDefaults standardUserDefaults] setObject:jsonArray forKey:MyOwnedRepositories];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        NSLog(@"update total owned repos=%@", @(repos.count));
     }
 }
 
@@ -119,7 +151,11 @@
 + (AFHTTPRequestOperation *)myRepositoriesWithSuccess:(void (^)(NSArray *))success
                                               failure:(GitHubClientFailureBlock)failure
 {
-    return [GITRepository repositoriesOfUrl:@"/user/repos?sort=created" success:success failure:failure];
+    return [GITRepository repositoriesOfUrl:@"/user/repos?sort=created" success:^(NSArray *repos) {
+        // 每次调用 API 成功获取之后都保存到本地
+        [GITRepository updateMyOwnedRepositories:repos];
+        success(repos);
+    } failure:failure];
 }
 
 + (AFHTTPRequestOperation *)repositoriesOfUser:(NSString *)user
@@ -162,11 +198,13 @@
                                               failure:(GitHubClientFailureBlock)failure
 {
     NSString *url = [NSString stringWithFormat:@"/users/%@/starred?sort=created", user];
-    return [GITRepository repositoriesOfUrl:url
-                                    success:^(NSArray *repos) {
-                                        [GITRepository updateMyStarredRepositories:repos]; // 保存
-                                        success(repos);
-                                    }failure:failure];
+    return [GITRepository repositoriesOfUrl:url success:^(NSArray *repos) {
+        
+        if ([user isEqualToString:[GITUser username]]) {
+            [GITRepository updateMyStarredRepositories:repos]; // 保存
+        }
+        success(repos);
+    } failure:failure];
 }
 
 //+ (AFHTTPRequestOperation *)forksOfRepository:(GITRepository *)repo

@@ -60,7 +60,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     _ownedReposCache   = [NSArray array];
     _starredReposCache = [NSArray array];
     
-    [self loadData];
+    [self loadCachedRepos];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -132,7 +132,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
         _segmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"Starred", @"Owned"]];
         _segmentedControl.selectedSegmentIndex = _reposType; // 根据资源库类型设定是 starred 还是 public
         
-        [_segmentedControl addTarget:self action:@selector(loadData) forControlEvents:UIControlEventValueChanged];
+        [_segmentedControl addTarget:self action:@selector(loadCachedRepos) forControlEvents:UIControlEventValueChanged];
     }
     
     return _segmentedControl;
@@ -161,6 +161,30 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
                                                 iconColor:[UIColor darkGrayColor]
                                                 iconScale:1.0
                                                   andSize:CGSizeMake(30.0f, 30.0f)];
+}
+
+- (void)loadCachedRepos
+{
+    if (self.isAuthenticatedUser) {
+        NSArray *cachedRepos = nil;
+        if (_segmentedControl.selectedSegmentIndex == 0) {
+            cachedRepos = [GITRepository myStarredRepositories];
+        }
+        else if (_segmentedControl.selectedSegmentIndex == 1) {
+            cachedRepos = [GITRepository myOwnedRepositories];
+        }
+        
+        if (cachedRepos && cachedRepos.count > 0) {
+            self.repos = cachedRepos;
+            [self.tableView reloadData];
+        }
+        else {
+            [self loadData];
+        }
+    }
+    else {
+        [self loadData];
+    }
 }
 
 - (BOOL)isAuthenticatedUser
@@ -203,15 +227,6 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
             
         }];
     }
-    // 没有 _segmentedControl，说明是查看他人资源库
-    else {
-        if (_reposType == RepositoriesTableVCReposTypePublic) {
-            [self loadReposOfUser:_user];
-        }
-        else if (_reposType == RepositoriesTableVCReposTypeStarred) {
-            [self loadStarredReposOfUser:_user];
-        }
-    }
 }
 
 - (void)loadReposOfUser:(NSString *)user
@@ -240,7 +255,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
 {
     if (self.isAuthenticatedUser) {
         NSArray *cachedStarredRepos = [GITRepository myStarredRepositories];
-        if (!cachedStarredRepos) {
+        if (!cachedStarredRepos || cachedStarredRepos.count == 0) {
             [GITRepository starredRepositoriesByUser:user success:^(NSArray * repos) {
                 self.starredReposCache = repos;
                 self.repos = self.starredReposCache;

@@ -74,6 +74,8 @@ typedef NS_ENUM(NSUInteger, JGHRepositoryOrderBy) {
 
 + (void)updateMyStarredRepositories:(NSArray *)repos;
 
++ (NSArray *)myOwnedRepositories;
+
 + (AFHTTPRequestOperation *)myRepositoriesWithSuccess:(void (^)(NSArray *))success
                                               failure:(GitHubClientFailureBlock)failure;
 
