@@ -10,6 +10,7 @@
 #import "RepositoryHeaderView.h"
 #import "UserProfileTableVC.h"
 #import "RepositoriesTableVC.h"
+#import "WebViewController.h"
 
 #import "UIImage+MRC_Octicons.h"
 
@@ -147,7 +148,8 @@
             case 0:
                 [self performSegueWithIdentifier:@"RepositoryDetail2UserProfile" sender:nil];
                 break;
-            default:
+            case 1:
+                [self performSegueWithIdentifier:@"ReposDetail2WebView" sender:nil];
                 break;
         }
     }
@@ -195,6 +197,10 @@
         RepositoriesTableVC *controller = (RepositoriesTableVC *)segue.destinationViewController;
         controller.user = [NSString stringWithFormat:@"%@/%@", self.repo.owner.login, self.repo.name];
         controller.reposType = RepositoriesTableVCReposTypeForks;
+    }
+    else if ([identifier isEqualToString:@"ReposDetail2WebView"]) {
+        WebViewController *controller = (WebViewController *)segue.destinationViewController;
+        controller.url = self.repo.htmlURL;
     }
 }
 
