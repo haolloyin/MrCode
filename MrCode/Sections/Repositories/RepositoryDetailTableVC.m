@@ -223,6 +223,7 @@
 - (void)forkRepository
 {
     NSLog(@"");
+    [self performSegueWithIdentifier:@"ReposDetail2ReposTableVC" sender:self.repo];
 }
 
 - (void)watchRepository
