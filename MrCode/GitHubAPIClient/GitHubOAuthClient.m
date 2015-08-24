@@ -165,7 +165,6 @@ static NSString *kTOKEN_STORE_IDENTIFIER = @"GitHubOAuthClient_TOKEN_STORE_IDENT
 {
     // Maybe user revoke authorized application from https://github.com/settings/applications
     if (operation.response.statusCode == GitHubOAuthClienAPIStatus401_Unauthorized) {
-        NSLog(@"");
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:kTOKEN_STORE_IDENTIFIER];
         [[NSUserDefaults standardUserDefaults] synchronize];
         
@@ -173,11 +172,16 @@ static NSString *kTOKEN_STORE_IDENTIFIER = @"GitHubOAuthClient_TOKEN_STORE_IDENT
     }
 }
 
+- (void)setHeader:(NSString *)header withValue:(NSString *)value
+{
+    [_requestManager.requestSerializer setValue:value forHTTPHeaderField:header];
+//    _requestManager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/vnd.github.VERSION.html"];
+}
+
 #pragma mark - Private
 
 - (void)setRequestManagerAuthosizationHeader
 {
-    NSLog(@"");
     [_requestManager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     
     if (self.accessToken) {
@@ -199,7 +203,7 @@ static NSString *kTOKEN_STORE_IDENTIFIER = @"GitHubOAuthClient_TOKEN_STORE_IDENT
         return [self.requestManager GET:urlString
                              parameters:parameters
                                 success:^(AFHTTPRequestOperation *operation, id responseObject) {
-//                                    NSLog(@"response: %@, %@,", [responseObject class], responseObject);
+                                    NSLog(@"response: %@, %@,", [responseObject class], responseObject);
                                     success(operation, responseObject);
                                     
                                 } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
