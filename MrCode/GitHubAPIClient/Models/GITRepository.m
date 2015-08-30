@@ -310,10 +310,8 @@ static NSString *MyOwnedRepositories = @"MrCode_MyOwnedRepositories";
     NSString *url = [NSString stringWithFormat:@"/repos/%@/readme", self.fullName];
     return [client getWithURL:url parameters:nil success:^(AFHTTPRequestOperation *operation, NSDictionary *dict) {
         NSString *base64String = dict[@"content"];
-        NSLog(@"base64String:\n%@", base64String);
-//        NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:base64String options:0];
-        NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:@"V2ViVmlld0phdmFzY3JpcHRCcmlkZ2UKPT09PT09PT09PT09PT09PT09PT0" options:NSDataBase64DecodingIgnoreUnknownCharacters];
-        NSLog(@"decodedData:\n%@", decodedData);
+        NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:base64String options:NSDataBase64DecodingIgnoreUnknownCharacters];
+        NSLog(@"decodedData:\n%@", @(decodedData == nil));
         NSString *content = [[NSString alloc] initWithData:decodedData encoding:NSUTF8StringEncoding];
         NSLog(@"content:\n%@", content);
         success(content);
