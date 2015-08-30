@@ -51,7 +51,9 @@ typedef NS_ENUM(NSUInteger, GitHubOAuthClienAPIStatus) {
 
 #pragma mark - HTTP
 
-- (void)setHeader:(NSString *)header withValue:(NSString *)value;
+- (void)setValue:(NSString *)value forHeader:(NSString *)header;
+
+- (void)setAcceptableContentTypes:(NSString *)contentTypes;
 
 - (AFHTTPRequestOperation *)getWithURL:(NSString *)url
                             parameters:(NSDictionary *)parameters

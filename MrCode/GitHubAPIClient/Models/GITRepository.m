@@ -305,17 +305,31 @@ static NSString *MyOwnedRepositories = @"MrCode_MyOwnedRepositories";
                                       failure:(GitHubClientFailureBlock)failure;
 {
     GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
-//    [client setHeader:@"Accept" withValue:@"application/vnd.github.VERSION.html"];
+    // 苍天啊，原来 AF 直接不接受这种 Accept，直接在 error 的代码里根据 StatusCode==200 判断算了
+    // 参考这里并各种设置测试都无效：http://stackoverflow.com/questions/19114623
+    [client setValue:@"application/vnd.github.VERSION.html" forHeader:@"Accept"];
+//    [client setAcceptableContentTypes:@"application/vnd.github.VERSION.html"];
     
     NSString *url = [NSString stringWithFormat:@"/repos/%@/readme", self.fullName];
     return [client getWithURL:url parameters:nil success:^(AFHTTPRequestOperation *operation, NSDictionary *dict) {
+        
         NSString *base64String = dict[@"content"];
         NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:base64String options:NSDataBase64DecodingIgnoreUnknownCharacters];
-        NSLog(@"decodedData:\n%@", @(decodedData == nil));
         NSString *content = [[NSString alloc] initWithData:decodedData encoding:NSUTF8StringEncoding];
-        NSLog(@"content:\n%@", content);
         success(content);
-    } failure:failure];
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+//        NSLog(@"error:\n%@", error);
+        if (operation.response.statusCode == 200) {
+            NSData *encodedData = error.userInfo[@"com.alamofire.serialization.response.error.data"];
+            NSString *content = [[NSString alloc] initWithData:encodedData encoding:NSUTF8StringEncoding];
+            success(content);
+        }
+        else {
+            failure(operation, error);
+        }
+    }];
 }
 
 @end

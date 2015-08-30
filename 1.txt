@@ -1,0 +1,31 @@
+<div class="announce instapaper_body md" data-path="README.md" id="readme"><article class="markdown-body entry-content" itemprop="mainContentOfPage"><h1><a id="user-content-additions" class="anchor" href="#additions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Additions</h1>
+
+<p>便捷iOS开发的各种类库</p>
+
+<p>在<code>*-Prefix.pch</code>中引入<code>AdditionsMacro.h</code>即可</p>
+
+<h1><a id="user-content-api列表" class="anchor" href="#api列表" aria-hidden="true"><span class="octicon octicon-link"></span></a>API列表</h1>
+
+<ul>
+<li>扩展功能列表:
+
+<ul>
+<li><code>AudioManager.h</code> 在线音乐播放,支持播放列表后台播放和锁屏截图设置</li>
+</ul></li>
+<li>增强api类列表:
+
+<ul>
+<li><code>NSData+Additions.h</code></li>
+<li><code>NSString+Additions.h</code></li>
+<li><code>NSArray+Additions.h</code></li>
+<li><code>NSMutableArray+Additions.h</code></li>
+<li><code>NSDictionary+Additions.h</code></li>
+<li><code>UIApplication+Additions.h</code></li>
+<li><code>UIDevice+Additions.h</code></li>
+<li><code>UIScreen+Additions.h</code></li>
+<li><code>UITableView+Additions.h</code></li>
+<li><code>UIView+Additions.h</code></li>
+<li><code>UIColor+Additions.h</code></li>
+</ul></li>
+</ul>
+</article></div>

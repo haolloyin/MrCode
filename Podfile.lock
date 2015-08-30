@@ -1,31 +1,31 @@
 PODS:
-  - AFNetworking (2.5.4):
-    - AFNetworking/NSURLConnection (= 2.5.4)
-    - AFNetworking/NSURLSession (= 2.5.4)
-    - AFNetworking/Reachability (= 2.5.4)
-    - AFNetworking/Security (= 2.5.4)
-    - AFNetworking/Serialization (= 2.5.4)
-    - AFNetworking/UIKit (= 2.5.4)
-  - AFNetworking/NSURLConnection (2.5.4):
+  - AFNetworking (2.6.0):
+    - AFNetworking/NSURLConnection (= 2.6.0)
+    - AFNetworking/NSURLSession (= 2.6.0)
+    - AFNetworking/Reachability (= 2.6.0)
+    - AFNetworking/Security (= 2.6.0)
+    - AFNetworking/Serialization (= 2.6.0)
+    - AFNetworking/UIKit (= 2.6.0)
+  - AFNetworking/NSURLConnection (2.6.0):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.5.4):
+  - AFNetworking/NSURLSession (2.6.0):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.5.4)
-  - AFNetworking/Security (2.5.4)
-  - AFNetworking/Serialization (2.5.4)
-  - AFNetworking/UIKit (2.5.4):
+  - AFNetworking/Reachability (2.6.0)
+  - AFNetworking/Security (2.6.0)
+  - AFNetworking/Serialization (2.6.0)
+  - AFNetworking/UIKit (2.6.0):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - ChameleonFramework (1.2.1):
     - ChameleonFramework/Default (= 1.2.1)
   - ChameleonFramework/Default (1.2.1)
   - DateTools (1.6.1)
-  - Masonry (0.6.1)
-  - MJExtension (2.3.7)
+  - Masonry (0.6.2)
+  - MJExtension (2.5.9)
   - OcticonsIOS (0.0.2)
   - SDWebImage (3.7.3):
     - SDWebImage/Core (= 3.7.3)
@@ -43,11 +43,11 @@ DEPENDENCIES:
   - UITableView+FDTemplateLayoutCell
 
 SPEC CHECKSUMS:
-  AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
+  AFNetworking: 79f7eb1a0fcfa7beb409332b2ca49afe9ce53b05
   ChameleonFramework: 3476f813ac1615aef0a9a958f05520dfca47e09d
   DateTools: 9bcc89e4f2f9004d8a7a2bd1b49269cf78968e65
-  Masonry: 4972309f2f134de9dd312f4dc4a21359b50e6caa
-  MJExtension: ab4e7c529b2c7a705e6f78f73e33d97929a42b39
+  Masonry: 362e8a1cc0beada4a4c4832d5e863da2a51533be
+  MJExtension: 2330aeb6c83428c820749290bf766e81827cda65
   OcticonsIOS: 845ce2794c2837cf688049c4782467ef0c3c949d
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
   UITableView+FDTemplateLayoutCell: d5be6056b5060313f5955a2590ecd33142ad713d

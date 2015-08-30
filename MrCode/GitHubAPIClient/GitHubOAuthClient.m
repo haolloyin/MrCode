@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 hao. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
 #import "GitHubOAuthClient.h"
 #import "GITUser.h"
 
@@ -172,17 +173,24 @@ static NSString *kTOKEN_STORE_IDENTIFIER = @"GitHubOAuthClient_TOKEN_STORE_IDENT
     }
 }
 
-- (void)setHeader:(NSString *)header withValue:(NSString *)value
+- (void)setValue:(NSString *)value forHeader:(NSString *)header
 {
     [_requestManager.requestSerializer setValue:value forHTTPHeaderField:header];
-//    _requestManager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"application/vnd.github.VERSION.html"];
+}
+
+- (void)setAcceptableContentTypes:(NSString *)contentTypes
+{
+    // 同时需要把默认的 requestSerializer Accept 头部去掉
+//    [self setValue:nil forHeader:@"Accept"];
+    [_requestManager.responseSerializer.acceptableContentTypes setByAddingObject:contentTypes];
 }
 
 #pragma mark - Private
 
 - (void)setRequestManagerAuthosizationHeader
 {
-    [_requestManager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    // 默认的 Accept 头部
+    [self setValue:@"application/json" forHeader:@"Accept"];
     
     if (self.accessToken) {
         NSString *value = [NSString stringWithFormat:@"Bearer %@", _accessToken];
