@@ -200,12 +200,12 @@
     }
     else if ([identifier isEqualToString:@"ReposDetail2WebView"]) {
 //        WebViewController *controller = (WebViewController *)segue.destinationViewController;
-//        controller.url = self.repo.htmlURL;
+
         [self.repo readmeWithsuccess:^(NSString *success) {
             NSLog(@"%@", success);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            
-        }];
+            NSLog(@"%@", error);
+        } needRefresh:NO];
     }
 }
 

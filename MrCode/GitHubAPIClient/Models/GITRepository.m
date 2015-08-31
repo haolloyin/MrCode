@@ -8,9 +8,11 @@
 
 #import "GITRepository.h"
 #import "NSString+ToNSDate.h"
+#import "KVStoreManager.h"
 
 static NSString *MyStarredRepositories = @"MrCode_MyStarredRepositories";
 static NSString *MyOwnedRepositories = @"MrCode_MyOwnedRepositories";
+static NSString *kReposReadMeTableName = @"MrCode_ReposReadMeTableName";
 
 @implementation GITRepository
 
@@ -302,7 +304,31 @@ static NSString *MyOwnedRepositories = @"MrCode_MyOwnedRepositories";
 }
 
 - (AFHTTPRequestOperation *)readmeWithsuccess:(void (^)(NSString *))success
-                                      failure:(GitHubClientFailureBlock)failure;
+                                      failure:(GitHubClientFailureBlock)failure
+                                  needRefresh:(BOOL)refresh
+{
+    if (refresh) {
+        return [self readmeWithsuccess:success failure:failure];
+    }
+    
+    NSString *key = [self readmeStoreKey];
+    NSString *readmeHTMLString = [[KVStoreManager sharedStore] getStringById:key fromTable:kReposReadMeTableName];
+    if (!readmeHTMLString) {
+        NSLog(@"no cache");
+        return [self readmeWithsuccess:success failure:failure];
+    }
+    success(readmeHTMLString);
+
+    return nil;
+}
+
+- (NSString *)readmeStoreKey
+{
+    return [NSString stringWithFormat:@"%@_README_KEY", self.fullName];
+}
+
+- (AFHTTPRequestOperation *)readmeWithsuccess:(void (^)(NSString *))success
+                                      failure:(GitHubClientFailureBlock)failure
 {
     GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
     // 苍天啊，原来 AF 直接不接受这种 Accept，直接在 error 的代码里根据 StatusCode==200 判断算了
@@ -316,14 +342,20 @@ static NSString *MyOwnedRepositories = @"MrCode_MyOwnedRepositories";
         NSString *base64String = dict[@"content"];
         NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:base64String options:NSDataBase64DecodingIgnoreUnknownCharacters];
         NSString *content = [[NSString alloc] initWithData:decodedData encoding:NSUTF8StringEncoding];
+        
+        // 保存
+        [[KVStoreManager sharedStore] createTableWithName:kReposReadMeTableName];
+        [[KVStoreManager sharedStore] putString:content withId:[self readmeStoreKey] intoTable:kReposReadMeTableName];
         success(content);
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
-//        NSLog(@"error:\n%@", error);
         if (operation.response.statusCode == 200) {
             NSData *encodedData = error.userInfo[@"com.alamofire.serialization.response.error.data"];
             NSString *content = [[NSString alloc] initWithData:encodedData encoding:NSUTF8StringEncoding];
+            
+            // 保存
+            [[KVStoreManager sharedStore] createTableWithName:kReposReadMeTableName];
+            [[KVStoreManager sharedStore] putString:content withId:[self readmeStoreKey] intoTable:kReposReadMeTableName];
             success(content);
         }
         else {

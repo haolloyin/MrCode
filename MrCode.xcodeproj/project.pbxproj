@@ -28,6 +28,7 @@
 		3F29DF211B50E718002257DF /* NotificationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F29DF201B50E718002257DF /* NotificationTableViewCell.m */; };
 		3F29DF241B516804002257DF /* GITEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F29DF231B516804002257DF /* GITEvent.m */; };
 		3F29DF371B52485B002257DF /* GITSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F29DF361B52485B002257DF /* GITSearch.m */; };
+		3F38015F1B94B6D9005DACE5 /* KVStoreManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F38015E1B94B6D9005DACE5 /* KVStoreManager.m */; };
 		3F4149061B5B5EE30025B708 /* UserProfileTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F4149051B5B5EE30025B708 /* UserProfileTableVC.m */; };
 		3F4149091B5B8E2B0025B708 /* UserProfileHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F4149081B5B8E2B0025B708 /* UserProfileHeaderView.m */; };
 		3FBFD28C1B4AD68800BDC00F /* UIImage+MRC_Octicons.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD28B1B4AD68800BDC00F /* UIImage+MRC_Octicons.m */; };
@@ -93,6 +94,8 @@
 		3F29DF231B516804002257DF /* GITEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GITEvent.m; sourceTree = "<group>"; };
 		3F29DF351B52485B002257DF /* GITSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GITSearch.h; sourceTree = "<group>"; };
 		3F29DF361B52485B002257DF /* GITSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GITSearch.m; sourceTree = "<group>"; };
+		3F38015D1B94B6D9005DACE5 /* KVStoreManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KVStoreManager.h; sourceTree = "<group>"; };
+		3F38015E1B94B6D9005DACE5 /* KVStoreManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KVStoreManager.m; sourceTree = "<group>"; };
 		3F4149041B5B5EE30025B708 /* UserProfileTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProfileTableVC.h; sourceTree = "<group>"; };
 		3F4149051B5B5EE30025B708 /* UserProfileTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProfileTableVC.m; sourceTree = "<group>"; };
 		3F4149071B5B8E2B0025B708 /* UserProfileHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProfileHeaderView.h; sourceTree = "<group>"; };
@@ -342,6 +345,8 @@
 			children = (
 				3FDB8D2E1B726B37004694B4 /* WebViewController.h */,
 				3FDB8D2F1B726B37004694B4 /* WebViewController.m */,
+				3F38015D1B94B6D9005DACE5 /* KVStoreManager.h */,
+				3F38015E1B94B6D9005DACE5 /* KVStoreManager.m */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -502,6 +507,7 @@
 				3F2547791B45A1DE0012CDD6 /* GITOrganization.m in Sources */,
 				3FDB8D281B725E5D004694B4 /* UserTableViewCell.m in Sources */,
 				3FCF7CFA1B63865B002CE5D5 /* SearchTableVC.m in Sources */,
+				3F38015F1B94B6D9005DACE5 /* KVStoreManager.m in Sources */,
 				3F4149091B5B8E2B0025B708 /* UserProfileHeaderView.m in Sources */,
 				3F29DF241B516804002257DF /* GITEvent.m in Sources */,
 				3F2547471B45A0060012CDD6 /* AppDelegate.m in Sources */,

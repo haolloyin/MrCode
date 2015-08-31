@@ -133,6 +133,8 @@ typedef NS_ENUM(NSUInteger, JGHRepositoryOrderBy) {
 //                                   success:(void (^)(NSArray *))success
 //                                   failure:(GitHubClientFailureBlock)failure;
 
-- (AFHTTPRequestOperation *)readmeWithsuccess:(void (^)(NSString *))success failure:(GitHubClientFailureBlock)failure;
+- (AFHTTPRequestOperation *)readmeWithsuccess:(void (^)(NSString *))success
+                                      failure:(GitHubClientFailureBlock)failure
+                                  needRefresh:(BOOL)refresh;
 
 @end
