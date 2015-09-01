@@ -317,6 +317,7 @@ static NSString *kReposReadMeTableName = @"MrCode_ReposReadMeTableName";
         NSLog(@"no cache");
         return [self readmeWithsuccess:success failure:failure];
     }
+    NSLog(@"cached");
     success(readmeHTMLString);
 
     return nil;
@@ -342,26 +343,30 @@ static NSString *kReposReadMeTableName = @"MrCode_ReposReadMeTableName";
         NSString *base64String = dict[@"content"];
         NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:base64String options:NSDataBase64DecodingIgnoreUnknownCharacters];
         NSString *content = [[NSString alloc] initWithData:decodedData encoding:NSUTF8StringEncoding];
-        
-        // 保存
-        [[KVStoreManager sharedStore] createTableWithName:kReposReadMeTableName];
-        [[KVStoreManager sharedStore] putString:content withId:[self readmeStoreKey] intoTable:kReposReadMeTableName];
-        success(content);
+        NSString *html = [NSString stringWithFormat:@"<html><head><title>%@</title></head><body>%@</body></html>", self.fullName, content];
+        [self storeReadmeHTML:html];
+        NSLog(@"refresh README ok");
+        success(html);
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         if (operation.response.statusCode == 200) {
             NSData *encodedData = error.userInfo[@"com.alamofire.serialization.response.error.data"];
             NSString *content = [[NSString alloc] initWithData:encodedData encoding:NSUTF8StringEncoding];
-            
-            // 保存
-            [[KVStoreManager sharedStore] createTableWithName:kReposReadMeTableName];
-            [[KVStoreManager sharedStore] putString:content withId:[self readmeStoreKey] intoTable:kReposReadMeTableName];
-            success(content);
+            NSString *html = [NSString stringWithFormat:@"<html><head><title>%@</title></head><body>%@</body></html>", self.fullName, content];
+            [self storeReadmeHTML:html];
+            NSLog(@"refresh README error but ok");
+            success(html);
         }
         else {
             failure(operation, error);
         }
     }];
+}
+
+- (void)storeReadmeHTML:(NSString *)html
+{
+    [[KVStoreManager sharedStore] createTableWithName:kReposReadMeTableName];
+    [[KVStoreManager sharedStore] putString:html withId:[self readmeStoreKey] intoTable:kReposReadMeTableName];
 }
 
 @end

@@ -211,12 +211,12 @@ static NSString *kTOKEN_STORE_IDENTIFIER = @"GitHubOAuthClient_TOKEN_STORE_IDENT
         return [self.requestManager GET:urlString
                              parameters:parameters
                                 success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                                    NSLog(@"response: %@, %@,", [responseObject class], responseObject);
+//                                    NSLog(@"response: %@, %@,", [responseObject class], responseObject);
                                     success(operation, responseObject);
                                     
                                 } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                     [self removeTokenIfUnauthorizedWithOperation:operation];
-                                    NSLog(@"error: %@", error);
+//                                    NSLog(@"error: %@", error);
                                     failure(operation, error);
                                 }];
     } else if ([method isEqualToString:@"POST"]) {

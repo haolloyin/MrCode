@@ -199,10 +199,12 @@
         controller.reposType = RepositoriesTableVCReposTypeForks;
     }
     else if ([identifier isEqualToString:@"ReposDetail2WebView"]) {
-//        WebViewController *controller = (WebViewController *)segue.destinationViewController;
-
         [self.repo readmeWithsuccess:^(NSString *success) {
-            NSLog(@"%@", success);
+            WebViewController *controller = (WebViewController *)segue.destinationViewController;
+            controller.htmlString = success;
+            controller.title = self.repo.name;
+            [controller reloadWebView];
+            
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
         } needRefresh:NO];

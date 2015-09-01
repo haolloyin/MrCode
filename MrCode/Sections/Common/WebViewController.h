@@ -10,6 +10,9 @@
 
 @interface WebViewController : UIViewController
 
-@property (nonatomic, strong) NSURL *url;
+@property (nonatomic, copy) NSURL *url;
+@property (nonatomic, copy) NSString *htmlString;
+
+- (void)reloadWebView;
 
 @end

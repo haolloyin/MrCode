@@ -28,7 +28,10 @@
     _webView.delegate = self;
     _webView.scalesPageToFit = YES;
     
-    [self.webView loadRequest:[NSURLRequest requestWithURL:self.url]];
+    self.navigationItem.title = self.title;
+    // FIXME 不知道这里为啥一定要先调用一次，否则之后所有 loadHTMLString 都不会触发 shouldStartLoadWithRequest
+    // 文档只是这样说 shouldStartLoadWithRequest 方法 “Sent before a web view begins loading a frame.”
+    [self reloadWebView];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -50,7 +53,13 @@
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-    return self.url ? YES : NO;
+    if (self.htmlString) {
+        return YES;
+    }
+    else if (self.url) {
+        return YES;
+    }
+    return NO;
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)webView
@@ -66,6 +75,19 @@
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
     NSLog(@"%@", error);
+}
+
+#pragma mark - Public
+
+- (void)reloadWebView
+{
+    if (self.htmlString) {
+        NSURL *baseURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]];
+        [self.webView loadHTMLString:self.htmlString baseURL:baseURL];
+    }
+    else {
+        [self.webView loadRequest:[NSURLRequest requestWithURL:self.url]];
+    }
 }
 
 @end
