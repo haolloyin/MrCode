@@ -29,6 +29,8 @@
 		3F29DF241B516804002257DF /* GITEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F29DF231B516804002257DF /* GITEvent.m */; };
 		3F29DF371B52485B002257DF /* GITSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F29DF361B52485B002257DF /* GITSearch.m */; };
 		3F38015F1B94B6D9005DACE5 /* KVStoreManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F38015E1B94B6D9005DACE5 /* KVStoreManager.m */; };
+		3F3801641B98097A005DACE5 /* github1.css in Resources */ = {isa = PBXBuildFile; fileRef = 3F3801621B98097A005DACE5 /* github1.css */; };
+		3F3801651B98097A005DACE5 /* github2.css in Resources */ = {isa = PBXBuildFile; fileRef = 3F3801631B98097A005DACE5 /* github2.css */; };
 		3F4149061B5B5EE30025B708 /* UserProfileTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F4149051B5B5EE30025B708 /* UserProfileTableVC.m */; };
 		3F4149091B5B8E2B0025B708 /* UserProfileHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F4149081B5B8E2B0025B708 /* UserProfileHeaderView.m */; };
 		3FBFD28C1B4AD68800BDC00F /* UIImage+MRC_Octicons.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD28B1B4AD68800BDC00F /* UIImage+MRC_Octicons.m */; };
@@ -96,6 +98,8 @@
 		3F29DF361B52485B002257DF /* GITSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GITSearch.m; sourceTree = "<group>"; };
 		3F38015D1B94B6D9005DACE5 /* KVStoreManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KVStoreManager.h; sourceTree = "<group>"; };
 		3F38015E1B94B6D9005DACE5 /* KVStoreManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KVStoreManager.m; sourceTree = "<group>"; };
+		3F3801621B98097A005DACE5 /* github1.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = github1.css; sourceTree = "<group>"; };
+		3F3801631B98097A005DACE5 /* github2.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = github2.css; sourceTree = "<group>"; };
 		3F4149041B5B5EE30025B708 /* UserProfileTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProfileTableVC.h; sourceTree = "<group>"; };
 		3F4149051B5B5EE30025B708 /* UserProfileTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProfileTableVC.m; sourceTree = "<group>"; };
 		3F4149071B5B8E2B0025B708 /* UserProfileHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProfileHeaderView.h; sourceTree = "<group>"; };
@@ -165,6 +169,7 @@
 		3F2547401B45A0060012CDD6 /* MrCode */ = {
 			isa = PBXGroup;
 			children = (
+				3F3801601B98097A005DACE5 /* Resources */,
 				3FCF7CEB1B635324002CE5D5 /* Vendors */,
 				3F25476A1B45A1DE0012CDD6 /* GitHubAPIClient */,
 				3F2547811B47F3D40012CDD6 /* Sections */,
@@ -286,6 +291,23 @@
 				3FBFD2911B4C1C3500BDC00F /* RepositoryHeaderView.m */,
 			);
 			path = Repositories;
+			sourceTree = "<group>";
+		};
+		3F3801601B98097A005DACE5 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				3F3801611B98097A005DACE5 /* css */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		3F3801611B98097A005DACE5 /* css */ = {
+			isa = PBXGroup;
+			children = (
+				3F3801621B98097A005DACE5 /* github1.css */,
+				3F3801631B98097A005DACE5 /* github2.css */,
+			);
+			path = css;
 			sourceTree = "<group>";
 		};
 		3F4149031B5B5E6D0025B708 /* Profile */ = {
@@ -452,6 +474,8 @@
 			files = (
 				3F2547501B45A0060012CDD6 /* Main.storyboard in Resources */,
 				3F2547551B45A0070012CDD6 /* LaunchScreen.xib in Resources */,
+				3F3801651B98097A005DACE5 /* github2.css in Resources */,
+				3F3801641B98097A005DACE5 /* github1.css in Resources */,
 				3F2547521B45A0070012CDD6 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

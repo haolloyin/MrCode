@@ -14,6 +14,15 @@ static NSString *MyStarredRepositories = @"MrCode_MyStarredRepositories";
 static NSString *MyOwnedRepositories = @"MrCode_MyOwnedRepositories";
 static NSString *kReposReadMeTableName = @"MrCode_ReposReadMeTableName";
 
+//static NSString *kHTMLTemplateString = @"<html><head><meta charset='utf-8'>"
+//"<link crossorigin=\"anonymous\" href=\"https://assets-cdn.github.com/assets/github-11f9d64531e606e5dcae92cd4bc5db0397294f98aca5575628fe6cba053ebeef.css\" media=\"all\" rel=\"stylesheet\"/>"
+//"<link crossorigin=\"anonymous\" href=\"https://assets-cdn.github.com/assets/github2-c0d3df1e6943fef2afbe89f45c3ee9bfbedf1deaf2ec3b76e55192a78f137218.css\" media=\"all\" rel=\"stylesheet\"/>"
+//"<title>%@</title></head><body>%@</body></html>";
+static NSString *kHTMLTemplateString = @"<html><head><meta charset='utf-8'>"
+"<link crossorigin=\"anonymous\" href=\"github1.css\" media=\"all\" rel=\"stylesheet\"/>"
+"<link crossorigin=\"anonymous\" href=\"github2.css\" media=\"all\" rel=\"stylesheet\"/>"
+"<title>%@</title></head><body>%@</body></html>";
+
 @implementation GITRepository
 
 + (NSDictionary *)replacedKeyFromPropertyName
@@ -343,7 +352,7 @@ static NSString *kReposReadMeTableName = @"MrCode_ReposReadMeTableName";
         NSString *base64String = dict[@"content"];
         NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:base64String options:NSDataBase64DecodingIgnoreUnknownCharacters];
         NSString *content = [[NSString alloc] initWithData:decodedData encoding:NSUTF8StringEncoding];
-        NSString *html = [NSString stringWithFormat:@"<html><head><title>%@</title></head><body>%@</body></html>", self.fullName, content];
+        NSString *html = [NSString stringWithFormat:kHTMLTemplateString, self.fullName, content];
         [self storeReadmeHTML:html];
         NSLog(@"refresh README ok");
         success(html);
@@ -352,7 +361,7 @@ static NSString *kReposReadMeTableName = @"MrCode_ReposReadMeTableName";
         if (operation.response.statusCode == 200) {
             NSData *encodedData = error.userInfo[@"com.alamofire.serialization.response.error.data"];
             NSString *content = [[NSString alloc] initWithData:encodedData encoding:NSUTF8StringEncoding];
-            NSString *html = [NSString stringWithFormat:@"<html><head><title>%@</title></head><body>%@</body></html>", self.fullName, content];
+            NSString *html = [NSString stringWithFormat:kHTMLTemplateString, self.fullName, content];
             [self storeReadmeHTML:html];
             NSLog(@"refresh README error but ok");
             success(html);
