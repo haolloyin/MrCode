@@ -7,6 +7,7 @@
 //
 
 #import "KVStoreManager.h"
+#import "MrCodeConst.h"
 
 @implementation KVStoreManager
 
@@ -16,7 +17,7 @@
     static YTKKeyValueStore *store;
     if (!store) {
         dispatch_once(&onceToken, ^{
-            store = [[YTKKeyValueStore alloc] initDBWithName:@"MrCode.db"];
+            store = [[YTKKeyValueStore alloc] initDBWithName:MCYTKKeyValueStoreDB];
         });
     }
 

@@ -31,6 +31,7 @@
 		3F38015F1B94B6D9005DACE5 /* KVStoreManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F38015E1B94B6D9005DACE5 /* KVStoreManager.m */; };
 		3F3801641B98097A005DACE5 /* github1.css in Resources */ = {isa = PBXBuildFile; fileRef = 3F3801621B98097A005DACE5 /* github1.css */; };
 		3F3801651B98097A005DACE5 /* github2.css in Resources */ = {isa = PBXBuildFile; fileRef = 3F3801631B98097A005DACE5 /* github2.css */; };
+		3F38016A1B981264005DACE5 /* MrCodeConst.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F3801691B981264005DACE5 /* MrCodeConst.m */; };
 		3F4149061B5B5EE30025B708 /* UserProfileTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F4149051B5B5EE30025B708 /* UserProfileTableVC.m */; };
 		3F4149091B5B8E2B0025B708 /* UserProfileHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F4149081B5B8E2B0025B708 /* UserProfileHeaderView.m */; };
 		3FBFD28C1B4AD68800BDC00F /* UIImage+MRC_Octicons.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD28B1B4AD68800BDC00F /* UIImage+MRC_Octicons.m */; };
@@ -100,6 +101,8 @@
 		3F38015E1B94B6D9005DACE5 /* KVStoreManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KVStoreManager.m; sourceTree = "<group>"; };
 		3F3801621B98097A005DACE5 /* github1.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = github1.css; sourceTree = "<group>"; };
 		3F3801631B98097A005DACE5 /* github2.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = github2.css; sourceTree = "<group>"; };
+		3F3801681B9810BE005DACE5 /* MrCodeConst.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MrCodeConst.h; sourceTree = "<group>"; };
+		3F3801691B981264005DACE5 /* MrCodeConst.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MrCodeConst.m; sourceTree = "<group>"; };
 		3F4149041B5B5EE30025B708 /* UserProfileTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProfileTableVC.h; sourceTree = "<group>"; };
 		3F4149051B5B5EE30025B708 /* UserProfileTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProfileTableVC.m; sourceTree = "<group>"; };
 		3F4149071B5B8E2B0025B708 /* UserProfileHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProfileHeaderView.h; sourceTree = "<group>"; };
@@ -365,6 +368,8 @@
 		3FDB8D2D1B726B15004694B4 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				3F3801681B9810BE005DACE5 /* MrCodeConst.h */,
+				3F3801691B981264005DACE5 /* MrCodeConst.m */,
 				3FDB8D2E1B726B37004694B4 /* WebViewController.h */,
 				3FDB8D2F1B726B37004694B4 /* WebViewController.m */,
 				3F38015D1B94B6D9005DACE5 /* KVStoreManager.h */,
@@ -552,6 +557,7 @@
 				3FBFD28F1B4C1C0900BDC00F /* RepositoryDetailTableVC.m in Sources */,
 				3FDB8D301B726B37004694B4 /* WebViewController.m in Sources */,
 				3F2547931B4842C80012CDD6 /* ReposTableViewCell.m in Sources */,
+				3F38016A1B981264005DACE5 /* MrCodeConst.m in Sources */,
 				3F25477A1B45A1DE0012CDD6 /* GITRepository.m in Sources */,
 				3F2547781B45A1DE0012CDD6 /* GITNotification.m in Sources */,
 				3FCF7CEF1B635337002CE5D5 /* KxMenu.m in Sources */,
