@@ -64,9 +64,9 @@ typedef NS_ENUM(NSUInteger, JGHRepositoryOrderBy) {
 @property (nonatomic, readonly, copy  ) NSString   *name;
 @property (nonatomic, readonly, copy  ) NSString   *language;
 @property (nonatomic, readonly, strong) NSURL      *url;
-@property (nonatomic, readonly, copy  ) NSDate     *updatedAt;
-@property (nonatomic, readonly, copy  ) NSDate     *createdAt;
-@property (nonatomic, readonly, copy  ) NSDate     *pushedAt;
+@property (nonatomic, readonly, strong) NSDate     *updatedAt;
+@property (nonatomic, readonly, strong) NSDate     *createdAt;
+@property (nonatomic, readonly, strong) NSDate     *pushedAt;
 
 + (BOOL)isStarredRepo:(GITRepository *)repo;
 
