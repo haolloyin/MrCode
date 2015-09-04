@@ -24,6 +24,18 @@
 
 @implementation UserProfileTableVC
 
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    if(self = [super initWithCoder:aDecoder])
+    {
+        self.tabBarItem.title = @"Profile";
+        CGSize size = CGSizeMake(30, 30);
+        self.tabBarItem.image = [UIImage octicon_imageWithIdentifier:@"Person" iconColor:FlatGray size:size];
+        self.tabBarItem.selectedImage = [UIImage octicon_imageWithIdentifier:@"Person" iconColor:FlatSkyBlue size:size];
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     

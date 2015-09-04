@@ -12,7 +12,8 @@
 #import "RepositoryDetailTableVC.h"
 #import "GITUser.h"
 
-#import "UIImage+Octions.h"
+#import "UIImage+MRC_Octicons.h"
+#import <ChameleonFramework/Chameleon.h>
 #import "UITableView+FDTemplateLayoutCell.h"
 
 static NSString *kReposCellIdentifier = @"ReposCellIdentifier";
@@ -32,6 +33,18 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
 @end
 
 @implementation RepositoriesTableVC
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    if(self = [super initWithCoder:aDecoder])
+    {
+        self.tabBarItem.title = @"Repositories";
+        CGSize size = CGSizeMake(30, 30);
+        self.tabBarItem.image = [UIImage octicon_imageWithIdentifier:@"Repo" iconColor:FlatGray size:size];
+        self.tabBarItem.selectedImage = [UIImage octicon_imageWithIdentifier:@"Repo" iconColor:FlatSkyBlue size:size];
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -156,11 +169,9 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
 
     cell.detailTextLabel.text      = detailText;
     cell.detailTextLabel.textColor = [UIColor grayColor];
-    cell.imageView.image = [UIImage octicon_imageWithIcon:repo.isForked ? @"RepoForked" : @"Repo"
-                                          backgroundColor:[UIColor clearColor]
-                                                iconColor:[UIColor darkGrayColor]
-                                                iconScale:1.0
-                                                  andSize:CGSizeMake(30.0f, 30.0f)];
+    cell.imageView.image = [UIImage octicon_imageWithIdentifier:repo.isForked ? @"RepoForked" : @"Repo"
+                                                      iconColor:[UIColor darkGrayColor]
+                                                           size:CGSizeMake(30.0f, 30.0f)];
 }
 
 - (void)loadCachedRepos

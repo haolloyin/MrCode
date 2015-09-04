@@ -58,6 +58,18 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 
 @implementation SearchTableVC
 
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    if(self = [super initWithCoder:aDecoder])
+    {
+        self.tabBarItem.title = @"Explore";
+        CGSize size = CGSizeMake(30, 30);
+        self.tabBarItem.image = [UIImage octicon_imageWithIdentifier:@"Search" iconColor:FlatGray size:size];
+        self.tabBarItem.selectedImage = [UIImage octicon_imageWithIdentifier:@"Search" iconColor:FlatSkyBlue size:size];
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     

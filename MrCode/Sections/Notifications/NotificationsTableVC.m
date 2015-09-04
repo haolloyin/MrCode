@@ -13,6 +13,8 @@
 #import "WebViewController.h"
 
 #import "UITableView+FDTemplateLayoutCell.h"
+#import "UIImage+MRC_Octicons.h"
+#import <ChameleonFramework/Chameleon.h>
 
 static NSString *kNotificationCellIdentifier = @"NotificationCellIdentifier";
 
@@ -23,6 +25,18 @@ static NSString *kNotificationCellIdentifier = @"NotificationCellIdentifier";
 @end
 
 @implementation NotificationsTableVC
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    if(self = [super initWithCoder:aDecoder])
+    {
+        self.tabBarItem.title = @"Notifications";
+        CGSize size = CGSizeMake(30, 30);
+        self.tabBarItem.image = [UIImage octicon_imageWithIdentifier:@"Broadcast" iconColor:FlatGray size:size];
+        self.tabBarItem.selectedImage = [UIImage octicon_imageWithIdentifier:@"Broadcast" iconColor:FlatSkyBlue size:size];
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];

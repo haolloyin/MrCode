@@ -298,11 +298,11 @@
             </objects>
             <point key="canvasLocation" x="1478" y="-1044"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Notifications-->
         <scene sceneID="Ago-H3-1ym">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Cq6-y5-SbT" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" systemItem="mostViewed" id="tK2-Pz-TrN"/>
+                    <tabBarItem key="tabBarItem" title="Notifications" id="tK2-Pz-TrN"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="lkz-E0-Ybb">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -317,7 +317,7 @@
             </objects>
             <point key="canvasLocation" x="527" y="-395"/>
         </scene>
-        <!--Test View Controller-->
+        <!--Test-->
         <scene sceneID="xfm-3f-47w">
             <objects>
                 <viewController id="V56-aY-A6c" customClass="TestViewController" sceneMemberID="viewController">
@@ -330,17 +330,17 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <tabBarItem key="tabBarItem" systemItem="more" id="G4l-xH-QeS"/>
+                    <tabBarItem key="tabBarItem" title="Test" id="G4l-xH-QeS"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Spc-2H-okr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-416" y="714"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Repositories-->
         <scene sceneID="2d7-FZ-qie">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="JhY-XZ-Ycj" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" systemItem="favorites" id="9dv-Jy-YNX"/>
+                    <tabBarItem key="tabBarItem" title="Repositories" id="9dv-Jy-YNX"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Dh5-cu-TFn">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -453,11 +453,11 @@
             </objects>
             <point key="canvasLocation" x="1059" y="1867"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Profile-->
         <scene sceneID="qd8-2P-3DA">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="fzm-pv-y3d" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" systemItem="bookmarks" id="ibk-4O-yMF"/>
+                    <tabBarItem key="tabBarItem" title="Profile" id="ibk-4O-yMF"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="jII-IR-eQN">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -472,11 +472,11 @@
             </objects>
             <point key="canvasLocation" x="946" y="-1044"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Explore-->
         <scene sceneID="lez-E9-v9M">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="z9Q-ov-zKb" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" systemItem="search" id="2bf-4p-rT9"/>
+                    <tabBarItem key="tabBarItem" title="Explore" id="2bf-4p-rT9"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Vyk-1V-Drb">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -516,9 +516,9 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="hP2-ir-aXF"/>
-        <segue reference="a08-hr-d3G"/>
-        <segue reference="tBB-ju-T8Q"/>
+        <segue reference="qLl-oV-EcP"/>
+        <segue reference="dYg-Dp-d5i"/>
         <segue reference="C0F-bt-AMl"/>
+        <segue reference="a08-hr-d3G"/>
     </inferredMetricsTieBreakers>
 </document>
