@@ -32,8 +32,8 @@ static NSString *kNotificationCellIdentifier = @"NotificationCellIdentifier";
     {
         self.tabBarItem.title = @"Notifications";
         CGSize size = CGSizeMake(30, 30);
-        self.tabBarItem.image = [UIImage octicon_imageWithIdentifier:@"Broadcast" iconColor:FlatGray size:size];
-        self.tabBarItem.selectedImage = [UIImage octicon_imageWithIdentifier:@"Broadcast" iconColor:FlatSkyBlue size:size];
+        self.tabBarItem.image = [UIImage octicon_imageWithIdentifier:@"RadioTower" iconColor:FlatGray size:size];
+        self.tabBarItem.selectedImage = [UIImage octicon_imageWithIdentifier:@"RadioTower" iconColor:FlatSkyBlue size:size];
     }
     return self;
 }
