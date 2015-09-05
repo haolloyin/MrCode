@@ -23,7 +23,7 @@ PODS:
   - ChameleonFramework (1.2.1):
     - ChameleonFramework/Default (= 1.2.1)
   - ChameleonFramework/Default (1.2.1)
-  - DateTools (1.6.1)
+  - DateTools (1.7.0)
   - FMDB (2.5):
     - FMDB/standard (= 2.5)
   - FMDB/common (2.5)
@@ -53,7 +53,7 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   AFNetworking: 79f7eb1a0fcfa7beb409332b2ca49afe9ce53b05
   ChameleonFramework: 3476f813ac1615aef0a9a958f05520dfca47e09d
-  DateTools: 9bcc89e4f2f9004d8a7a2bd1b49269cf78968e65
+  DateTools: 53288ee8b905fdc75897a1e6b5cc0144b14cba60
   FMDB: 96e8f1bcc1329e269330f99770ad4285d9003e52
   Masonry: 362e8a1cc0beada4a4c4832d5e863da2a51533be
   MJExtension: 2330aeb6c83428c820749290bf766e81827cda65

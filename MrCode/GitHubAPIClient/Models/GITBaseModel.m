@@ -11,6 +11,8 @@
 
 @implementation GITBaseModel
 
+MJCodingImplementation
+
 - (id)newValueFromOldValue:(id)oldValue property:(MJProperty *)property
 {
     if (oldValue != [NSNull null] && [oldValue isKindOfClass:[NSString class]] && property.type.typeClass == [NSDate class]) {

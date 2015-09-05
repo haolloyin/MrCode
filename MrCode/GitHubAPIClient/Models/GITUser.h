@@ -16,8 +16,8 @@ static NSString *kAUTHENTICATED_USER_IDENTIFIER = @"GitHubOAuthClient_AUTHENTICA
 
 @property (nonatomic, readonly, copy  ) NSString   *login;
 @property (nonatomic, assign          ) NSUInteger ID;
-@property (nonatomic, readonly, strong) NSURL      *avatarURL;
 @property (nonatomic, readonly, copy  ) NSString   *gravatarId;
+@property (nonatomic, readonly, strong) NSURL      *avatarURL;
 @property (nonatomic, readonly, strong) NSURL      *url;
 @property (nonatomic, readonly, strong) NSURL      *htmlURL;
 @property (nonatomic, readonly, strong) NSURL      *followersURL;

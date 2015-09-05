@@ -71,11 +71,12 @@ static NSString *kReposReadMeTableName = @"MrCode_ReposReadMeTableName";
 
 + (NSArray *)myStarredRepositories
 {
-    NSArray *jsonArray = [[NSUserDefaults standardUserDefaults] objectForKey:MyStarredRepositories];
+    NSArray *dataArray = [[NSUserDefaults standardUserDefaults] objectForKey:MyStarredRepositories];
     
     NSMutableArray *repos = [NSMutableArray array];
-    for (NSDictionary *item in jsonArray) {
-        [repos addObject:[GITRepository objectWithKeyValues:item]];
+    for (NSData *data in dataArray) {
+        GITRepository *repo = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        [repos addObject:repo];
     }
     NSLog(@"return total starred repos=%@", @(repos.count));
     return [repos copy];
@@ -85,13 +86,12 @@ static NSString *kReposReadMeTableName = @"MrCode_ReposReadMeTableName";
 {
     if (repos) {
         // 先转化成 Json 字典再持久化
-        NSMutableArray *jsonArray = [NSMutableArray array];
+        NSMutableArray *dataArray = [NSMutableArray array];
         for (GITRepository *item in repos) {
-            NSDictionary *jsonDict = item.keyValues;
-            [jsonArray addObject:jsonDict];
+            [dataArray addObject:[NSKeyedArchiver archivedDataWithRootObject:item]];
         }
 
-        [[NSUserDefaults standardUserDefaults] setObject:jsonArray forKey:MyStarredRepositories];
+        [[NSUserDefaults standardUserDefaults] setObject:dataArray forKey:MyStarredRepositories];
         [[NSUserDefaults standardUserDefaults] synchronize];
         
         NSLog(@"update total starred repos=%@", @(repos.count));
@@ -100,11 +100,12 @@ static NSString *kReposReadMeTableName = @"MrCode_ReposReadMeTableName";
 
 + (NSArray *)myOwnedRepositories
 {
-    NSArray *jsonArray = [[NSUserDefaults standardUserDefaults] objectForKey:MyOwnedRepositories];
+    NSArray *dataArray = [[NSUserDefaults standardUserDefaults] objectForKey:MyOwnedRepositories];
     
     NSMutableArray *repos = [NSMutableArray array];
-    for (NSDictionary *item in jsonArray) {
-        [repos addObject:[GITRepository objectWithKeyValues:item]];
+    for (NSData *data in dataArray) {
+        GITRepository *repo = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        [repos addObject:repo];
     }
     NSLog(@"return total owned repos=%@", @(repos.count));
     return [repos copy];
@@ -113,14 +114,11 @@ static NSString *kReposReadMeTableName = @"MrCode_ReposReadMeTableName";
 + (void)updateMyOwnedRepositories:(NSArray *)repos
 {
     if (repos) {
-        // 先转化成 Json 字典再持久化
-        NSMutableArray *jsonArray = [NSMutableArray array];
+        NSMutableArray *dataArray = [NSMutableArray array];
         for (GITRepository *item in repos) {
-            NSDictionary *jsonDict = item.keyValues;
-            [jsonArray addObject:jsonDict];
+            [dataArray addObject:[NSKeyedArchiver archivedDataWithRootObject:item]];
         }
-        
-        [[NSUserDefaults standardUserDefaults] setObject:jsonArray forKey:MyOwnedRepositories];
+        [[NSUserDefaults standardUserDefaults] setObject:dataArray forKey:MyOwnedRepositories];
         [[NSUserDefaults standardUserDefaults] synchronize];
         
         NSLog(@"update total owned repos=%@", @(repos.count));
