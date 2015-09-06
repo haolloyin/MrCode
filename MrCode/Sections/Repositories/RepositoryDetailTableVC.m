@@ -61,7 +61,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return section == 0 ? 2 : 7;
+    return section == 0 ? 2 : 8;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -125,6 +125,10 @@
                 textLabel = @"Issues";
                 iconIdentifier = @"IssueOpened";
                 break;
+            case 7:
+                textLabel = @"Source Code";
+                iconIdentifier = @"Code";
+                break;
         }
     }
     
@@ -158,7 +162,13 @@
             case 0:
                 [self performSegueWithIdentifier:@"ReposDetail2ReposTableVC" sender:self.repo];
                 break;
-                
+            case 7:
+                [self.repo contentsOfPath:nil success:^(NSArray *array) {
+                    NSLog(@"array:\n%@", array);
+                } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                    NSLog(@"error:\n%@", error);
+                }];
+                break;
             default:
                 break;
         }

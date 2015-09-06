@@ -11,6 +11,25 @@
 #import "GITBaseModel.h"
 #import "GITUser.h"
 
+@interface GITRepositoryContent : GITBaseModel
+
+@property (nonatomic, readonly, copy) NSString *name;
+@property (nonatomic, readonly, copy) NSString *path;
+@property (nonatomic, readonly, copy) NSString *sha;
+@property (nonatomic, readonly, copy) NSString *type;
+@property (nonatomic, assign        ) NSUInteger size;
+@property (nonatomic, readonly, strong) NSURL  *url;
+@property (nonatomic, readonly, strong) NSURL  *htmlURL;
+@property (nonatomic, readonly, strong) NSURL  *gitURL;
+@property (nonatomic, readonly, strong) NSURL  *downloadURL;
+@property (nonatomic, readonly, strong) NSURL  *linksSelfURL;
+@property (nonatomic, readonly, strong) NSURL  *linksGitURL;
+@property (nonatomic, readonly, strong) NSURL  *linksHtmlURL;
+
+@end
+
+
+
 typedef NS_ENUM(NSUInteger, JGHRepositoryType) {
     JGHRepositoryTypeAll,
     JGHRepositoryTypeOwner,
@@ -136,5 +155,9 @@ typedef NS_ENUM(NSUInteger, JGHRepositoryOrderBy) {
 - (AFHTTPRequestOperation *)readmeWithsuccess:(void (^)(NSString *))success
                                       failure:(GitHubClientFailureBlock)failure
                                   needRefresh:(BOOL)refresh;
+
+- (AFHTTPRequestOperation *)contentsOfPath:(NSString *)path
+                                   success:(void (^)(NSArray *))success
+                                   failure:(GitHubClientFailureBlock)failure;
 
 @end

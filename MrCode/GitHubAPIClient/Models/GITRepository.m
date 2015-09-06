@@ -15,6 +15,29 @@ static NSString *MyStarredRepositories = @"MrCode_MyStarredRepositories";
 static NSString *MyOwnedRepositories = @"MrCode_MyOwnedRepositories";
 static NSString *kReposReadMeTableName = @"MrCode_ReposReadMeTableName";
 
+@implementation GITRepositoryContent
+
++ (NSDictionary *)replacedKeyFromPropertyName
+{
+    return @{
+             @"name": @"name",
+             @"path": @"path",
+             @"sha": @"sha",
+             @"size": @"size",
+             @"url": @"url",
+             @"htmlURL": @"html_url",
+             @"gitURL": @"git_url",
+             @"downloadURL": @"download_url",
+             @"size": @"type",
+             @"linksSelfURL": @"_links.self",
+             @"linksGitURL": @"_links.git",
+             @"linksHtmlURL": @"_links.html"
+             };
+}
+
+@end
+
+
 @implementation GITRepository
 
 + (NSDictionary *)replacedKeyFromPropertyName
@@ -298,6 +321,26 @@ static NSString *kReposReadMeTableName = @"MrCode_ReposReadMeTableName";
     success(readmeHTMLString);
 
     return nil;
+}
+
+- (AFHTTPRequestOperation *)contentsOfPath:(NSString *)path
+                                   success:(void (^)(NSArray *))success
+                                   failure:(GitHubClientFailureBlock)failure
+{
+    GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
+    [client setValue:@"application/vnd.github.VERSION.html" forHeader:@"Accept"];
+    
+    path = path ?:@"";
+    NSString *url = [NSString stringWithFormat:@"/repos/%@/contents/%@", self.fullName, path];
+    return [client getWithURL:url parameters:nil success:^(AFHTTPRequestOperation *operation, id obj) {
+        NSMutableArray *array = [NSMutableArray array];
+        for (NSDictionary *dic in obj) {
+            GITRepositoryContent *content = [GITRepositoryContent objectWithKeyValues:dic];
+            NSLog(@"content:\n%@", content);
+            [array addObject:content];
+        }
+        success([array copy]);
+    } failure:failure];
 }
 
 #pragma mark - Private
