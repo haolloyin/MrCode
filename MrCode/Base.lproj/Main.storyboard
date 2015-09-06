@@ -172,11 +172,48 @@
                         <segue destination="t2G-KY-Cq4" kind="push" identifier="RepositoryDetail2UserProfile" id="tBB-ju-T8Q"/>
                         <segue destination="pbu-Ix-DVe" kind="push" identifier="ReposDetail2ReposTableVC" id="hP2-ir-aXF"/>
                         <segue destination="OBL-bN-xyv" kind="push" identifier="ReposDetail2WebView" id="shR-eN-YNR"/>
+                        <segue destination="wTD-eO-FW2" kind="push" identifier="ReposDetail2UserTableVC" id="rEC-14-Au0"/>
+                        <segue destination="X9g-oL-0Y8" kind="push" identifier="ReposDetail2ReposContentTableVC" id="IpJ-nh-bsg"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8aQ-Zx-MoC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1491" y="322"/>
+        </scene>
+        <!--Repository Content TableVC-->
+        <scene sceneID="c89-0X-dRp">
+            <objects>
+                <tableViewController id="X9g-oL-0Y8" customClass="RepositoryContentTableVC" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="nlw-iA-5Fh">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="BasicCell" textLabel="c6V-SC-N78" style="IBUITableViewCellStyleDefault" id="SQx-HS-nz6">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="SQx-HS-nz6" id="u7A-Jh-wmf">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="c6V-SC-N78">
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="X9g-oL-0Y8" id="K51-b2-7FT"/>
+                            <outlet property="delegate" destination="X9g-oL-0Y8" id="02R-LB-7nF"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="HSZ-WR-zU4"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nAw-Xq-jFo" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2048" y="1075"/>
         </scene>
         <!--Users TableVC-->
         <scene sceneID="Ohv-Vg-neC">
@@ -518,7 +555,8 @@
     <inferredMetricsTieBreakers>
         <segue reference="a08-hr-d3G"/>
         <segue reference="tBB-ju-T8Q"/>
-        <segue reference="shR-eN-YNR"/>
         <segue reference="hP2-ir-aXF"/>
+        <segue reference="rEC-14-Au0"/>
+        <segue reference="shR-eN-YNR"/>
     </inferredMetricsTieBreakers>
 </document>

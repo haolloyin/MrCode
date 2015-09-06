@@ -336,7 +336,6 @@ static NSString *kReposReadMeTableName = @"MrCode_ReposReadMeTableName";
         NSMutableArray *array = [NSMutableArray array];
         for (NSDictionary *dic in obj) {
             GITRepositoryContent *content = [GITRepositoryContent objectWithKeyValues:dic];
-            NSLog(@"content:\n%@", content);
             [array addObject:content];
         }
         success([array copy]);

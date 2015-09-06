@@ -11,6 +11,7 @@
 #import "UserProfileTableVC.h"
 #import "RepositoriesTableVC.h"
 #import "WebViewController.h"
+#import "RepositoryContentTableVC.h"
 
 #import "UIImage+MRC_Octicons.h"
 
@@ -102,20 +103,20 @@
                 cell.detailTextLabel.text = self.repo.owner.login;
                 break;
             case 1:
-                textLabel = @"Releases";
-                iconIdentifier = @"Tag";
+                textLabel = @"Stargazers";
+                iconIdentifier = @"Star";
                 break;
             case 2:
-                textLabel = @"Recent Activity";
-                iconIdentifier = @"Rss";
+                textLabel = @"Source Code";
+                iconIdentifier = @"Code";
                 break;
             case 3:
                 textLabel = @"Contributors";
                 iconIdentifier = @"Organization";
                 break;
             case 4:
-                textLabel = @"Stargazers";
-                iconIdentifier = @"Star";
+                textLabel = @"Recent Activity";
+                iconIdentifier = @"Rss";
                 break;
             case 5:
                 textLabel = @"Pull Requests";
@@ -126,8 +127,8 @@
                 iconIdentifier = @"IssueOpened";
                 break;
             case 7:
-                textLabel = @"Source Code";
-                iconIdentifier = @"Code";
+                textLabel = @"Releases";
+                iconIdentifier = @"Tag";
                 break;
         }
     }
@@ -162,12 +163,11 @@
             case 0:
                 [self performSegueWithIdentifier:@"ReposDetail2ReposTableVC" sender:self.repo];
                 break;
-            case 7:
-                [self.repo contentsOfPath:nil success:^(NSArray *array) {
-                    NSLog(@"array:\n%@", array);
-                } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                    NSLog(@"error:\n%@", error);
-                }];
+            case 1:
+                [self performSegueWithIdentifier:@"ReposDetail2UserTableVC" sender:self.repo];
+                break;
+            case 2:
+                [self performSegueWithIdentifier:@"ReposDetail2ReposContentTableVC" sender:self.repo];
                 break;
             default:
                 break;
@@ -208,6 +208,11 @@
         controller.user = [NSString stringWithFormat:@"%@/%@", self.repo.owner.login, self.repo.name];
         controller.reposType = RepositoriesTableVCReposTypeForks;
     }
+    else if ([identifier isEqualToString:@"ReposDetail2UserTableVC"]) {
+        RepositoriesTableVC *controller = (RepositoriesTableVC *)segue.destinationViewController;
+        controller.user = [NSString stringWithFormat:@"%@/%@", self.repo.owner.login, self.repo.name];
+        controller.reposType = RepositoriesTableVCReposTypeForks;
+    }
     else if ([identifier isEqualToString:@"ReposDetail2WebView"]) {
         [self.repo readmeWithsuccess:^(NSString *success) {
             WebViewController *controller = (WebViewController *)segue.destinationViewController;
@@ -218,6 +223,11 @@
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
         } needRefresh:NO];
+    }
+    else if ([identifier isEqualToString:@"ReposDetail2ReposContentTableVC"]) {
+        RepositoryContentTableVC *controller = (RepositoryContentTableVC *)segue.destinationViewController;
+        controller.repo = (GITRepository *)sender;
+        controller.path = nil;
     }
 }
 

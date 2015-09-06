@@ -34,6 +34,7 @@
 		3F38016A1B981264005DACE5 /* MrCodeConst.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F3801691B981264005DACE5 /* MrCodeConst.m */; };
 		3F4149061B5B5EE30025B708 /* UserProfileTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F4149051B5B5EE30025B708 /* UserProfileTableVC.m */; };
 		3F4149091B5B8E2B0025B708 /* UserProfileHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F4149081B5B8E2B0025B708 /* UserProfileHeaderView.m */; };
+		3F8C0FAD1B9C96E40004F818 /* RepositoryContentTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F8C0FAC1B9C96E40004F818 /* RepositoryContentTableVC.m */; };
 		3FBFD28C1B4AD68800BDC00F /* UIImage+MRC_Octicons.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD28B1B4AD68800BDC00F /* UIImage+MRC_Octicons.m */; };
 		3FBFD28F1B4C1C0900BDC00F /* RepositoryDetailTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD28E1B4C1C0900BDC00F /* RepositoryDetailTableVC.m */; };
 		3FBFD2921B4C1C3500BDC00F /* RepositoryHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD2911B4C1C3500BDC00F /* RepositoryHeaderView.m */; };
@@ -107,6 +108,8 @@
 		3F4149051B5B5EE30025B708 /* UserProfileTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProfileTableVC.m; sourceTree = "<group>"; };
 		3F4149071B5B8E2B0025B708 /* UserProfileHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProfileHeaderView.h; sourceTree = "<group>"; };
 		3F4149081B5B8E2B0025B708 /* UserProfileHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProfileHeaderView.m; sourceTree = "<group>"; };
+		3F8C0FAB1B9C96E40004F818 /* RepositoryContentTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoryContentTableVC.h; sourceTree = "<group>"; };
+		3F8C0FAC1B9C96E40004F818 /* RepositoryContentTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepositoryContentTableVC.m; sourceTree = "<group>"; };
 		3FBFD28A1B4AD68800BDC00F /* UIImage+MRC_Octicons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MRC_Octicons.h"; sourceTree = "<group>"; };
 		3FBFD28B1B4AD68800BDC00F /* UIImage+MRC_Octicons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+MRC_Octicons.m"; sourceTree = "<group>"; };
 		3FBFD28D1B4C1C0900BDC00F /* RepositoryDetailTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoryDetailTableVC.h; sourceTree = "<group>"; };
@@ -292,6 +295,8 @@
 				3FBFD28E1B4C1C0900BDC00F /* RepositoryDetailTableVC.m */,
 				3FBFD2901B4C1C3500BDC00F /* RepositoryHeaderView.h */,
 				3FBFD2911B4C1C3500BDC00F /* RepositoryHeaderView.m */,
+				3F8C0FAB1B9C96E40004F818 /* RepositoryContentTableVC.h */,
+				3F8C0FAC1B9C96E40004F818 /* RepositoryContentTableVC.m */,
 			);
 			path = Repositories;
 			sourceTree = "<group>";
@@ -549,6 +554,7 @@
 				3F2547441B45A0060012CDD6 /* main.m in Sources */,
 				3F29DF371B52485B002257DF /* GITSearch.m in Sources */,
 				3F2547871B47F41D0012CDD6 /* NotificationsTableVC.m in Sources */,
+				3F8C0FAD1B9C96E40004F818 /* RepositoryContentTableVC.m in Sources */,
 				3F25477B1B45A1DE0012CDD6 /* GITUser.m in Sources */,
 				3FCF7D001B63B43B002CE5D5 /* LanguagesTableVC.m in Sources */,
 				3F29DF1B1B4D8A6D002257DF /* GITBaseModel.m in Sources */,
