@@ -7,7 +7,8 @@
 //
 
 #import "RepositoryContentTableVC.h"
-#import "UIImage+MRC_Octicons.h"
+#import "GITRepository.h"
+#import "RepositoryContentTableViewCell.h"
 
 @interface RepositoryContentTableVC ()
 
@@ -29,6 +30,9 @@
     
     _contents = [NSArray array];
     
+    [self.tableView registerClass:[RepositoryContentTableViewCell class]
+           forCellReuseIdentifier:NSStringFromClass([RepositoryContentTableViewCell class])];
+    
     [self loadData];
 }
 
@@ -48,28 +52,43 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"BasicCell" forIndexPath:indexPath];
-    GITRepositoryContent *item = _contents[indexPath.row];
-    
-    cell.textLabel.text = item.name;
-    if ([item.type isEqualToString:@"file"]) {
-        cell.imageView.image = [UIImage octicon_imageWithIdentifier:@"FileCode" size:CGSizeMake(20, 20)];
-    } else if ([item.type isEqualToString:@"dir"]) {
-        cell.imageView.image = [UIImage octicon_imageWithIdentifier:@"FileDirectory" size:CGSizeMake(20, 20)];
-    }
+    NSString *identifier = NSStringFromClass([RepositoryContentTableViewCell class]);
+    RepositoryContentTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
+    cell.gitContent = _contents[indexPath.row];
     
     return cell;
 }
 
-/*
+//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    GITRepositoryContent *item = _contents[indexPath.row];
+//    if ([item.type isEqualToString:@"dir"]) {
+//        NSLog(@"is dir");
+//        [self performSegueWithIdentifier:@"ReposContent2Self" sender:item];
+//    }
+//}
+
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+
+    // 因为这个 push 到自身 controller 是在 IB 拖 cell 连上的，所以不会触发 didSelectRowAtIndexPath，
+    // 也就无法设置 sender，此时 sender 是被点击的 UITableViewCell
+    RepositoryContentTableViewCell *cell = sender;
+    NSString *identifier = segue.identifier;
+    if ([identifier isEqualToString:@"ReposContent2Self"]) {
+        RepositoryContentTableVC *controller = (RepositoryContentTableVC *)segue.destinationViewController;
+        controller.repo = self.repo;
+
+        if (!self.path) {
+            controller.path = [NSString stringWithFormat:@"%@", cell.textLabel.text];
+        }
+        else {
+            controller.path = [NSString stringWithFormat:@"%@/%@", self.path, cell.textLabel.text];
+        }
+        controller.title = cell.textLabel.text;
+    }
 }
-*/
 
 - (void)loadData
 {

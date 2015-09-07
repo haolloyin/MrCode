@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GITRepository.h"
+
+@class GITRepository;
 
 @interface RepositoryContentTableVC : UITableViewController
 

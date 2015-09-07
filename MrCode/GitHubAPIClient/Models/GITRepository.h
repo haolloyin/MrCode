@@ -17,7 +17,9 @@
 @property (nonatomic, readonly, copy) NSString *path;
 @property (nonatomic, readonly, copy) NSString *sha;
 @property (nonatomic, readonly, copy) NSString *type;
+@property (nonatomic, readonly, copy) NSString *content; // 当 type 是 file 这里是 base64 编码后的内容
 @property (nonatomic, assign        ) NSUInteger size;
+
 @property (nonatomic, readonly, strong) NSURL  *url;
 @property (nonatomic, readonly, strong) NSURL  *htmlURL;
 @property (nonatomic, readonly, strong) NSURL  *gitURL;

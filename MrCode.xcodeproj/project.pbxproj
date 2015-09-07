@@ -35,6 +35,7 @@
 		3F4149061B5B5EE30025B708 /* UserProfileTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F4149051B5B5EE30025B708 /* UserProfileTableVC.m */; };
 		3F4149091B5B8E2B0025B708 /* UserProfileHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F4149081B5B8E2B0025B708 /* UserProfileHeaderView.m */; };
 		3F8C0FAD1B9C96E40004F818 /* RepositoryContentTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F8C0FAC1B9C96E40004F818 /* RepositoryContentTableVC.m */; };
+		3F8C0FB01B9DDF820004F818 /* RepositoryContentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F8C0FAF1B9DDF820004F818 /* RepositoryContentTableViewCell.m */; };
 		3FBFD28C1B4AD68800BDC00F /* UIImage+MRC_Octicons.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD28B1B4AD68800BDC00F /* UIImage+MRC_Octicons.m */; };
 		3FBFD28F1B4C1C0900BDC00F /* RepositoryDetailTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD28E1B4C1C0900BDC00F /* RepositoryDetailTableVC.m */; };
 		3FBFD2921B4C1C3500BDC00F /* RepositoryHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD2911B4C1C3500BDC00F /* RepositoryHeaderView.m */; };
@@ -110,6 +111,8 @@
 		3F4149081B5B8E2B0025B708 /* UserProfileHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProfileHeaderView.m; sourceTree = "<group>"; };
 		3F8C0FAB1B9C96E40004F818 /* RepositoryContentTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoryContentTableVC.h; sourceTree = "<group>"; };
 		3F8C0FAC1B9C96E40004F818 /* RepositoryContentTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepositoryContentTableVC.m; sourceTree = "<group>"; };
+		3F8C0FAE1B9DDF820004F818 /* RepositoryContentTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoryContentTableViewCell.h; sourceTree = "<group>"; };
+		3F8C0FAF1B9DDF820004F818 /* RepositoryContentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepositoryContentTableViewCell.m; sourceTree = "<group>"; };
 		3FBFD28A1B4AD68800BDC00F /* UIImage+MRC_Octicons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MRC_Octicons.h"; sourceTree = "<group>"; };
 		3FBFD28B1B4AD68800BDC00F /* UIImage+MRC_Octicons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+MRC_Octicons.m"; sourceTree = "<group>"; };
 		3FBFD28D1B4C1C0900BDC00F /* RepositoryDetailTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoryDetailTableVC.h; sourceTree = "<group>"; };
@@ -297,6 +300,8 @@
 				3FBFD2911B4C1C3500BDC00F /* RepositoryHeaderView.m */,
 				3F8C0FAB1B9C96E40004F818 /* RepositoryContentTableVC.h */,
 				3F8C0FAC1B9C96E40004F818 /* RepositoryContentTableVC.m */,
+				3F8C0FAE1B9DDF820004F818 /* RepositoryContentTableViewCell.h */,
+				3F8C0FAF1B9DDF820004F818 /* RepositoryContentTableViewCell.m */,
 			);
 			path = Repositories;
 			sourceTree = "<group>";
@@ -560,6 +565,7 @@
 				3F29DF1B1B4D8A6D002257DF /* GITBaseModel.m in Sources */,
 				3F2547961B4900960012CDD6 /* TestViewController.m in Sources */,
 				3F0006F21B4D7C6C00503F50 /* NSString+ToNSDate.m in Sources */,
+				3F8C0FB01B9DDF820004F818 /* RepositoryContentTableViewCell.m in Sources */,
 				3FBFD28F1B4C1C0900BDC00F /* RepositoryDetailTableVC.m in Sources */,
 				3FDB8D301B726B37004694B4 /* WebViewController.m in Sources */,
 				3F2547931B4842C80012CDD6 /* ReposTableViewCell.m in Sources */,
