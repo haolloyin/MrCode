@@ -15,6 +15,7 @@
 - (void)setGitContent:(GITRepositoryContent *)gitContent
 {
     _gitContent = gitContent;
+    self.textLabel.font = [UIFont systemFontOfSize:13];
     self.textLabel.text = _gitContent.name;
     
     if ([_gitContent.type isEqualToString:@"file"]) {

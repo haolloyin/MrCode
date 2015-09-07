@@ -35,6 +35,14 @@ static NSString *kReposReadMeTableName = @"MrCode_ReposReadMeTableName";
              };
 }
 
+- (NSString *)apiPath
+{
+    NSString *sitePrefix = [NSString stringWithFormat:@"https://api.github.com/repos/%@/contents/", self.repoFullName];
+    NSString *path = [self.url.absoluteString stringByReplacingOccurrencesOfString:sitePrefix withString:@""];
+    NSLog(@"url=%@,\nsitePrefix=%@,\npath=%@", self.url.absoluteString, sitePrefix, path);
+    return path;
+}
+
 @end
 
 
@@ -336,6 +344,7 @@ static NSString *kReposReadMeTableName = @"MrCode_ReposReadMeTableName";
         NSMutableArray *array = [NSMutableArray array];
         for (NSDictionary *dic in obj) {
             GITRepositoryContent *content = [GITRepositoryContent objectWithKeyValues:dic];
+            content.repoFullName = self.fullName;
             [array addObject:content];
         }
         success([array copy]);

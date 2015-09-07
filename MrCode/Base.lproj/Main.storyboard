@@ -202,6 +202,9 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="X9g-oL-0Y8" kind="push" identifier="ReposContent2Self" id="dhF-wj-6eI"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -558,5 +561,6 @@
         <segue reference="hP2-ir-aXF"/>
         <segue reference="rEC-14-Au0"/>
         <segue reference="shR-eN-YNR"/>
+        <segue reference="IpJ-nh-bsg"/>
     </inferredMetricsTieBreakers>
 </document>

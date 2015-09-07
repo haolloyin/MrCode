@@ -59,34 +59,34 @@
     return cell;
 }
 
-//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    GITRepositoryContent *item = _contents[indexPath.row];
-//    if ([item.type isEqualToString:@"dir"]) {
-//        NSLog(@"is dir");
-//        [self performSegueWithIdentifier:@"ReposContent2Self" sender:item];
-//    }
-//}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    GITRepositoryContent *item = _contents[indexPath.row];
+    if ([item.type isEqualToString:@"dir"]) {
+        NSLog(@"is dir");
+        [self performSegueWithIdentifier:@"ReposContent2Self" sender:item];
+    }
+    else if ([item.type isEqualToString:@"file"]) {
+        NSLog(@"is file");
+    }
+}
 
 #pragma mark - Navigation
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
 
     // 因为这个 push 到自身 controller 是在 IB 拖 cell 连上的，所以不会触发 didSelectRowAtIndexPath，
-    // 也就无法设置 sender，此时 sender 是被点击的 UITableViewCell
-    RepositoryContentTableViewCell *cell = sender;
+    // 也就无法设置 sender，此时 sender 是被点击的 UITableViewCell，但因为在 IB 设置 segue 的是 BasicCell，
+    // 而不是自定义的子类，所以 IB 中对 cell 设置的 selection 跳转没有生效，下面知识利用了 ReposContent2Self 这个 segue 标识
+    
+    GITRepositoryContent *content = sender;
     NSString *identifier = segue.identifier;
+    
     if ([identifier isEqualToString:@"ReposContent2Self"]) {
         RepositoryContentTableVC *controller = (RepositoryContentTableVC *)segue.destinationViewController;
         controller.repo = self.repo;
-
-        if (!self.path) {
-            controller.path = [NSString stringWithFormat:@"%@", cell.textLabel.text];
-        }
-        else {
-            controller.path = [NSString stringWithFormat:@"%@/%@", self.path, cell.textLabel.text];
-        }
-        controller.title = cell.textLabel.text;
+        controller.path = [content apiPath];
+        controller.title = content.name;
     }
 }
 
