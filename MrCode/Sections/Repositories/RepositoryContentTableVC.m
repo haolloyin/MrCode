@@ -54,40 +54,50 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSString *identifier = NSStringFromClass([RepositoryContentTableViewCell class]);
     RepositoryContentTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
-    cell.gitContent = _contents[indexPath.row];
+    [cell configWithGitContent:_contents[indexPath.row]];
     
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    GITRepositoryContent *item = _contents[indexPath.row];
-    if ([item.type isEqualToString:@"dir"]) {
+    GITRepositoryContent *content = _contents[indexPath.row];
+    if ([content.type isEqualToString:@"dir"]) {
         NSLog(@"is dir");
-        [self performSegueWithIdentifier:@"ReposContent2Self" sender:item];
+//        [self performSegueWithIdentifier:@"ReposContent2Self" sender:content];
+        
+        RepositoryContentTableVC *controller = [[RepositoryContentTableVC alloc] init];
+        controller.repo = self.repo;
+        controller.path = [content apiPath];
+        controller.title = content.name;
+        
+        [self.navigationController pushViewController:controller animated:YES];
+        NSLog(@"push");
     }
-    else if ([item.type isEqualToString:@"file"]) {
+    else if ([content.type isEqualToString:@"file"]) {
         NSLog(@"is file");
     }
 }
 
 #pragma mark - Navigation
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    NSString *identifier = segue.identifier;
+    NSLog(@"identifier=%@", identifier);
+    
     // 因为这个 push 到自身 controller 是在 IB 拖 cell 连上的，所以不会触发 didSelectRowAtIndexPath，
     // 也就无法设置 sender，此时 sender 是被点击的 UITableViewCell，但因为在 IB 设置 segue 的是 BasicCell，
     // 而不是自定义的子类，所以 IB 中对 cell 设置的 selection 跳转没有生效，下面知识利用了 ReposContent2Self 这个 segue 标识
-    
-    GITRepositoryContent *content = sender;
-    NSString *identifier = segue.identifier;
-    
-    if ([identifier isEqualToString:@"ReposContent2Self"]) {
-        RepositoryContentTableVC *controller = (RepositoryContentTableVC *)segue.destinationViewController;
-        controller.repo = self.repo;
-        controller.path = [content apiPath];
-        controller.title = content.name;
-    }
+    // FIXME: 这种方式在 IB 那个连线太晦涩，改用 pushViewController 更直观。
+//    GITRepositoryContent *content = sender;
+//    if ([identifier isEqualToString:@"ReposContent2Self"]) {
+//        RepositoryContentTableVC *controller = (RepositoryContentTableVC *)segue.destinationViewController;
+//        controller.repo = self.repo;
+//        controller.path = [content apiPath];
+//        controller.title = content.name;
+//        NSLog(@"ReposContent2Self");
+//    }
 }
 
 - (void)loadData

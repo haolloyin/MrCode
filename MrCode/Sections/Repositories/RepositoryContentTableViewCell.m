@@ -12,15 +12,18 @@
 
 @implementation RepositoryContentTableViewCell
 
-- (void)setGitContent:(GITRepositoryContent *)gitContent
+- (void)configWithGitContent:(GITRepositoryContent *)gitContent
 {
-    _gitContent = gitContent;
-    self.textLabel.font = [UIFont systemFontOfSize:13];
-    self.textLabel.text = _gitContent.name;
+    if (!gitContent) {
+        return;
+    }
     
-    if ([_gitContent.type isEqualToString:@"file"]) {
+    self.textLabel.font = [UIFont systemFontOfSize:13];
+    self.textLabel.text = gitContent.name;
+    
+    if ([gitContent.type isEqualToString:@"file"]) {
         self.imageView.image = [UIImage octicon_imageWithIdentifier:@"FileCode" size:CGSizeMake(20, 20)];
-    } else if ([_gitContent.type isEqualToString:@"dir"]) {
+    } else if ([gitContent.type isEqualToString:@"dir"]) {
         self.imageView.image = [UIImage octicon_imageWithIdentifier:@"FileDirectory" size:CGSizeMake(20, 20)];
     }
 }

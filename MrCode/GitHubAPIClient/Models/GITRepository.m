@@ -351,6 +351,27 @@ static NSString *kReposReadMeTableName = @"MrCode_ReposReadMeTableName";
     } failure:failure];
 }
 
+//TODO: wifi 环境下用 tree，否则逐步用 contentOfPath 方法
+//- (AFHTTPRequestOperation *)treeOfSha:(NSString *)sha
+//                              success:(void (^)(NSArray *))success
+//                              failure:(GitHubClientFailureBlock)failure
+//{
+//    GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
+//    [client setValue:@"application/vnd.github.VERSION.html" forHeader:@"Accept"];
+//    
+//    sha = sha ?:@"";
+//    NSString *url = [NSString stringWithFormat:@"/repos/%@/git/trees/%@?", self.fullName, sha];
+//    return [client getWithURL:url parameters:nil success:^(AFHTTPRequestOperation *operation, id obj) {
+//        NSMutableArray *array = [NSMutableArray array];
+//        for (NSDictionary *dic in obj) {
+//            GITRepositoryContent *content = [GITRepositoryContent objectWithKeyValues:dic];
+//            content.repoFullName = self.fullName;
+//            [array addObject:content];
+//        }
+//        success([array copy]);
+//    } failure:failure];
+//}
+
 #pragma mark - Private
 
 - (NSString *)repositoryTypeToString:(JGHRepositoryType)type

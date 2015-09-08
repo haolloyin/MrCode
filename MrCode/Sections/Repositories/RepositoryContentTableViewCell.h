@@ -12,6 +12,6 @@
 
 @interface RepositoryContentTableViewCell : UITableViewCell
 
-@property (nonatomic, strong) GITRepositoryContent *gitContent;
+- (void)configWithGitContent:(GITRepositoryContent *)gitContent;
 
 @end
