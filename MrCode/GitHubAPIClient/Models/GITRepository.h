@@ -31,6 +31,10 @@
 
 - (NSString *)apiPath;
 
+- (AFHTTPRequestOperation *)fileOfPath:(NSString *)path
+                               success:(void (^)(NSString *))success
+                               failure:(GitHubClientFailureBlock)failure;
+
 @end
 
 

@@ -9,6 +9,7 @@
 #import "RepositoryContentTableVC.h"
 #import "GITRepository.h"
 #import "RepositoryContentTableViewCell.h"
+#import "WebViewController.h"
 
 @interface RepositoryContentTableVC ()
 
@@ -63,19 +64,26 @@
 {
     GITRepositoryContent *content = _contents[indexPath.row];
     if ([content.type isEqualToString:@"dir"]) {
-        NSLog(@"is dir");
-//        [self performSegueWithIdentifier:@"ReposContent2Self" sender:content];
+
+        // 方法1，在 IB 中看弹出自身 VC 的 segue 连线很晦涩隐秘，不算好办法
+        [self performSegueWithIdentifier:@"ReposContent2Self" sender:content];
         
-        RepositoryContentTableVC *controller = [[RepositoryContentTableVC alloc] init];
-        controller.repo = self.repo;
-        controller.path = [content apiPath];
-        controller.title = content.name;
+        // 方法2，单独创建的 VC 不是从 SB 中获取，没有 segue 可以拿到下一个 VC
+//        RepositoryContentTableVC *controller = [[RepositoryContentTableVC alloc] init];
         
-        [self.navigationController pushViewController:controller animated:YES];
-        NSLog(@"push");
+        // 方法3，而下面试图从 SB 中取得 VC 却报错，最终还是用
+//        UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+//        RepositoryContentTableVC *controller = [sb instantiateViewControllerWithIdentifier:@"ReposDetail2ReposContentTableVC"];
+//        controller.repo = self.repo;
+//        controller.path = [content apiPath];
+//        controller.title = content.name;
+//        [self.navigationController pushViewController:controller animated:YES];
+
     }
     else if ([content.type isEqualToString:@"file"]) {
-        NSLog(@"is file");
+        if ([content.name hasSuffix:@".md"]) {
+            [self performSegueWithIdentifier:@"ReposContent2WebView" sender:content];
+        }
     }
 }
 
@@ -90,14 +98,27 @@
     // 也就无法设置 sender，此时 sender 是被点击的 UITableViewCell，但因为在 IB 设置 segue 的是 BasicCell，
     // 而不是自定义的子类，所以 IB 中对 cell 设置的 selection 跳转没有生效，下面知识利用了 ReposContent2Self 这个 segue 标识
     // FIXME: 这种方式在 IB 那个连线太晦涩，改用 pushViewController 更直观。
-//    GITRepositoryContent *content = sender;
-//    if ([identifier isEqualToString:@"ReposContent2Self"]) {
-//        RepositoryContentTableVC *controller = (RepositoryContentTableVC *)segue.destinationViewController;
-//        controller.repo = self.repo;
-//        controller.path = [content apiPath];
-//        controller.title = content.name;
-//        NSLog(@"ReposContent2Self");
-//    }
+    GITRepositoryContent *content = sender;
+    if ([identifier isEqualToString:@"ReposContent2Self"]) {
+        RepositoryContentTableVC *controller = (RepositoryContentTableVC *)segue.destinationViewController;
+        controller.repo = self.repo;
+        controller.path = [content apiPath];
+        controller.title = content.name;
+        NSLog(@"ReposContent2Self");
+    }
+    else if ([identifier isEqualToString:@"ReposContent2WebView"]) {
+        GITRepositoryContent *content = sender;
+        NSLog(@"begin load file data");
+        [content fileOfPath:content.apiPath success:^(NSString *html) {
+            WebViewController *controller = (WebViewController *)segue.destinationViewController;
+            controller.htmlString = html;
+            controller.title = content.name;
+            [controller reloadWebView];
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"error\n%@", error);
+        }];
+    }
 }
 
 - (void)loadData

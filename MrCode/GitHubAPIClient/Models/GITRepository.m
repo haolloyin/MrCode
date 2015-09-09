@@ -43,6 +43,40 @@ static NSString *kReposReadMeTableName = @"MrCode_ReposReadMeTableName";
     return path;
 }
 
+#pragma mark - Public
+
+- (AFHTTPRequestOperation *)fileOfPath:(NSString *)path
+                               success:(void (^)(NSString *))success
+                               failure:(GitHubClientFailureBlock)failure
+{
+    GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
+    [client setValue:@"application/vnd.github.VERSION.html" forHeader:@"Accept"];
+    
+    NSString *url = [NSString stringWithFormat:@"/repos/%@/contents/%@", self.repoFullName, path];
+    return [client getWithURL:url parameters:nil success:^(AFHTTPRequestOperation *operation, NSDictionary *dict) {
+        
+        NSString *base64String = dict[@"content"];
+        NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:base64String options:NSDataBase64DecodingIgnoreUnknownCharacters];
+        NSString *content = [[NSString alloc] initWithData:decodedData encoding:NSUTF8StringEncoding];
+        NSString *html = [NSString stringWithFormat:MCGitHubHTMLTemplateString, self.repoFullName, content];
+
+        NSLog(@"ok");
+        success(html);
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        if (operation.response.statusCode == 200) {
+            NSData *encodedData = error.userInfo[@"com.alamofire.serialization.response.error.data"];
+            NSString *content = [[NSString alloc] initWithData:encodedData encoding:NSUTF8StringEncoding];
+            NSString *html = [NSString stringWithFormat:MCGitHubHTMLTemplateString, self.repoFullName, content];
+            NSLog(@"error but ok");
+            success(html);
+        }
+        else {
+            failure(operation, error);
+        }
+    }];
+}
+
 @end
 
 

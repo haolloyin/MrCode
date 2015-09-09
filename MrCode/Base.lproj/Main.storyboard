@@ -213,10 +213,13 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="HSZ-WR-zU4"/>
+                    <connections>
+                        <segue destination="OBL-bN-xyv" kind="push" identifier="ReposContent2WebView" id="r5x-Lt-Gml"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nAw-Xq-jFo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2048" y="1075"/>
+            <point key="canvasLocation" x="1615" y="1085"/>
         </scene>
         <!--Users TableVC-->
         <scene sceneID="Ohv-Vg-neC">
@@ -557,10 +560,10 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="a08-hr-d3G"/>
-        <segue reference="tBB-ju-T8Q"/>
-        <segue reference="hP2-ir-aXF"/>
         <segue reference="rEC-14-Au0"/>
-        <segue reference="shR-eN-YNR"/>
         <segue reference="IpJ-nh-bsg"/>
+        <segue reference="hP2-ir-aXF"/>
+        <segue reference="tBB-ju-T8Q"/>
+        <segue reference="r5x-Lt-Gml"/>
     </inferredMetricsTieBreakers>
 </document>
