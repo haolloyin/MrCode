@@ -32,6 +32,7 @@
 - (NSString *)apiPath;
 
 - (AFHTTPRequestOperation *)fileOfPath:(NSString *)path
+                           needRefresh:(BOOL)needRefresh
                                success:(void (^)(NSString *))success
                                failure:(GitHubClientFailureBlock)failure;
 

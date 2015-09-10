@@ -14,6 +14,7 @@
 static NSString *MyStarredRepositories = @"MrCode_MyStarredRepositories";
 static NSString *MyOwnedRepositories = @"MrCode_MyOwnedRepositories";
 static NSString *kReposReadMeTableName = @"MrCode_ReposReadMeTableName";
+static NSString *kReposFileContentTableName = @"MrCode_ReposFileContentTableName";
 
 @implementation GITRepositoryContent
 
@@ -46,9 +47,24 @@ static NSString *kReposReadMeTableName = @"MrCode_ReposReadMeTableName";
 #pragma mark - Public
 
 - (AFHTTPRequestOperation *)fileOfPath:(NSString *)path
+                           needRefresh:(BOOL)needRefresh
                                success:(void (^)(NSString *))success
                                failure:(GitHubClientFailureBlock)failure
 {
+    NSString *html;
+    if (!needRefresh) {
+        NSString *key = [NSString stringWithFormat:@"%@/%@", self.repoFullName, self.apiPath];
+        html = [[KVStoreManager sharedStore] getStringById:key fromTable:kReposFileContentTableName];
+    }
+    
+    if (html) {
+        NSLog(@"hit cache");
+        success(html);
+        return nil;
+    }
+    
+    NSLog(@"no hit cache or need refresh");
+    
     GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
     [client setValue:@"application/vnd.github.VERSION.html" forHeader:@"Accept"];
     
@@ -61,6 +77,8 @@ static NSString *kReposReadMeTableName = @"MrCode_ReposReadMeTableName";
         NSString *html = [NSString stringWithFormat:MCGitHubHTMLTemplateString, self.repoFullName, content];
 
         NSLog(@"ok");
+        [self storeFileContent:html withKey:[NSString stringWithFormat:@"%@/%@", self.repoFullName, path]];
+        
         success(html);
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -68,13 +86,23 @@ static NSString *kReposReadMeTableName = @"MrCode_ReposReadMeTableName";
             NSData *encodedData = error.userInfo[@"com.alamofire.serialization.response.error.data"];
             NSString *content = [[NSString alloc] initWithData:encodedData encoding:NSUTF8StringEncoding];
             NSString *html = [NSString stringWithFormat:MCGitHubHTMLTemplateString, self.repoFullName, content];
+            
             NSLog(@"error but ok");
+            [self storeFileContent:html withKey:[NSString stringWithFormat:@"%@/%@", self.repoFullName, path]];
             success(html);
         }
         else {
             failure(operation, error);
         }
     }];
+}
+
+#pragma makr - Private
+
+- (void)storeFileContent:(NSString *)content withKey:(NSString *)key
+{
+    [[KVStoreManager sharedStore] createTableWithName:kReposFileContentTableName];
+    [[KVStoreManager sharedStore] putString:content withId:key intoTable:kReposFileContentTableName];
 }
 
 @end
@@ -370,7 +398,6 @@ static NSString *kReposReadMeTableName = @"MrCode_ReposReadMeTableName";
                                    failure:(GitHubClientFailureBlock)failure
 {
     GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
-    [client setValue:@"application/vnd.github.VERSION.html" forHeader:@"Accept"];
     
     path = path ?:@"";
     NSString *url = [NSString stringWithFormat:@"/repos/%@/contents/%@", self.fullName, path];

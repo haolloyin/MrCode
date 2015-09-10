@@ -109,7 +109,7 @@
     else if ([identifier isEqualToString:@"ReposContent2WebView"]) {
         GITRepositoryContent *content = sender;
         NSLog(@"begin load file data");
-        [content fileOfPath:content.apiPath success:^(NSString *html) {
+        [content fileOfPath:content.apiPath needRefresh:NO success:^(NSString *html) {
             WebViewController *controller = (WebViewController *)segue.destinationViewController;
             controller.htmlString = html;
             controller.title = content.name;
