@@ -167,6 +167,7 @@ typedef NS_ENUM(NSUInteger, JGHRepositoryOrderBy) {
                                   needRefresh:(BOOL)refresh;
 
 - (AFHTTPRequestOperation *)contentsOfPath:(NSString *)path
+                               needRefresh:(BOOL)needRefresh
                                    success:(void (^)(NSArray *))success
                                    failure:(GitHubClientFailureBlock)failure;
 

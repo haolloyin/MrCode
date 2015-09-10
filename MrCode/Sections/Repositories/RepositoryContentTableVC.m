@@ -123,7 +123,7 @@
 
 - (void)loadData
 {
-    [_repo contentsOfPath:_path success:^(NSArray *array) {
+    [_repo contentsOfPath:_path needRefresh:NO success:^(NSArray *array) {
         _contents = [array copy];
         [self.tableView reloadData];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {

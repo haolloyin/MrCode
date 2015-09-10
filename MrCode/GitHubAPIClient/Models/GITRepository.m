@@ -15,6 +15,7 @@ static NSString *MyStarredRepositories = @"MrCode_MyStarredRepositories";
 static NSString *MyOwnedRepositories = @"MrCode_MyOwnedRepositories";
 static NSString *kReposReadMeTableName = @"MrCode_ReposReadMeTableName";
 static NSString *kReposFileContentTableName = @"MrCode_ReposFileContentTableName";
+static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName";
 
 @implementation GITRepositoryContent
 
@@ -394,14 +395,36 @@ static NSString *kReposFileContentTableName = @"MrCode_ReposFileContentTableName
 }
 
 - (AFHTTPRequestOperation *)contentsOfPath:(NSString *)path
+                               needRefresh:(BOOL)needRefresh
                                    success:(void (^)(NSArray *))success
                                    failure:(GitHubClientFailureBlock)failure
 {
-    GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
-    
-    path = path ?:@"";
+    NSMutableArray *array = [NSMutableArray array];
+    path = path ?: @"";
     NSString *url = [NSString stringWithFormat:@"/repos/%@/contents/%@", self.fullName, path];
+    
+    if (!needRefresh) {
+        NSArray *cacheArray = [[KVStoreManager sharedStore] getObjectById:url fromTable:kReposContentsTableName];
+
+        if (cacheArray) {
+            for (NSDictionary *dic in cacheArray) {
+                GITRepositoryContent *content = [GITRepositoryContent objectWithKeyValues:dic];
+                content.repoFullName = self.fullName;
+                [array addObject:content];
+            }
+            NSLog(@"hit cache");
+            success([array copy]);
+            return nil;
+        }
+    }
+    
+    NSLog(@"not hit cache or need refresh");
+    
+    GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
     return [client getWithURL:url parameters:nil success:^(AFHTTPRequestOperation *operation, id obj) {
+        
+        [self storeContentsArray:obj forKey:url];
+        
         NSMutableArray *array = [NSMutableArray array];
         for (NSDictionary *dic in obj) {
             GITRepositoryContent *content = [GITRepositoryContent objectWithKeyValues:dic];
@@ -467,7 +490,6 @@ static NSString *kReposFileContentTableName = @"MrCode_ReposFileContentTableName
     // 苍天啊，原来 AF 直接不接受这种 Accept，直接在 error 的代码里根据 StatusCode==200 判断算了
     // 参考这里并各种设置测试都无效：http://stackoverflow.com/questions/19114623
     [client setValue:@"application/vnd.github.VERSION.html" forHeader:@"Accept"];
-//    [client setAcceptableContentTypes:@"application/vnd.github.VERSION.html"];
     
     NSString *url = [NSString stringWithFormat:@"/repos/%@/readme", self.fullName];
     return [client getWithURL:url parameters:nil success:^(AFHTTPRequestOperation *operation, NSDictionary *dict) {
@@ -499,6 +521,12 @@ static NSString *kReposFileContentTableName = @"MrCode_ReposFileContentTableName
 {
     [[KVStoreManager sharedStore] createTableWithName:kReposReadMeTableName];
     [[KVStoreManager sharedStore] putString:html withId:[self readmeStoreKey] intoTable:kReposReadMeTableName];
+}
+
+- (void)storeContentsArray:(NSArray *)array forKey:(NSString *)key
+{
+    [[KVStoreManager sharedStore] createTableWithName:kReposContentsTableName];
+    [[KVStoreManager sharedStore] putObject:array withId:key intoTable:kReposContentsTableName];
 }
 
 @end
