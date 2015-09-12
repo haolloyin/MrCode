@@ -25,7 +25,8 @@
 @property (nonatomic, readonly, copy  ) NSString      *reason;
 @property (nonatomic, assign          ) BOOL          isUnread;
 
-+ (AFHTTPRequestOperation *)myNotificationsWithSuccess:(void (^)(NSArray *))success
++ (AFHTTPRequestOperation *)myNotificationsNeedRefresh:(BOOL)needRefresh
+                                               success:(void (^)(NSArray *))success
                                                failure:(GitHubClientFailureBlock)failure;
 
 + (AFHTTPRequestOperation *)notificationsOfUser:(NSString *)user

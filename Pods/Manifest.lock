@@ -30,7 +30,9 @@ PODS:
   - FMDB/standard (2.5):
     - FMDB/common
   - Masonry (0.6.2)
+  - MBProgressHUD (0.9.1)
   - MJExtension (2.5.9)
+  - MJRefresh (2.4.9)
   - OcticonsIOS (0.0.2)
   - SDWebImage (3.7.3):
     - SDWebImage/Core (= 3.7.3)
@@ -44,7 +46,9 @@ DEPENDENCIES:
   - ChameleonFramework
   - DateTools
   - Masonry
+  - MBProgressHUD
   - MJExtension
+  - MJRefresh
   - OcticonsIOS
   - SDWebImage
   - UITableView+FDTemplateLayoutCell
@@ -56,7 +60,9 @@ SPEC CHECKSUMS:
   DateTools: 53288ee8b905fdc75897a1e6b5cc0144b14cba60
   FMDB: 96e8f1bcc1329e269330f99770ad4285d9003e52
   Masonry: 362e8a1cc0beada4a4c4832d5e863da2a51533be
+  MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
   MJExtension: 2330aeb6c83428c820749290bf766e81827cda65
+  MJRefresh: be84acb912d0a66364f76a75426698a39528e2ed
   OcticonsIOS: 845ce2794c2837cf688049c4782467ef0c3c949d
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
   UITableView+FDTemplateLayoutCell: d5be6056b5060313f5955a2590ecd33142ad713d

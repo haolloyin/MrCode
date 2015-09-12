@@ -7,6 +7,10 @@
 //
 
 #import "GITNotification.h"
+#import "KVStoreManager.h"
+
+static NSString *kNotificationsTableName = @"MrCode_NotificationsTableName";
+static NSString *kNotificationsCachedKey = @"MrCode_NotificationsCachedKey";
 
 @implementation GITNotification
 
@@ -36,21 +40,58 @@
     GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
     
     return [client getWithURL:url parameters:nil success:^(AFHTTPRequestOperation *operation, id obj) {
-        NSMutableArray *mutableArray = [NSMutableArray array];
-        for (NSDictionary *dict in obj) {
-            GITNotification *notification = [GITNotification objectWithKeyValues:dict];
-            [mutableArray addObject:notification];
-        }
-        success([mutableArray copy]);
+        NSArray *models = [GITNotification jsonArrayToModelArray:obj];
+        success(models);
     } failure:failure];
+}
+
++ (NSArray *)jsonArrayToModelArray:(NSArray *)array
+{
+    NSMutableArray *mutableArray = [NSMutableArray arrayWithCapacity:array.count];
+    for (NSDictionary *dict in array) {
+        GITNotification *notification = [GITNotification objectWithKeyValues:dict];
+        [mutableArray addObject:notification];
+    }
+    return [mutableArray copy];
+}
+
++ (void)storeObject:(id)obj byKey:(NSString *)key
+{
+    NSLog(@"");
+    [[KVStoreManager sharedStore] createTableWithName:kNotificationsTableName];
+    [[KVStoreManager sharedStore] putObject:obj withId:key intoTable:kNotificationsTableName];
+}
+
++ (id)getCachedObjectByKey:(NSString *)key
+{
+    NSLog(@"");
+    return [[KVStoreManager sharedStore] getObjectById:key fromTable:kNotificationsTableName];
 }
 
 #pragma mark - API
 
-+ (AFHTTPRequestOperation *)myNotificationsWithSuccess:(void (^)(NSArray *))success
++ (AFHTTPRequestOperation *)myNotificationsNeedRefresh:(BOOL)needRefresh
+                                               success:(void (^)(NSArray *))success
                                                failure:(GitHubClientFailureBlock)failure
 {
-    return [GITNotification notificationsWithUrl:@"/notifications" success:success failure:failure];
+    if (!needRefresh) {
+        NSArray *array = [GITNotification getCachedObjectByKey:kNotificationsCachedKey];
+
+        if (array) {
+            NSLog(@"not need refresh");
+            success([GITNotification jsonArrayToModelArray:array]);
+            return nil;
+        }
+    }
+    
+    NSLog(@"need refresh");
+    GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
+    return [client getWithURL:@"/notifications" parameters:nil success:^(AFHTTPRequestOperation *operation, id obj) {
+        
+        [GITNotification storeObject:obj byKey:kNotificationsCachedKey];
+        NSArray *models = [GITNotification jsonArrayToModelArray:obj];
+        success(models);
+    } failure:failure];
 }
 
 + (AFHTTPRequestOperation *)notificationsOfUser:(NSString *)user

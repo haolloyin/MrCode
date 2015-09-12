@@ -15,12 +15,14 @@
 #import "UITableView+FDTemplateLayoutCell.h"
 #import "UIImage+MRC_Octicons.h"
 #import <ChameleonFramework/Chameleon.h>
+#import "MJRefresh.h"
 
 static NSString *kNotificationCellIdentifier = @"NotificationCellIdentifier";
 
 @interface NotificationsTableVC () <NotificationTableViewCellRepoNameTapped>
 
 @property (nonatomic, strong) NSArray *notifications;
+@property (nonatomic, assign) BOOL needRefresh;
 
 @end
 
@@ -41,20 +43,21 @@ static NSString *kNotificationCellIdentifier = @"NotificationCellIdentifier";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    NSLog(@"");
-    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-    [self.tableView registerClass:[NotificationTableViewCell class]
-           forCellReuseIdentifier:NSStringFromClass([NotificationTableViewCell class])];
+    Class cellClass = [NotificationTableViewCell class];
+    [self.tableView registerClass:cellClass forCellReuseIdentifier:NSStringFromClass(cellClass)];
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 80.0;
     
     _notifications = [NSArray new];
+    _needRefresh = NO;
+    
+    [self setupRefreshHeader];
     
     [self loadData];
 }
@@ -130,13 +133,39 @@ static NSString *kNotificationCellIdentifier = @"NotificationCellIdentifier";
 
 #pragma makr - Private
 
+- (void)setupRefreshHeader
+{
+    MJRefreshNormalHeader *header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(loadData)];
+    
+    // 设置文字
+    [header setTitle:@"Pull down to refresh" forState:MJRefreshStateIdle];
+    [header setTitle:@"Release to refresh" forState:MJRefreshStatePulling];
+    [header setTitle:@"Loading ..." forState:MJRefreshStateRefreshing];
+    
+    // 设置字体
+    header.stateLabel.font = [UIFont systemFontOfSize:16];
+    header.lastUpdatedTimeLabel.font = [UIFont systemFontOfSize:14];
+    
+    // 设置颜色
+    header.stateLabel.textColor = [UIColor grayColor];
+    header.lastUpdatedTimeLabel.textColor = [UIColor grayColor];
+    
+    // 设置刷新控件
+    self.tableView.header = header;
+}
+
 - (void)loadData
 {
-    NSLog(@"");
-    [GITNotification myNotificationsWithSuccess:^(NSArray *notifications) {
-        self.notifications = notifications;
+    if (self.tableView.header.isRefreshing) {
+        _needRefresh = YES;
+    }
+    
+    [GITNotification myNotificationsNeedRefresh:_needRefresh success:^(NSArray *array) {
+        self.notifications = array;
+        self.needRefresh = NO;
+        [self.tableView.header endRefreshing];
         [self.tableView reloadData];
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    }failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"error: %@", error);
     }];
 }
