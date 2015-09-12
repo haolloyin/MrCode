@@ -16,6 +16,7 @@
 #import "UIImage+MRC_Octicons.h"
 #import <ChameleonFramework/Chameleon.h>
 #import "MJRefresh.h"
+#import "NSDate+DateTools.h"
 
 static NSString *kNotificationCellIdentifier = @"NotificationCellIdentifier";
 
@@ -149,6 +150,9 @@ static NSString *kNotificationCellIdentifier = @"NotificationCellIdentifier";
     // 设置颜色
     header.stateLabel.textColor = [UIColor grayColor];
     header.lastUpdatedTimeLabel.textColor = [UIColor grayColor];
+    header.lastUpdatedTimeText = ^(NSDate *date) {
+        return [NSString stringWithFormat:@"Last updated: %@", date.timeAgoSinceNow];
+    };
     
     // 设置刷新控件
     self.tableView.header = header;
