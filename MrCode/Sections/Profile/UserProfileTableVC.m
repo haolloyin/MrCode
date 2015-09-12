@@ -15,6 +15,7 @@
 
 #import "UIImage+MRC_Octicons.h"
 #import <ChameleonFramework/Chameleon.h>
+#import "MBProgressHUD.h"
 
 @interface UserProfileTableVC () <UserProfileHeaderViewDelegate>
 
@@ -203,10 +204,14 @@
     [self.tableView reloadData];
     [self.tableView setNeedsLayout];
     [self.tableView layoutIfNeeded];
+    
+    [MBProgressHUD hideHUDForView:self.navigationController.view animated:YES];
 }
 
 - (void)fetchUserProfile
 {
+    [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    
     if (!self.user) {
         [GITUser authenticatedUserWithSuccess:^(GITUser *user) {
             self.user = user;
