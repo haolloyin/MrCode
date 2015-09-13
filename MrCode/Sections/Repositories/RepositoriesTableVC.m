@@ -15,6 +15,9 @@
 #import "UIImage+MRC_Octicons.h"
 #import <ChameleonFramework/Chameleon.h>
 #import "UITableView+FDTemplateLayoutCell.h"
+#import "MBProgressHUD.h"
+#import "MJRefresh.h"
+#import "NSDate+DateTools.h"
 
 static NSString *kReposCellIdentifier = @"ReposCellIdentifier";
 static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
@@ -22,13 +25,8 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
 @interface RepositoriesTableVC ()
 
 @property (strong, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
-
-@property (nonatomic, copy) NSString *cachedUser;
 @property (nonatomic, strong) NSArray *repos;
-@property (nonatomic, strong) NSArray *ownedReposCache;
-@property (nonatomic, strong) NSArray *starredReposCache;
-
-@property (nonatomic, assign) BOOL isAuthenticatedUser;
+@property (nonatomic, assign) BOOL needRefresh;
 
 @end
 
@@ -61,6 +59,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     self.tableView.estimatedRowHeight = 80.0;
     
     NSLog(@"_user=%@, [GITUser username]=%@, _reposType=%@", _user, [GITUser username], @(_reposType));
+    _user = _user ? : [GITUser username];
 
     if (_reposType == RepositoriesTableVCReposTypeForks) {
         self.navigationItem.title = @"Forks";
@@ -69,11 +68,12 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
         self.navigationItem.titleView = self.segmentedControl;
     }
     
+    _needRefresh = NO;
     _repos             = [NSArray array];
-    _ownedReposCache   = [NSArray array];
-    _starredReposCache = [NSArray array];
     
-    [self loadCachedRepos];
+    [self setupRefreshHeader];
+    
+    [self loadData];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -145,10 +145,34 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
         _segmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"Starred", @"Owned"]];
         _segmentedControl.selectedSegmentIndex = _reposType; // 根据资源库类型设定是 starred 还是 public
         
-        [_segmentedControl addTarget:self action:@selector(loadCachedRepos) forControlEvents:UIControlEventValueChanged];
+        [_segmentedControl addTarget:self action:@selector(loadData) forControlEvents:UIControlEventValueChanged];
     }
     
     return _segmentedControl;
+}
+
+- (void)setupRefreshHeader
+{
+    MJRefreshNormalHeader *header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(loadData)];
+    
+    // 设置文字
+    [header setTitle:@"Pull down to refresh" forState:MJRefreshStateIdle];
+    [header setTitle:@"Release to refresh" forState:MJRefreshStatePulling];
+    [header setTitle:@"Loading ..." forState:MJRefreshStateRefreshing];
+    
+    // 设置字体
+    header.stateLabel.font = [UIFont systemFontOfSize:16];
+    header.lastUpdatedTimeLabel.font = [UIFont systemFontOfSize:14];
+    
+    // 设置颜色
+    header.stateLabel.textColor = [UIColor grayColor];
+    header.lastUpdatedTimeLabel.textColor = [UIColor grayColor];
+    header.lastUpdatedTimeText = ^(NSDate *date) {
+        return [NSString stringWithFormat:@"Last updated: %@", date.timeAgoSinceNow];
+    };
+    
+    // 设置刷新控件
+    self.tableView.header = header;
 }
 
 #pragma mark - Private
@@ -174,119 +198,44 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
                                                            size:CGSizeMake(30.0f, 30.0f)];
 }
 
-- (void)loadCachedRepos
-{
-    if (self.isAuthenticatedUser) {
-        NSArray *cachedRepos = nil;
-        if (_segmentedControl.selectedSegmentIndex == 0) {
-            cachedRepos = [GITRepository myStarredRepositories];
-        }
-        else if (_segmentedControl.selectedSegmentIndex == 1) {
-            cachedRepos = [GITRepository myOwnedRepositories];
-        }
-        
-        if (cachedRepos && cachedRepos.count > 0) {
-            self.repos = cachedRepos;
-            [self.tableView reloadData];
-        }
-        else {
-            [self loadData];
-        }
-    }
-    else {
-        [self loadData];
-    }
-}
-
-- (BOOL)isAuthenticatedUser
-{
-    NSString *authenticatedUser = [GITUser username];
-    if (!_user || [_user isEqualToString:authenticatedUser]) {
-        _user = authenticatedUser;
-        return YES;
-    }
-    return NO;
-}
-
 - (void)loadData
 {
+    if (self.tableView.header.isRefreshing) {
+        _needRefresh = YES;
+    }
+    
     // 有 _segmentedControl，说明是查看本人资源库
     if (_segmentedControl && _segmentedControl.selectedSegmentIndex == 0) {
-        if ([self.starredReposCache count] > 0) {
-            self.repos = self.starredReposCache;
-            [self.tableView reloadData];
-            return;
-        }
         
-        [self loadStarredReposOfUser:_user];
+        [GITRepository starredRepositoriesByUser:_user needRefresh:_needRefresh success:^(NSArray *repos) {
+            self.repos = repos;
+            [self.tableView.header endRefreshing];
+            [self.tableView reloadData];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"error:\n%@", error);
+            [self.tableView.header endRefreshing];
+        }];
     }
     else if (_segmentedControl && _segmentedControl.selectedSegmentIndex == 1) {
-        if ([self.ownedReposCache count] > 0) {
-            self.repos = self.ownedReposCache;
-            [self.tableView reloadData];
-            return;
-        }
         
-        [self loadReposOfUser:_user];
+        [GITRepository repositoriesOfUser:_user needRefresh:_needRefresh success:^(NSArray *repos) {
+            self.repos = repos;
+            [self.tableView.header endRefreshing];
+            [self.tableView reloadData];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"error:\n%@", error);
+            [self.tableView.header endRefreshing];
+        }];
     }
     // 列出某个 Repo 被 fork 的列表
     else if (_reposType == RepositoriesTableVCReposTypeForks) {
         [GITRepository forksOfRepository:_user success:^(NSArray *repos) {
             self.repos = repos;
+            [self.tableView.header endRefreshing];
             [self.tableView reloadData];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            
-        }];
-    }
-}
-
-- (void)loadReposOfUser:(NSString *)user
-{
-    if (self.isAuthenticatedUser) {
-        [GITRepository myRepositoriesWithSuccess:^(NSArray *repos) {
-            self.ownedReposCache = repos;
-            self.repos = self.ownedReposCache;
-            [self.tableView reloadData];
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            
-        }];
-    }
-    else {
-        [GITRepository repositoriesOfUser:user success:^(NSArray *repos) {
-            self.ownedReposCache = repos;
-            self.repos = self.ownedReposCache;
-            [self.tableView reloadData];
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            
-        }];
-    }
-}
-
-- (void)loadStarredReposOfUser:(NSString *)user
-{
-    if (self.isAuthenticatedUser) {
-        NSArray *cachedStarredRepos = [GITRepository myStarredRepositories];
-        if (!cachedStarredRepos || cachedStarredRepos.count == 0) {
-            [GITRepository starredRepositoriesByUser:user success:^(NSArray * repos) {
-                self.starredReposCache = repos;
-                self.repos = self.starredReposCache;
-                [self.tableView reloadData];
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                
-            }];
-        }
-        else {
-            self.repos = cachedStarredRepos;
-            [self.tableView reloadData];
-        }
-    }
-    else {
-        [GITRepository starredRepositoriesByUser:user success:^(NSArray * repos) {
-            self.starredReposCache = repos;
-            self.repos = self.starredReposCache;
-            [self.tableView reloadData];
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            
+            NSLog(@"error:\n%@", error);
+            [self.tableView.header endRefreshing];
         }];
     }
 }

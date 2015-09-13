@@ -11,11 +11,12 @@
 #import "KVStoreManager.h"
 #import "MrCodeConst.h"
 
+static NSString *RepositoriesTableName = @"MrCode_RepositoriesTableName";
 static NSString *MyStarredRepositories = @"MrCode_MyStarredRepositories";
 static NSString *MyOwnedRepositories = @"MrCode_MyOwnedRepositories";
-static NSString *kReposReadMeTableName = @"MrCode_ReposReadMeTableName";
-static NSString *kReposFileContentTableName = @"MrCode_ReposFileContentTableName";
-static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName";
+static NSString *kReposReadMeTableName = @"MrCode_ReposReadMeTableName"; // 保存多个 repos 的 README 内容
+static NSString *kReposFileContentTableName = @"MrCode_ReposFileContentTableName"; // 保存多个 repos 的多个目录
+static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 保存多个 repos 的多个文件内容
 
 @implementation GITRepositoryContent
 
@@ -154,7 +155,9 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName";
 
 + (BOOL)isStarredRepo:(GITRepository *)repo
 {
-    NSArray *starredRepos = [GITRepository myStarredRepositories];
+    NSArray *cachedRepos = [[KVStoreManager sharedStore] getObjectById:MyStarredRepositories fromTable:RepositoriesTableName];
+    NSArray *starredRepos = [GITRepository jsonArrayToModelArray:cachedRepos];
+    
     for (GITRepository *item in starredRepos) {
         if ([repo.fullName isEqualToString:item.fullName]) {
             return YES;
@@ -163,130 +166,37 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName";
     return NO;
 }
 
-+ (NSArray *)myStarredRepositories
-{
-    NSArray *dataArray = [[NSUserDefaults standardUserDefaults] objectForKey:MyStarredRepositories];
-    
-    NSMutableArray *repos = [NSMutableArray array];
-    for (NSData *data in dataArray) {
-        GITRepository *repo = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-        [repos addObject:repo];
-    }
-    NSLog(@"return total starred repos=%@", @(repos.count));
-    return [repos copy];
-}
-
-+ (void)updateMyStarredRepositories:(NSArray *)repos
-{
-    if (repos) {
-        // 先转化成 Json 字典再持久化
-        NSMutableArray *dataArray = [NSMutableArray array];
-        for (GITRepository *item in repos) {
-            [dataArray addObject:[NSKeyedArchiver archivedDataWithRootObject:item]];
-        }
-
-        [[NSUserDefaults standardUserDefaults] setObject:dataArray forKey:MyStarredRepositories];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
-        NSLog(@"update total starred repos=%@", @(repos.count));
-    }
-}
-
-+ (NSArray *)myOwnedRepositories
-{
-    NSArray *dataArray = [[NSUserDefaults standardUserDefaults] objectForKey:MyOwnedRepositories];
-    
-    NSMutableArray *repos = [NSMutableArray array];
-    for (NSData *data in dataArray) {
-        GITRepository *repo = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-        [repos addObject:repo];
-    }
-    NSLog(@"return total owned repos=%@", @(repos.count));
-    return [repos copy];
-}
-
-+ (void)updateMyOwnedRepositories:(NSArray *)repos
-{
-    if (repos) {
-        NSMutableArray *dataArray = [NSMutableArray array];
-        for (GITRepository *item in repos) {
-            [dataArray addObject:[NSKeyedArchiver archivedDataWithRootObject:item]];
-        }
-        [[NSUserDefaults standardUserDefaults] setObject:dataArray forKey:MyOwnedRepositories];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
-        NSLog(@"update total owned repos=%@", @(repos.count));
-    }
-}
-
 #pragma mark - API
 
-+ (AFHTTPRequestOperation *)myRepositoriesWithSuccess:(void (^)(NSArray *))success
-                                              failure:(GitHubClientFailureBlock)failure
-{
-    return [GITRepository repositoriesOfUrl:@"/user/repos?sort=created" success:^(NSArray *repos) {
-        // 每次调用 API 成功获取之后都保存到本地
-        [GITRepository updateMyOwnedRepositories:repos];
-        success(repos);
-    } failure:failure];
-}
-
 + (AFHTTPRequestOperation *)repositoriesOfUser:(NSString *)user
-                                          type:(JGHRepositoryType)type
-                                        sortBy:(JGHRepositorySortBy)sortBy
-                                       orderBy:(JGHRepositoryOrderBy)orderBy
+                                   needRefresh:(BOOL)needRefresh
                                        success:(void (^)(NSArray *))success
                                        failure:(GitHubClientFailureBlock)failure
 {
-    // TODO
-    return [GITRepository repositoriesOfUser:user success:success failure:failure];
-}
-
-+ (AFHTTPRequestOperation *)repositoriesOfUser:(NSString *)user
-                                       success:(void (^)(NSArray *))success
-                                       failure:(GitHubClientFailureBlock)failure
-{
+    // 本人
+    if ([user isEqualToString:[GITUser username]]) {
+        return [GITRepository myRepositoriesNeedRefresh:needRefresh success:success failure:failure];
+    }
+    
     NSString *url = [NSString stringWithFormat:@"/users/%@/repos", user];
     return [GITRepository repositoriesOfUrl:url success:success failure:failure];
 }
 
-+ (AFHTTPRequestOperation *)repositoriesOfOrganization:(NSString *)org
-                                               success:(void (^)(NSArray *))success
-                                               failure:(GitHubClientFailureBlock)failure
-{
-    NSString *url = [NSString stringWithFormat:@"/orgs/%@/repos", org];
-    return [GITRepository repositoriesOfUrl:url success:success failure:failure];
-}
-
-+ (AFHTTPRequestOperation *)publicRepositoriesSince:(NSString *)since
-                                            success:(void (^)(NSArray *))success
-                                            failure:(GitHubClientFailureBlock)failure;
-{
-    NSString *url = [NSString stringWithFormat:@"/repositories?since=%@", since ? since : @"0"];
-    return [GITRepository repositoriesOfUrl:url success:success failure:failure];
-}
-
 + (AFHTTPRequestOperation *)starredRepositoriesByUser:(NSString *)user
+                                          needRefresh:(BOOL)needRefresh
                                               success:(void (^)(NSArray *))success
                                               failure:(GitHubClientFailureBlock)failure
 {
+    // 本人
+    if ([user isEqualToString:[GITUser username]]) {
+        return [GITRepository myStarredRepositoriesNeedRefresh:needRefresh success:success failure:failure];
+    }
+    
     NSString *url = [NSString stringWithFormat:@"/users/%@/starred?sort=created", user];
     return [GITRepository repositoriesOfUrl:url success:^(NSArray *repos) {
-        
-        if ([user isEqualToString:[GITUser username]]) {
-            [GITRepository updateMyStarredRepositories:repos]; // 保存
-        }
         success(repos);
     } failure:failure];
 }
-
-//+ (AFHTTPRequestOperation *)forksOfRepository:(GITRepository *)repo
-//                                      success:(void (^)(NSArray *))success
-//                                      failure:(GitHubClientFailureBlock)failure
-//{
-//    NSString *url = [NSString stringWithFormat:@"/repos/%@/%@/forks?sort=newest", repo.owner.login, repo.name];
-//    return [GITRepository repositoriesOfUrl:url success:success failure:failure];
-//}
 
 + (AFHTTPRequestOperation *)forksOfRepository:(GITRepository *)repoName
                                       success:(void (^)(NSArray *))success
@@ -308,10 +218,10 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName";
         if (operation.response.statusCode == 204) {
             
             // 保存新增的 star
-            NSArray *starredRepos = [GITRepository myStarredRepositories];
+            NSArray *starredRepos = [GITRepository getCachedObjectByKey:MyStarredRepositories];
             NSMutableArray *newStarredRepos = [NSMutableArray arrayWithArray:starredRepos];
             [newStarredRepos addObject:repo];
-            [GITRepository updateMyStarredRepositories:newStarredRepos];
+            [GITRepository storeObject:[newStarredRepos copy] byKey:MyStarredRepositories];
             
             success(YES);
         }
@@ -329,7 +239,7 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName";
         // See https://developer.github.com/v3/activity/starring/#response-2
         if (operation.response.statusCode == 204) {
             
-            NSArray *starredRepos = [GITRepository myStarredRepositories];
+            NSArray *starredRepos = [GITRepository getCachedObjectByKey:MyStarredRepositories];
             NSMutableArray *newStarredRepos = [NSMutableArray array];
             
             for (GITRepository *item in starredRepos) {
@@ -337,7 +247,7 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName";
                     [newStarredRepos addObject:item];
                 }
             }
-            [GITRepository updateMyStarredRepositories:newStarredRepos];
+            [GITRepository storeObject:[newStarredRepos copy] byKey:MyStarredRepositories];
             
             success(YES);
         }
@@ -464,18 +374,76 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName";
     return repositoryType[type];
 }
 
++ (NSArray *)jsonArrayToModelArray:(NSArray *)array
+{
+    NSMutableArray *mutableArray = [NSMutableArray arrayWithCapacity:array.count];
+    for (NSDictionary *dict in array) {
+        GITRepository *item = [GITRepository objectWithKeyValues:dict];
+        [mutableArray addObject:item];
+    }
+    return [mutableArray copy];
+}
+
 + (AFHTTPRequestOperation *)repositoriesOfUrl:(NSString *)url success:(void (^)(NSArray *))success failure:(GitHubClientFailureBlock)failure
 {
     GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
     
     return [client getWithURL:url parameters:nil success:^(AFHTTPRequestOperation *operation, id obj) {
-        NSMutableArray *mutableArray = [NSMutableArray array];
-        for (NSDictionary *dict in obj) {
-            GITRepository *repos = [GITRepository objectWithKeyValues:dict];
-            [mutableArray addObject:repos];
-        }
-        success([mutableArray copy]);
+        success(obj);
     } failure:failure];
+}
+
++ (AFHTTPRequestOperation *)myStarredRepositoriesNeedRefresh:(BOOL)needRefresh
+                                                     success:(void (^)(NSArray *))success
+                                                     failure:(GitHubClientFailureBlock)failure
+{
+    if (!needRefresh) {
+        NSArray *cachedRepos = [GITRepository getCachedObjectByKey:MyStarredRepositories];
+        if (cachedRepos) {
+            success([GITRepository jsonArrayToModelArray:cachedRepos]);
+            return nil;
+        }
+    }
+    
+    NSString *url = [NSString stringWithFormat:@"/users/%@/starred?sort=created", [GITUser username]];
+    return [GITRepository repositoriesOfUrl:url success:^(NSArray *repos) {
+        // 每次调用 API 成功获取之后都保存到本地
+        [GITRepository storeObject:repos byKey:MyStarredRepositories];
+
+        success([GITRepository jsonArrayToModelArray:repos]);
+    } failure:failure];
+}
+
++ (AFHTTPRequestOperation *)myRepositoriesNeedRefresh:(BOOL)needRefresh
+                                              success:(void (^)(NSArray *))success
+                                              failure:(GitHubClientFailureBlock)failure
+{
+    if (!needRefresh) {
+        NSArray *cachedRepos = [GITRepository getCachedObjectByKey:MyOwnedRepositories];
+        if (cachedRepos) {
+            success([GITRepository jsonArrayToModelArray:cachedRepos]);
+            return nil;
+        }
+    }
+    
+    return [GITRepository repositoriesOfUrl:@"/user/repos?sort=created" success:^(NSArray *repos) {
+        // 每次调用 API 成功获取之后都保存到本地
+        [GITRepository storeObject:repos byKey:MyOwnedRepositories];
+        success([GITRepository jsonArrayToModelArray:repos]);
+    } failure:failure];
+}
+
++ (void)storeObject:(id)obj byKey:(NSString *)key
+{
+    NSLog(@"");
+    [[KVStoreManager sharedStore] createTableWithName:RepositoriesTableName];
+    [[KVStoreManager sharedStore] putObject:obj withId:key intoTable:RepositoriesTableName];
+}
+
++ (id)getCachedObjectByKey:(NSString *)key
+{
+    NSLog(@"");
+    return [[KVStoreManager sharedStore] getObjectById:key fromTable:RepositoriesTableName];
 }
 
 - (NSString *)readmeStoreKey

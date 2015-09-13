@@ -99,35 +99,13 @@ typedef NS_ENUM(NSUInteger, JGHRepositoryOrderBy) {
 
 + (BOOL)isStarredRepo:(GITRepository *)repo;
 
-+ (NSArray *)myStarredRepositories;
-
-+ (void)updateMyStarredRepositories:(NSArray *)repos;
-
-+ (NSArray *)myOwnedRepositories;
-
-+ (AFHTTPRequestOperation *)myRepositoriesWithSuccess:(void (^)(NSArray *))success
-                                              failure:(GitHubClientFailureBlock)failure;
-
 + (AFHTTPRequestOperation *)repositoriesOfUser:(NSString *)user
-                                          type:(JGHRepositoryType)type
-                                        sortBy:(JGHRepositorySortBy)sortBy
-                                       orderBy:(JGHRepositoryOrderBy)orderBy
+                                   needRefresh:(BOOL)needRefresh
                                        success:(void (^)(NSArray *))success
                                        failure:(GitHubClientFailureBlock)failure;
-
-+ (AFHTTPRequestOperation *)repositoriesOfUser:(NSString *)user
-                                       success:(void (^)(NSArray *))success
-                                       failure:(GitHubClientFailureBlock)failure;
-
-+ (AFHTTPRequestOperation *)repositoriesOfOrganization:(NSString *)org
-                                               success:(void (^)(NSArray *))success
-                                               failure:(GitHubClientFailureBlock)failure;
-
-+ (AFHTTPRequestOperation *)publicRepositoriesSince:(NSString *)since
-                                            success:(void (^)(NSArray *))success
-                                            failure:(GitHubClientFailureBlock)failure;
 
 + (AFHTTPRequestOperation *)starredRepositoriesByUser:(NSString *)user
+                                          needRefresh:(BOOL)needRefresh
                                               success:(void (^)(NSArray *))success
                                               failure:(GitHubClientFailureBlock)failure;
 
