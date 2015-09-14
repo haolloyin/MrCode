@@ -12,6 +12,7 @@
 
 @property (nonatomic, copy) NSURL *url;
 @property (nonatomic, copy) NSString *htmlString;
+@property (nonatomic, copy) NSString *(^loadRequestBlock)(void);
 
 - (void)reloadWebView;
 

@@ -61,11 +61,13 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_resource "DateTools/DateTools/DateTools.bundle"
   install_resource "MJRefresh/MJRefresh/MJRefresh.bundle"
   install_resource "OcticonsIOS/OcticonsIOS/octicons.ttf"
+  install_resource "WebViewJavascriptBridge/WebViewJavascriptBridge/WebViewJavascriptBridge.js.txt"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_resource "DateTools/DateTools/DateTools.bundle"
   install_resource "MJRefresh/MJRefresh/MJRefresh.bundle"
   install_resource "OcticonsIOS/OcticonsIOS/octicons.ttf"
+  install_resource "WebViewJavascriptBridge/WebViewJavascriptBridge/WebViewJavascriptBridge.js.txt"
 fi
 
 rsync -avr --copy-links --no-relative --exclude '*/.svn/*' --files-from="$RESOURCES_TO_COPY" / "${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"

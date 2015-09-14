@@ -110,6 +110,11 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
 @end
 
 
+@interface GITRepository ()
+
+@end
+
+
 @implementation GITRepository
 
 + (NSDictionary *)replacedKeyFromPropertyName
@@ -466,18 +471,22 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
         NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:base64String options:NSDataBase64DecodingIgnoreUnknownCharacters];
         NSString *content = [[NSString alloc] initWithData:decodedData encoding:NSUTF8StringEncoding];
         NSString *html = [NSString stringWithFormat:MCGitHubHTMLTemplateString, self.fullName, content];
-        [self storeReadmeHTML:html];
+        NSString *formatedHTML = [html stringByReplacingOccurrencesOfString:@"<img src=" withString:@"<img image_src="];
+        
+        [self storeReadmeHTML:formatedHTML];
         NSLog(@"refresh README ok");
-        success(html);
+        success(formatedHTML);
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         if (operation.response.statusCode == 200) {
             NSData *encodedData = error.userInfo[@"com.alamofire.serialization.response.error.data"];
             NSString *content = [[NSString alloc] initWithData:encodedData encoding:NSUTF8StringEncoding];
             NSString *html = [NSString stringWithFormat:MCGitHubHTMLTemplateString, self.fullName, content];
-            [self storeReadmeHTML:html];
+            NSString *formatedHTML = [html stringByReplacingOccurrencesOfString:@"<img src=" withString:@"<img image_src="];
+            
+            [self storeReadmeHTML:formatedHTML];
             NSLog(@"refresh README error but ok");
-            success(html);
+            success(formatedHTML);
         }
         else {
             failure(operation, error);

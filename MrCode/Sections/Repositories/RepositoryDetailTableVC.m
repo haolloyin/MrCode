@@ -223,6 +223,15 @@
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
         } needRefresh:NO];
+        
+        WebViewController *controller = (WebViewController *)segue.destinationViewController;
+        controller.loadRequestBlock = ^NSString *() {
+            [self.repo readmeWithsuccess:^(NSString *success) {
+                return success;
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                NSLog(@"%@", error);
+            } needRefresh:NO];
+        };
     }
     else if ([identifier isEqualToString:@"ReposDetail2ReposContentTableVC"]) {
         RepositoryContentTableVC *controller = (RepositoryContentTableVC *)segue.destinationViewController;

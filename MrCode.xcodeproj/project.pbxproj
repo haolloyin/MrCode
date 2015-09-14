@@ -34,6 +34,7 @@
 		3F38016A1B981264005DACE5 /* MrCodeConst.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F3801691B981264005DACE5 /* MrCodeConst.m */; };
 		3F4149061B5B5EE30025B708 /* UserProfileTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F4149051B5B5EE30025B708 /* UserProfileTableVC.m */; };
 		3F4149091B5B8E2B0025B708 /* UserProfileHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F4149081B5B8E2B0025B708 /* UserProfileHeaderView.m */; };
+		3F6103CD1BA716F600B6A7D0 /* main.js in Resources */ = {isa = PBXBuildFile; fileRef = 3F6103CC1BA716F600B6A7D0 /* main.js */; };
 		3F8C0FAD1B9C96E40004F818 /* RepositoryContentTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F8C0FAC1B9C96E40004F818 /* RepositoryContentTableVC.m */; };
 		3F8C0FB01B9DDF820004F818 /* RepositoryContentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F8C0FAF1B9DDF820004F818 /* RepositoryContentTableViewCell.m */; };
 		3FBFD28C1B4AD68800BDC00F /* UIImage+MRC_Octicons.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD28B1B4AD68800BDC00F /* UIImage+MRC_Octicons.m */; };
@@ -109,6 +110,7 @@
 		3F4149051B5B5EE30025B708 /* UserProfileTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProfileTableVC.m; sourceTree = "<group>"; };
 		3F4149071B5B8E2B0025B708 /* UserProfileHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProfileHeaderView.h; sourceTree = "<group>"; };
 		3F4149081B5B8E2B0025B708 /* UserProfileHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProfileHeaderView.m; sourceTree = "<group>"; };
+		3F6103CC1BA716F600B6A7D0 /* main.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = main.js; sourceTree = "<group>"; };
 		3F8C0FAB1B9C96E40004F818 /* RepositoryContentTableVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoryContentTableVC.h; sourceTree = "<group>"; };
 		3F8C0FAC1B9C96E40004F818 /* RepositoryContentTableVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepositoryContentTableVC.m; sourceTree = "<group>"; };
 		3F8C0FAE1B9DDF820004F818 /* RepositoryContentTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoryContentTableViewCell.h; sourceTree = "<group>"; };
@@ -309,6 +311,7 @@
 		3F3801601B98097A005DACE5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3F6103CB1BA716F600B6A7D0 /* js */,
 				3F3801611B98097A005DACE5 /* css */,
 			);
 			path = Resources;
@@ -336,6 +339,14 @@
 				3FDB8D271B725E5D004694B4 /* UserTableViewCell.m */,
 			);
 			path = Profile;
+			sourceTree = "<group>";
+		};
+		3F6103CB1BA716F600B6A7D0 /* js */ = {
+			isa = PBXGroup;
+			children = (
+				3F6103CC1BA716F600B6A7D0 /* main.js */,
+			);
+			path = js;
 			sourceTree = "<group>";
 		};
 		3FBFD2891B4AD67800BDC00F /* Helpers */ = {
@@ -490,6 +501,7 @@
 				3F2547501B45A0060012CDD6 /* Main.storyboard in Resources */,
 				3F2547551B45A0070012CDD6 /* LaunchScreen.xib in Resources */,
 				3F3801651B98097A005DACE5 /* github2.css in Resources */,
+				3F6103CD1BA716F600B6A7D0 /* main.js in Resources */,
 				3F3801641B98097A005DACE5 /* github1.css in Resources */,
 				3F2547521B45A0070012CDD6 /* Images.xcassets in Resources */,
 			);

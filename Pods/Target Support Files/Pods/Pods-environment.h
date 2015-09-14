@@ -94,7 +94,7 @@
 #define COCOAPODS_POD_AVAILABLE_MJExtension
 #define COCOAPODS_VERSION_MAJOR_MJExtension 2
 #define COCOAPODS_VERSION_MINOR_MJExtension 5
-#define COCOAPODS_VERSION_PATCH_MJExtension 9
+#define COCOAPODS_VERSION_PATCH_MJExtension 10
 
 // MJRefresh
 #define COCOAPODS_POD_AVAILABLE_MJRefresh
@@ -131,6 +131,12 @@
 #define COCOAPODS_VERSION_MAJOR_UITableView_FDTemplateLayoutCell 1
 #define COCOAPODS_VERSION_MINOR_UITableView_FDTemplateLayoutCell 3
 #define COCOAPODS_VERSION_PATCH_UITableView_FDTemplateLayoutCell 0
+
+// WebViewJavascriptBridge
+#define COCOAPODS_POD_AVAILABLE_WebViewJavascriptBridge
+#define COCOAPODS_VERSION_MAJOR_WebViewJavascriptBridge 4
+#define COCOAPODS_VERSION_MINOR_WebViewJavascriptBridge 1
+#define COCOAPODS_VERSION_PATCH_WebViewJavascriptBridge 4
 
 // YTKKeyValueStore
 #define COCOAPODS_POD_AVAILABLE_YTKKeyValueStore
