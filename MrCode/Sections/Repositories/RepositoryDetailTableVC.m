@@ -214,23 +214,29 @@
         controller.reposType = RepositoriesTableVCReposTypeForks;
     }
     else if ([identifier isEqualToString:@"ReposDetail2WebView"]) {
-        [self.repo readmeWithsuccess:^(NSString *success) {
-            WebViewController *controller = (WebViewController *)segue.destinationViewController;
-            controller.htmlString = success;
-            controller.title = self.repo.name;
-            [controller reloadWebView];
-            
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"%@", error);
-        } needRefresh:NO];
+//        [self.repo readmeWithsuccess:^(NSString *success) {
+//            WebViewController *controller = (WebViewController *)segue.destinationViewController;
+//            controller.htmlString = success;
+//            controller.title = self.repo.name;
+//            [controller reloadWebView];
+//            
+//        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//            NSLog(@"%@", error);
+//        } needRefresh:NO];
         
         WebViewController *controller = (WebViewController *)segue.destinationViewController;
         controller.loadRequestBlock = ^NSString *() {
+            NSLog(@"init loadRequestBlock");
+            __block NSString *html = nil;
+            
             [self.repo readmeWithsuccess:^(NSString *success) {
-                return success;
+                NSLog(@"request README");
+                html = success;
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                 NSLog(@"%@", error);
             } needRefresh:NO];
+            
+            return html;
         };
     }
     else if ([identifier isEqualToString:@"ReposDetail2ReposContentTableVC"]) {

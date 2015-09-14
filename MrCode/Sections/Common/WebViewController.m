@@ -94,8 +94,12 @@
     
     // 优先执行 block 中的代码
     if (self.loadRequestBlock) {
+        NSLog(@"loadRequestBlock");
         self.htmlString = self.loadRequestBlock();
-        [self.webView loadHTMLString:self.htmlString baseURL:baseURL];
+        
+        if (self.htmlString) {
+            [self.webView loadHTMLString:self.htmlString baseURL:baseURL];
+        }
     }
     else if (self.htmlString) {
         [self.webView loadHTMLString:self.htmlString baseURL:baseURL];
@@ -107,7 +111,9 @@
 
 #pragma mark -- 下载全部图片
 
--(void)downloadAllImagesInNative:(NSArray *)imageUrls{
+-(void)downloadAllImagesInNative:(NSArray *)imageUrls
+{
+    NSLog(@"downloadAllImagesInNative");
     
     SDWebImageManager *manager = [SDWebImageManager sharedManager];
     

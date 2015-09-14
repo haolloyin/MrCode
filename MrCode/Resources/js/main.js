@@ -21,6 +21,9 @@ function imagesDownloadComplete(pOldUrl, pNewUrl) {
 }
 
 function onLoaded() {
+    console.log("onLoaded...");
+    alert("onLoaded()");
+    
     connectWebViewJavascriptBridge(function(bridge) {
         var imageUrlsArray = new Array();
         var allImage = document.querySelectorAll("img");
