@@ -37,6 +37,13 @@
     self.navigationItem.title = self.title;
     // FIXME 不知道这里为啥一定要先调用一次，否则之后所有 loadHTMLString 都不会触发 shouldStartLoadWithRequest
     // 文档只是这样说 shouldStartLoadWithRequest 方法 “Sent before a web view begins loading a frame.”
+//    [self reloadWebView];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    NSLog(@"webView=%@", _webView);
+    
     [self reloadWebView];
 }
 
@@ -59,10 +66,7 @@
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-    if (self.htmlString) {
-        return YES;
-    }
-    else if (self.url) {
+    if (self.delegate || self.htmlString || self.url) {
         return YES;
     }
     return NO;
@@ -71,7 +75,6 @@
 - (void)webViewDidStartLoad:(UIWebView *)webView
 {
     NSLog(@"URL=%@", self.url.absoluteString);
-    [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
@@ -90,18 +93,15 @@
 
 - (void)reloadWebView
 {
-    NSURL *baseURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]];
+    [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
     
-    // 优先执行 block 中的代码
-    if (self.loadRequestBlock) {
-        NSLog(@"loadRequestBlock");
-        self.htmlString = self.loadRequestBlock();
-        
-        if (self.htmlString) {
-            [self.webView loadHTMLString:self.htmlString baseURL:baseURL];
-        }
+    // 优先执行 delegate 中的代码
+    if (self.delegate) {
+        NSLog(@"run delegate");
+        [self.delegate webViewShouldLoadRequest:self.webView];
     }
     else if (self.htmlString) {
+        NSURL *baseURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]];
         [self.webView loadHTMLString:self.htmlString baseURL:baseURL];
     }
     else {

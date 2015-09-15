@@ -15,7 +15,7 @@
 
 #import "UIImage+MRC_Octicons.h"
 
-@interface RepositoryDetailTableVC () <RepositoryHeaderViewDelegate>
+@interface RepositoryDetailTableVC () <RepositoryHeaderViewDelegate, WebViewControllerDelegate>
 
 @property (nonatomic, strong) RepositoryHeaderView *headerView;
 
@@ -200,50 +200,52 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     NSString *identifier = segue.identifier;
     if ([identifier isEqualToString:@"RepositoryDetail2UserProfile"]) {
+        
         UserProfileTableVC *controller = (UserProfileTableVC *)segue.destinationViewController;
         controller.user = self.repo.owner;
     }
     else if ([identifier isEqualToString:@"ReposDetail2ReposTableVC"]) {
+        
         RepositoriesTableVC *controller = (RepositoriesTableVC *)segue.destinationViewController;
         controller.user = [NSString stringWithFormat:@"%@/%@", self.repo.owner.login, self.repo.name];
         controller.reposType = RepositoriesTableVCReposTypeForks;
     }
     else if ([identifier isEqualToString:@"ReposDetail2UserTableVC"]) {
+        
         RepositoriesTableVC *controller = (RepositoriesTableVC *)segue.destinationViewController;
         controller.user = [NSString stringWithFormat:@"%@/%@", self.repo.owner.login, self.repo.name];
         controller.reposType = RepositoriesTableVCReposTypeForks;
     }
     else if ([identifier isEqualToString:@"ReposDetail2WebView"]) {
-//        [self.repo readmeWithsuccess:^(NSString *success) {
-//            WebViewController *controller = (WebViewController *)segue.destinationViewController;
-//            controller.htmlString = success;
-//            controller.title = self.repo.name;
-//            [controller reloadWebView];
-//            
-//        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-//            NSLog(@"%@", error);
-//        } needRefresh:NO];
         
         WebViewController *controller = (WebViewController *)segue.destinationViewController;
-        controller.loadRequestBlock = ^NSString *() {
-            NSLog(@"init loadRequestBlock");
-            __block NSString *html = nil;
-            
-            [self.repo readmeWithsuccess:^(NSString *success) {
-                NSLog(@"request README");
-                html = success;
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                NSLog(@"%@", error);
-            } needRefresh:NO];
-            
-            return html;
-        };
+        controller.title = self.repo.name;
+        controller.delegate = self;
     }
     else if ([identifier isEqualToString:@"ReposDetail2ReposContentTableVC"]) {
+        
         RepositoryContentTableVC *controller = (RepositoryContentTableVC *)segue.destinationViewController;
         controller.repo = (GITRepository *)sender;
         controller.path = nil;
     }
+}
+
+#pragma makr - WebViewControllerDelegate
+
+- (void)webViewShouldLoadRequest:(UIWebView *)webView
+{
+    [self.repo readmeWithsuccess:^(NSString *success) {
+        
+//        NSLog(@"html:\n%@", success);
+        
+        NSURL *baseURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]];
+        [webView loadHTMLString:success baseURL:baseURL];
+        
+        NSLog(@"webView=%@", webView);
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error);
+    } needRefresh:NO];
 }
 
 #pragma mark - Private

@@ -8,11 +8,18 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol WebViewControllerDelegate <NSObject>
+
+@optional
+- (void)webViewShouldLoadRequest:(UIWebView *)webView;
+
+@end
+
 @interface WebViewController : UIViewController
 
 @property (nonatomic, copy) NSURL *url;
 @property (nonatomic, copy) NSString *htmlString;
-@property (nonatomic, copy) NSString *(^loadRequestBlock)(void);
+@property (nonatomic, weak) id<WebViewControllerDelegate> delegate;
 
 - (void)reloadWebView;
 
