@@ -235,6 +235,7 @@
 - (void)webViewShouldLoadRequest:(UIWebView *)webView
 {
     [self.repo readmeWithsuccess:^(NSString *success) {
+//        NSLog(@"%@", success);
         
         NSURL *baseURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]];
         [webView loadHTMLString:success baseURL:baseURL];

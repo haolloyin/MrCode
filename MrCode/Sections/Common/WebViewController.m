@@ -114,7 +114,7 @@
 
 -(void)downloadAllImagesInNative:(NSArray *)imageUrls
 {
-    NSLog(@"downloadAllImagesInNative, imageUrls=\n%@", imageUrls);
+//    NSLog(@"downloadAllImagesInNative, imageUrls=\n%@", imageUrls);
     
     SDWebImageManager *manager = [SDWebImageManager sharedManager];
     
@@ -124,7 +124,7 @@
         [_allImages addObject:[NSNull null]];
     }
     
-    for (NSUInteger i = 0; i < imageUrls.count-1; i++) {
+    for (NSUInteger i = 0; i < imageUrls.count; i++) {
         NSString *url = imageUrls[i];
         [manager downloadImageWithURL:[NSURL URLWithString:url] options:SDWebImageHighPriority progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
                                 
@@ -133,10 +133,10 @@
                     //把图片在磁盘中的地址传回给JS
                     NSString *key = [manager cacheKeyForURL:imageURL];
                     NSString *cachedPath = [manager.imageCache defaultCachePathForKey:key];
-                    NSLog(@"downloaded=%@", url);
+//                    NSLog(@"downloaded=%@", url);
                     NSLog(@"cachePath=%@", cachedPath);
                     
-                    [_jsBridge callHandler:@"imagesDownloadComplete" data:cachedPath];
+                    [_jsBridge callHandler:@"imagesDownloadComplete" data:@[url, cachedPath]];
                 });
             }
         }];
@@ -151,9 +151,11 @@
     if (!_jsBridge) {
         _jsBridge = [WebViewJavascriptBridge bridgeForWebView:self.webView webViewDelegate:self handler:^(id data, WVJBResponseCallback responseCallback) {
             
-//            NSLog(@"ObjC received message from JS: %@, %@", data, [data class]);
+//            NSLog(@"ObjC received message from JS: %@\n%@", [data class], data);
             
-            [self downloadAllImagesInNative:data];
+            if (data) {
+                [self downloadAllImagesInNative:data];
+            }
             
             if (responseCallback) {
                 responseCallback(@"Response for message from ObjC");
