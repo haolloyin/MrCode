@@ -1,4 +1,5 @@
 
+// 必须，初始化 WebViewJavascriptBridge
 function connectWebViewJavascriptBridge(callback) {
     if (window.WebViewJavascriptBridge) {
         callback(WebViewJavascriptBridge)
@@ -9,23 +10,12 @@ function connectWebViewJavascriptBridge(callback) {
     }
 }
 
-function imagesDownloadComplete(pOldUrl, pNewUrl) {
-    var allImage = document.querySelectorAll("img");
-    allImage = Array.prototype.slice.call(allImage, 0);
-    
-    alert(pOldUrl + "\n" + pNewUrl)
-    
-    allImage.forEach(function(image) {
-        if (image.getAttribute("image_src") == pOldUrl || image.getAttribute("image_src") == decodeURIComponent(pOldUrl)) {
-            image.src = pNewUrl;
-        }
-    });
-}
-
+// HTML body 中的主调函数
 function onLoaded() {
     console.log("onLoaded...");
     // alert("onLoaded()");
     
+    // 初始化 WebViewJavascriptBridge
     connectWebViewJavascriptBridge(function(bridge) {
 
         // 初始化，所有 objc send(data) 的方法都会经过这里处理
@@ -60,6 +50,7 @@ function onLoaded() {
             });
         });
 
+        // 将当前页面所有 image 下的 image_src 地址收集起来
         var imageUrlsArray = new Array();
         var allImage = document.querySelectorAll("img");
 
@@ -68,7 +59,8 @@ function onLoaded() {
             var image_src = image.getAttribute("image_src");
             var newLength = imageUrlsArray.push(image_src);
         });
-
+        
+        // 将所有图片地址发给 objc 端
         bridge.send(imageUrlsArray);
     });
 }
