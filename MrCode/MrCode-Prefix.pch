@@ -15,7 +15,7 @@
 #pragma mark - Some better NSLog
 
 #define NSLog(format, ...) do {         \
-fprintf(stderr, "<%s : %d> %s\n",       \
+fprintf(stderr, "<%s : %d>\n%s\n",       \
 [[[NSString stringWithUTF8String:__FILE__] lastPathComponent] UTF8String], \
 __LINE__, __func__);                    \
 (NSLog)((format), ##__VA_ARGS__);       \

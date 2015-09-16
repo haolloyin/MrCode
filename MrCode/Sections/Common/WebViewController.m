@@ -34,6 +34,8 @@
     _webView.delegate = self;
     _webView.scalesPageToFit = YES;
     
+    [self setupJSBridge];
+    
     self.navigationItem.title = self.title;
     // FIXME 不知道这里为啥一定要先调用一次，否则之后所有 loadHTMLString 都不会触发 shouldStartLoadWithRequest
     // 文档只是这样说 shouldStartLoadWithRequest 方法 “Sent before a web view begins loading a frame.”
@@ -97,7 +99,6 @@
     
     // 优先执行 delegate 中的代码
     if (self.delegate) {
-        NSLog(@"run delegate");
         [self.delegate webViewShouldLoadRequest:self.webView];
     }
     else if (self.htmlString) {
@@ -109,11 +110,11 @@
     }
 }
 
-#pragma mark -- 下载全部图片
+#pragma mark - 下载全部图片
 
 -(void)downloadAllImagesInNative:(NSArray *)imageUrls
 {
-    NSLog(@"downloadAllImagesInNative");
+    NSLog(@"downloadAllImagesInNative, imageUrls=\n%@", imageUrls);
     
     SDWebImageManager *manager = [SDWebImageManager sharedManager];
     
@@ -125,20 +126,17 @@
     
     for (NSUInteger i = 0; i < imageUrls.count-1; i++) {
         NSString *url = imageUrls[i];
-        
         [manager downloadImageWithURL:[NSURL URLWithString:url] options:SDWebImageHighPriority progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-            
+                                
             if (image) {
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                    
-                    NSString *imgB64 = [UIImageJPEGRepresentation(image, 1.0) base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
-                    
                     //把图片在磁盘中的地址传回给JS
                     NSString *key = [manager cacheKeyForURL:imageURL];
-                    NSLog(@"imageURL=%@\ncacheURL=%@", imageURL, key);
+                    NSString *cachedPath = [manager.imageCache defaultCachePathForKey:key];
+                    NSLog(@"downloaded=%@", url);
+                    NSLog(@"cachePath=%@", cachedPath);
                     
-                    NSString *source = [NSString stringWithFormat:@"data:image/png;base64,%@", imgB64];
-                    [self.jsBridge callHandler:@"imagesDownloadComplete" data:@[key,source]];
+                    [_jsBridge callHandler:@"imagesDownloadComplete" data:cachedPath];
                 });
             }
         }];
@@ -147,15 +145,21 @@
 
 #pragma mark - Property
 
-- (WebViewJavascriptBridge *)jsBridge
+- (void)setupJSBridge
 {
+    // 这里不能用惰性初始化，否则根本没给 webView 的 HTML 注入 WebViewJavascriptBridge 对象
     if (!_jsBridge) {
         _jsBridge = [WebViewJavascriptBridge bridgeForWebView:self.webView webViewDelegate:self handler:^(id data, WVJBResponseCallback responseCallback) {
-            NSLog(@"ObjC received message from JS: %@", data);
-            responseCallback(@"Response for message from ObjC");
+            
+//            NSLog(@"ObjC received message from JS: %@, %@", data, [data class]);
+            
+            [self downloadAllImagesInNative:data];
+            
+            if (responseCallback) {
+                responseCallback(@"Response for message from ObjC");
+            }
         }];
     }
-    return _jsBridge;
 }
 
 @end

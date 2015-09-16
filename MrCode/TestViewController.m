@@ -7,10 +7,11 @@
 //
 
 #import "TestViewController.h"
-#import "Masonry.h"
 #import "GITEvent.h"
 
+#import "Masonry.h"
 #import "KxMenu.h"
+#import "SDWebImageManager.h"
 
 @interface TestViewController ()
 
@@ -94,6 +95,8 @@
         make.centerX.equalTo(self.view);
         make.top.equalTo(@20);
     }];
+    
+    [self downloadImage];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -112,6 +115,38 @@
 */
 
 #pragma mark - Private
+
+- (void)downloadImage
+{
+    SDWebImageManager *manager = [SDWebImageManager sharedManager];
+    NSURL *url = [NSURL URLWithString:@"https://camo.githubusercontent.com/01dd1026d86789cd3479004e93c8320fe125be4d/68747470733a2f2f7261772e6769746875622e636f6d2f6a6f686e696c2f4a46496d6167655069636b6572436f6e74726f6c6c65722f6d61737465722f6173736574732f73637265656e73686f74312e706e67"];
+    if ([manager cachedImageExistsForURL:url]) {
+        NSString *key = [manager cacheKeyForURL:url];
+        NSLog(@"cachedImageExistsForURL=%@", [manager.imageCache defaultCachePathForKey:key]);
+    }
+    else {
+    
+        NSLog(@"downloading");
+        [manager downloadImageWithURL:url options:SDWebImageHighPriority progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+            
+            if (image) {
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                    
+                    NSLog(@"downloaded=%@", url);
+                    
+                    UIImageView *imageView = [[UIImageView alloc] initWithFrame:self.view.frame];
+                    imageView.image = image;
+                    [self.view addSubview:imageView];
+                    
+                    //把图片在磁盘中的地址传回给JS
+                    NSString *key = [manager cacheKeyForURL:imageURL];
+                    
+                    NSLog(@"cacheType=%@, key=%@", @(cacheType), key);
+                });
+            }
+        }];
+    }
+}
 
 - (void)showMenu:(UIButton *)sender
 {
@@ -156,6 +191,7 @@
     [KxMenu showMenuInView:self.view
                   fromRect:sender.frame
                  menuItems:menuItems];
+
 }
 
 - (void) pushMenuItem:(id)sender

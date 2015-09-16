@@ -236,12 +236,8 @@
 {
     [self.repo readmeWithsuccess:^(NSString *success) {
         
-//        NSLog(@"html:\n%@", success);
-        
         NSURL *baseURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]];
         [webView loadHTMLString:success baseURL:baseURL];
-        
-        NSLog(@"webView=%@", webView);
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
