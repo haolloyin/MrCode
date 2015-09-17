@@ -10,6 +10,8 @@
 #import "GitHubOAuthClient.h"
 #import "GITUser.h"
 
+#import "AFHTTPRequestOperationManager.h"
+
 static NSString *kTOKEN_STORE_IDENTIFIER = @"GitHubOAuthClient_TOKEN_STORE_IDENTIFIER";
 
 #pragma mark - GitHubOAuthClient

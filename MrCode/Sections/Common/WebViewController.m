@@ -134,7 +134,7 @@
                     NSString *key = [manager cacheKeyForURL:imageURL];
                     NSString *cachedPath = [manager.imageCache defaultCachePathForKey:key];
 //                    NSLog(@"downloaded=%@", url);
-                    NSLog(@"cachePath=%@", cachedPath);
+//                    NSLog(@"cachePath=%@", cachedPath);
                     
                     [_jsBridge callHandler:@"imagesDownloadComplete" data:@[url, cachedPath]];
                 });

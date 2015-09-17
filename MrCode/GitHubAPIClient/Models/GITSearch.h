@@ -22,4 +22,10 @@
                                           success:(void (^)(NSArray *))success
                                           failure:(GitHubClientFailureBlock)failure;
 
++ (AFHTTPRequestOperation *)trendingReposOfLanguage:(NSString *)language
+                                              since:(NSString *)since
+                                            success:(void (^)(NSArray *))repos
+                                            failure:(GitHubClientFailureBlock)failure;
+
+
 @end

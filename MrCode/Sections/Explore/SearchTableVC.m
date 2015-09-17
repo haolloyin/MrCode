@@ -549,9 +549,16 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 {
     // 排行榜
     if (_currentTargetType == CurrentTargetTypeTrending) {
-        [GITSearch repositoriesWithKeyword:nil language:@"objectivec" sortBy:@"stars&created:2015-07-26" success:^(NSArray *array) {
-            [_trendingReposCache addObjectsFromArray:array];
-            [self refreshWithData:_trendingReposCache];
+//        [GITSearch repositoriesWithKeyword:nil language:@"objectivec" sortBy:@"stars&created:2015-07-26" success:^(NSArray *array) {
+//            [_trendingReposCache addObjectsFromArray:array];
+//            [self refreshWithData:_trendingReposCache];
+//        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//            NSLog(@"%@", error);
+//        }];
+        
+        [GITSearch trendingReposOfLanguage:self.selectedLanguage since:self.selectedDatePeriod success:^(NSArray *repos) {
+            [_trendingDevelopersCache addObject:repos];
+            [self refreshWithData:_trendingDevelopersCache];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
         }];
