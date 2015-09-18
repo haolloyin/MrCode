@@ -87,6 +87,8 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     
     [self initial];
     [self updateSeearchBarPlaceholder];
+    [self restoreCurrentSelectedLanguage];
+    [self restoreCurrentSelectedDatePeriod];
     
     _data                    = [NSArray array];
     _trendingReposCache      = [NSMutableArray array];
@@ -100,13 +102,13 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 - (void)viewWillAppear:(BOOL)animated
 {
     NSLog(@"");
-    [self restoreCurrentSelectedLanguage];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
     NSLog(@"");
     [self saveCurrentSelectedLanguage];
+    [self saveCurrentSelectedDatePeriod];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -483,6 +485,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 - (void)saveCurrentSelectedLanguage
 {
     if (self.selectedLanguage) {
+        NSLog(@"selectedLanguage=%@", self.selectedLanguage);
         [[NSUserDefaults standardUserDefaults] setObject:self.selectedLanguage forKey:@"MrCode_CurrentSelectedLanguage"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
@@ -492,6 +495,29 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 {
     NSString *language = [[NSUserDefaults standardUserDefaults] objectForKey:@"MrCode_CurrentSelectedLanguage"];
     self.selectedLanguage = language;
+    NSLog(@"selectedLanguage=%@", self.selectedLanguage);
+}
+
+- (void)saveCurrentSelectedDatePeriod
+{
+    if (self.selectedDatePeriod) {
+        [[NSUserDefaults standardUserDefaults] setObject:self.selectedDatePeriod forKey:@"MrCode_CurrentSelectedDatePeriod"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+}
+
+- (void)restoreCurrentSelectedDatePeriod
+{
+    NSString *period = [[NSUserDefaults standardUserDefaults] objectForKey:@"MrCode_CurrentSelectedDatePeriod"];
+    if ([period isEqualToString:@"Today"]) {
+        self.selectedDatePeriod = @"daily";
+    }
+    else if ([period isEqualToString:@"This week"]) {
+        self.selectedDatePeriod = @"weekly";
+    }
+    else if ([period isEqualToString:@"This month"]) {
+        self.selectedDatePeriod = @"monthly";
+    }
 }
 
 - (void)reloadData
@@ -549,15 +575,8 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 {
     // 排行榜
     if (_currentTargetType == CurrentTargetTypeTrending) {
-//        [GITSearch repositoriesWithKeyword:nil language:@"objectivec" sortBy:@"stars&created:2015-07-26" success:^(NSArray *array) {
-//            [_trendingReposCache addObjectsFromArray:array];
-//            [self refreshWithData:_trendingReposCache];
-//        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-//            NSLog(@"%@", error);
-//        }];
-        
         [GITSearch trendingReposOfLanguage:self.selectedLanguage since:self.selectedDatePeriod success:^(NSArray *repos) {
-            [_trendingDevelopersCache addObject:repos];
+            [_trendingDevelopersCache addObjectsFromArray:repos];
             [self refreshWithData:_trendingDevelopersCache];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);

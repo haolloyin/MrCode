@@ -69,17 +69,20 @@
                                             success:(void (^)(NSArray *))repos
                                             failure:(GitHubClientFailureBlock)failure
 {
-    language = language ? : @"all";
-    since = since ? : @"";
+    NSLog(@"language=%@, since=%@", language, since);
+    language = language ? : @"";
+    since = since ? : @"daily";
     NSString *trendingURL = @"http://trending.codehub-app.com/v2/trending?since=%@&language=%@";
-    NSString *url = [NSString stringWithFormat:trendingURL, language, since];
+    NSString *url = [NSString stringWithFormat:trendingURL, since, [language lowercaseString]];
+    NSLog(@"%@", url);
     
-    GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
-    return [client getWithURL:url parameters:nil success:^(AFHTTPRequestOperation *operation, id obj) {
+    AFHTTPRequestOperationManager *client = [GitHubOAuthClient httpManager];
+    return [client GET:url parameters:nil success:^(AFHTTPRequestOperation *operation, id obj) {
+        
         NSMutableArray *mutableArray = [NSMutableArray array];
-        for (NSDictionary *dict in obj[@"items"]) {
-            GITUser *user = [GITUser objectWithKeyValues:dict];
-            [mutableArray addObject:user];
+        for (NSDictionary *dict in obj) {
+            GITRepository *repo = [GITRepository objectWithKeyValues:dict];
+            [mutableArray addObject:repo];
         }
         repos([mutableArray copy]);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {

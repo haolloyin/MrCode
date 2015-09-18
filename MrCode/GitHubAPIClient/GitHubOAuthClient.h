@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class AFHTTPRequestOperation;
+#import "AFHTTPRequestOperationManager.h"
 
 /**
  *  GitHubOAuthClient
@@ -51,6 +51,8 @@ typedef NS_ENUM(NSUInteger, GitHubOAuthClienAPIStatus) {
 - (void)handleRedirectURL:(NSURL *)url;
 
 #pragma mark - HTTP
+
++ (AFHTTPRequestOperationManager *)httpManager;
 
 - (void)setValue:(NSString *)value forHeader:(NSString *)header;
 
