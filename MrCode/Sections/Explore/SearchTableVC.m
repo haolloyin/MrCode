@@ -509,15 +509,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 - (void)restoreCurrentSelectedDatePeriod
 {
     NSString *period = [[NSUserDefaults standardUserDefaults] objectForKey:@"MrCode_CurrentSelectedDatePeriod"];
-    if ([period isEqualToString:@"Today"]) {
-        self.selectedDatePeriod = @"daily";
-    }
-    else if ([period isEqualToString:@"This week"]) {
-        self.selectedDatePeriod = @"weekly";
-    }
-    else if ([period isEqualToString:@"This month"]) {
-        self.selectedDatePeriod = @"monthly";
-    }
+    self.selectedDatePeriod = period;
 }
 
 - (void)reloadData

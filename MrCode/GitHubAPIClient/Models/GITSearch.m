@@ -72,6 +72,17 @@
     NSLog(@"language=%@, since=%@", language, since);
     language = language ? : @"";
     since = since ? : @"daily";
+    
+    if ([since isEqualToString:@"Today"]) {
+        since = @"daily";
+    }
+    else if ([since isEqualToString:@"This week"]) {
+        since = @"weekly";
+    }
+    else if ([since isEqualToString:@"This month"]) {
+        since = @"monthly";
+    }
+    
     NSString *trendingURL = @"http://trending.codehub-app.com/v2/trending?since=%@&language=%@";
     NSString *url = [NSString stringWithFormat:trendingURL, since, [language lowercaseString]];
     NSLog(@"%@", url);
