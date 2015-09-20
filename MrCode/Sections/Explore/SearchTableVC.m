@@ -21,6 +21,8 @@
 #import "UIImage+MRC_Octicons.h"
 #import <ChameleonFramework/Chameleon.h>
 #import "KxMenu.h"
+#import "MBProgressHUD.h"
+
 
 // 搜索 Repos 或 Developer
 typedef NS_ENUM(NSUInteger, SearchType) {
@@ -28,17 +30,16 @@ typedef NS_ENUM(NSUInteger, SearchType) {
     SearchTypeDeveloper = 1
 };
 
-// 当前时排行榜还是搜索
+// 当前是排行榜还是搜索
 typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     CurrentTargetTypeTrending = 0,
     CurrentTargetTypeSearch = 1
 };
 
-@interface SearchTableVC () <UISearchBarDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
+@interface SearchTableVC () <UISearchBarDelegate>
 
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
-@property (strong, nonatomic) UIPickerView *pickerView;
 
 @property (nonatomic, strong) NSArray *data;
 @property (nonatomic, strong) NSMutableArray *trendingReposCache; // Repo 排行榜 cache
@@ -53,6 +54,8 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 @property (nonatomic, assign) CurrentTargetType currentTargetType;
 @property (nonatomic, copy) NSString *selectedLanguage; //当前选中的语言
 @property (nonatomic, copy) NSString *selectedDatePeriod; //当前选中日期范围，有 Today，This Week，This month
+
+@property (nonatomic, assign) BOOL needRefresh;
 
 @end
 
@@ -90,13 +93,14 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     [self restoreCurrentSelectedLanguage];
     [self restoreCurrentSelectedDatePeriod];
     
+    _needRefresh = NO;
     _data                    = [NSArray array];
     _trendingReposCache      = [NSMutableArray array];
     _trendingDevelopersCache = [NSMutableArray array];
     _searchReposCache        = [NSMutableArray array];
     _searchDevelopersCache   = [NSMutableArray array];
     
-    [self reloadData];
+    [self loadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -208,67 +212,6 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     [cell setSelected:NO];
 }
 
-//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-//{
-//    NSLog(@"");
-//    return self.pickerView;
-//}
-
-#pragma mark - UIPickerView delegate & data source
-
-
-
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
-{
-    return 3;
-}
-
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
-{
-    NSLog(@"component=%@", @(component));
-    NSInteger count = 2;
-    if (component == 0) {
-        count = 2;
-    }
-    else if (component == 1) {
-        count = 3;
-    }
-    else if (component == 3) {
-        return [[LanguagesTableVC favouriteLanguages] count];
-    }
-    return count;
-}
-
-- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
-{
-    NSString *title = @"";
-    NSArray *targets = @[@"Repository", @"Developer"];
-    NSArray *datePeriod = @[@"Tody", @"This Week", @"This Month"];
-    
-    switch (component) {
-        case 0:
-            title = targets[row];
-            break;
-        case 1:
-            title = datePeriod[row];
-            break;
-        case 2:
-            title = [LanguagesTableVC favouriteLanguages][row];
-            break;
-    }
-    return title;
-}
-
-- (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component
-{
-    return 100;
-}
-
-- (CGFloat)pickerView:(UIPickerView *)pickerView rowHeightForComponent:(NSInteger)component
-{
-    return 30;
-}
-
 #pragma mark - UISearchBarDelegate
 
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar
@@ -283,7 +226,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     
     self.keyword = searchBar.text;
     [searchBar resignFirstResponder];
-    [self reloadData];
+    [self loadData];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
@@ -449,11 +392,12 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     NSLog(@"BEFORE, currentTargetType: %@, keyword: %@", @(self.currentTargetType), self.keyword);
     
     self.currentTargetType = self.segmentedControl.selectedSegmentIndex;
+    
     self.keyword = nil;
     self.searchBar.text = nil;
     self.searchBar.placeholder = (self.searchType == SearchTypeRepository ? @"Repositories" : @"Developers");
     
-    [self reloadData];
+    [self loadData];
     
     NSLog(@"AFTER, currentTargetType: %@, keyword: %@", @(self.currentTargetType), self.keyword);
 }
@@ -468,16 +412,6 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     });
     
     return _placehodlerImage;
-}
-
-- (UIPickerView *)pickerView
-{
-    if (!_pickerView) {
-        _pickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 30)];
-        _pickerView.delegate = self;
-        _pickerView.dataSource = self;
-    }
-    return _pickerView;
 }
 
 #pragma mark - Private
@@ -512,8 +446,10 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     self.selectedDatePeriod = period;
 }
 
-- (void)reloadData
+- (void)loadData
 {
+    [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    
     if (_searchType == SearchTypeRepository) {
         [self loadRepos];
     }
@@ -612,6 +548,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     NSLog(@"");
     _data = [array copy];
     [self.tableView reloadData];
+    [MBProgressHUD hideHUDForView:self.navigationController.view animated:YES];
 }
 
 @end
