@@ -444,7 +444,6 @@
                         </segmentedControl>
                     </navigationItem>
                     <connections>
-                        <outlet property="searchBar" destination="jAc-Iw-3Bw" id="Nkd-Ms-Wb0"/>
                         <outlet property="segmentedControl" destination="TwL-Ud-bk8" id="qDZ-W7-3ff"/>
                         <segue destination="Zsf-ip-eNN" kind="push" identifier="SearchVC2RepositoryDetail" id="rRJ-Zw-Ha6"/>
                         <segue destination="t2G-KY-Cq4" kind="push" identifier="Search2UserProfile" id="Gc8-A6-8Vw"/>
@@ -559,11 +558,11 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="a08-hr-d3G"/>
+        <segue reference="rRJ-Zw-Ha6"/>
+        <segue reference="Gc8-A6-8Vw"/>
+        <segue reference="hP2-ir-aXF"/>
         <segue reference="rEC-14-Au0"/>
         <segue reference="IpJ-nh-bsg"/>
-        <segue reference="hP2-ir-aXF"/>
-        <segue reference="tBB-ju-T8Q"/>
         <segue reference="r5x-Lt-Gml"/>
     </inferredMetricsTieBreakers>
 </document>

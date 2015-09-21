@@ -22,6 +22,8 @@
 #import <ChameleonFramework/Chameleon.h>
 #import "KxMenu.h"
 #import "MBProgressHUD.h"
+#import "MJRefresh.h"
+#import "NSDate+DateTools.h"
 
 
 // 搜索 Repos 或 Developer
@@ -39,7 +41,8 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 @interface SearchTableVC () <UISearchBarDelegate>
 
 @property (weak, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
-@property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
+
+@property (strong, nonatomic) UISearchBar *searchBar;
 
 @property (nonatomic, strong) NSArray *data;
 @property (nonatomic, strong) NSMutableArray *trendingReposCache; // Repo 排行榜 cache
@@ -99,8 +102,6 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     _trendingDevelopersCache = [NSMutableArray array];
     _searchReposCache        = [NSMutableArray array];
     _searchDevelopersCache   = [NSMutableArray array];
-    
-    [self loadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -125,7 +126,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     self.searchType = SearchTypeRepository;
     self.currentTargetType = CurrentTargetTypeTrending;
     
-    self.searchBar.delegate = self;
+    [self segmentedControlChanged];
     
     UIImage *settingImage = [UIImage octicon_imageWithIdentifier:@"Gear" size:CGSizeMake(20, 20)];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:settingImage
@@ -225,6 +226,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     NSLog(@"keyword: %@", searchBar.text);
     
     self.keyword = searchBar.text;
+    self.needRefresh = YES;
     [searchBar resignFirstResponder];
     [self loadData];
 }
@@ -250,7 +252,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     }
 }
 
-#pragma mark - IBAction
+#pragma mark - KxMenu
 
 - (void)showMenu:(UINavigationItem *)sender
 {
@@ -383,6 +385,8 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     }
 }
 
+#pragma mark - IBAction
+
 - (void)segmentedControlChanged
 {
     if ([KxMenu isShowing]) {
@@ -393,9 +397,19 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     
     self.currentTargetType = self.segmentedControl.selectedSegmentIndex;
     
-    self.keyword = nil;
-    self.searchBar.text = nil;
-    self.searchBar.placeholder = (self.searchType == SearchTypeRepository ? @"Repositories" : @"Developers");
+    if (self.currentTargetType == 0) {
+        self.tableView.tableHeaderView = nil;
+        [self setupRefreshHeader];
+    }
+    else {
+        self.tableView.header = nil;
+        self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 40)];
+        self.searchBar.delegate = self;
+        self.keyword = nil;
+        self.searchBar.text = nil;
+        self.searchBar.placeholder = (self.searchType == SearchTypeRepository ? @"Repositories" : @"Developers");
+        self.tableView.tableHeaderView = self.searchBar;
+    }
     
     [self loadData];
     
@@ -415,6 +429,30 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 }
 
 #pragma mark - Private
+
+- (void)setupRefreshHeader
+{
+    MJRefreshNormalHeader *header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(loadData)];
+    
+    // 设置文字
+    [header setTitle:@"Pull down to refresh" forState:MJRefreshStateIdle];
+    [header setTitle:@"Release to refresh" forState:MJRefreshStatePulling];
+    [header setTitle:@"Loading ..." forState:MJRefreshStateRefreshing];
+    
+    // 设置字体
+    header.stateLabel.font = [UIFont systemFontOfSize:16];
+    header.lastUpdatedTimeLabel.font = [UIFont systemFontOfSize:14];
+    
+    // 设置颜色
+    header.stateLabel.textColor = [UIColor grayColor];
+    header.lastUpdatedTimeLabel.textColor = [UIColor grayColor];
+    header.lastUpdatedTimeText = ^(NSDate *date) {
+        return [NSString stringWithFormat:@"Last updated: %@", date.timeAgoSinceNow];
+    };
+    
+    // 设置刷新控件
+    self.tableView.header = header;
+}
 
 - (void)saveCurrentSelectedLanguage
 {
@@ -448,7 +486,11 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 
 - (void)loadData
 {
-    [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    NSLog(@"");
+    
+    if (self.tableView.header.isRefreshing) {
+        _needRefresh = YES;
+    }
     
     if (_searchType == SearchTypeRepository) {
         [self loadRepos];
@@ -461,8 +503,10 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 
 - (void)loadRepos
 {
+    NSLog(@"");
+    
     if (_currentTargetType == CurrentTargetTypeTrending) {
-        if ([_trendingReposCache count] == 0) {
+        if (_needRefresh) {
             [self fetchRepos];
         }
         else {
@@ -470,7 +514,8 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
         }
     }
     else if (_currentTargetType == CurrentTargetTypeSearch) {
-        if ([_searchReposCache count] == 0) {
+        if (_needRefresh) {
+            [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
             [self fetchRepos];
         }
         else {
@@ -482,7 +527,8 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 - (void)loadDevelopers
 {
     if (_currentTargetType == CurrentTargetTypeTrending) {
-        if ([_trendingDevelopersCache count] == 0) {
+        // TODO
+        if (_needRefresh) {
             [self fetchDevelopers];
         }
         else {
@@ -490,7 +536,8 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
         }
     }
     else if (_currentTargetType == CurrentTargetTypeSearch) {
-        if ([_searchDevelopersCache count] == 0) {
+        if (_needRefresh) {
+            [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
             [self fetchDevelopers];
         }
         else {
@@ -501,23 +548,36 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 
 - (void)fetchRepos
 {
+    NSLog(@"");
+    
     // 排行榜
     if (_currentTargetType == CurrentTargetTypeTrending) {
         [GITSearch trendingReposOfLanguage:self.selectedLanguage since:self.selectedDatePeriod success:^(NSArray *repos) {
-            [_trendingDevelopersCache addObjectsFromArray:repos];
-            [self refreshWithData:_trendingDevelopersCache];
+            
+            [_trendingReposCache removeAllObjects];
+            [_trendingReposCache addObjectsFromArray:repos];
+            [self refreshWithData:_trendingReposCache];
+            
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
         }];
     }
     // 搜索
     else if (_currentTargetType == CurrentTargetTypeSearch) {
-        [GITSearch repositoriesWithKeyword:self.keyword language:nil sortBy:nil success:^(NSArray *array) {
-            [_searchReposCache addObjectsFromArray:array];
-            [self refreshWithData:_searchReposCache];
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"%@", error);
-        }];
+        if (self.keyword) {
+            [GITSearch repositoriesWithKeyword:self.keyword language:self.selectedLanguage sortBy:nil success:^(NSArray *array) {
+                
+                [_searchReposCache removeAllObjects];
+                [_searchReposCache addObjectsFromArray:array];
+                [self refreshWithData:_searchReposCache];
+                
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                NSLog(@"%@", error);
+            }];
+        }
+        else {
+            [self refreshWithData:nil];
+        }
     }
 }
 
@@ -526,29 +586,45 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     // 排行榜
     if (_currentTargetType == CurrentTargetTypeTrending) {
         [GITSearch developersWithKeyword:nil sortBy:nil success:^(NSArray *array) {
+            
+            [_trendingDevelopersCache removeAllObjects];
             [_trendingDevelopersCache addObjectsFromArray:array];
             [self refreshWithData:_trendingDevelopersCache];
+            
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
         }];
     }
     // 搜索
     else if (_currentTargetType == CurrentTargetTypeSearch) {
-        [GITSearch developersWithKeyword:self.keyword sortBy:nil success:^(NSArray *array) {
-            [_searchDevelopersCache addObjectsFromArray:array];
-            [self refreshWithData:_searchDevelopersCache];
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"%@", error);
-        }];
+        if (self.keyword) {
+            [GITSearch developersWithKeyword:self.keyword sortBy:nil success:^(NSArray *array) {
+                
+                [_searchDevelopersCache removeAllObjects];
+                [_searchDevelopersCache addObjectsFromArray:array];
+                [self refreshWithData:_searchDevelopersCache];
+                
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                NSLog(@"%@", error);
+            }];
+        }
+        else {
+            [self refreshWithData:nil];
+        }
     }
 }
 
 - (void)refreshWithData:(NSMutableArray *)array
 {
     NSLog(@"");
+    
     _data = [array copy];
+    _needRefresh = NO;
+    
     [self.tableView reloadData];
-    [MBProgressHUD hideHUDForView:self.navigationController.view animated:YES];
+    [self.tableView.header endRefreshing];
+    
+    [MBProgressHUD hideAllHUDsForView:self.navigationController.view animated:YES];
 }
 
 @end
