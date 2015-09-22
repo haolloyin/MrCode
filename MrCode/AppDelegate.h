@@ -12,9 +12,9 @@
 
 @property (strong, nonatomic) UIWindow *window;
 
-- (BOOL)isAlreadyOAuth;
++ (BOOL)isAlreadyOAuth;
 
-- (void)setupGitHubOAuth;
++ (void)setupGitHubOAuthWithCompleteBlock:(void (^)(void))completeBlock;
 
 @end
 

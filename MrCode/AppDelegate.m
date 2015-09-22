@@ -69,15 +69,17 @@ NSString * const kAccessURL        = @"https://github.com/login/oauth/access_tok
 
 #pragma mark - Public
 
-- (BOOL)isAlreadyOAuth
++ (BOOL)isAlreadyOAuth
 {
     GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
     return client.alreadyOAuth;
 }
 
-- (void)setupGitHubOAuth
++ (void)setupGitHubOAuthWithCompleteBlock:(void (^)(void))completeBlock
 {
     GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
+    [client setOauthCompleteBlock:completeBlock];
+    
     [client setupWithClientID:kClientID
                        secret:kClientSecret
                       baseURL:kGitHubAPIBaseURL

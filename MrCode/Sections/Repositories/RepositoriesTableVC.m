@@ -63,6 +63,17 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 80.0;
     
+    if (_reposType == RepositoriesTableVCReposTypeForks) {
+        self.navigationItem.title = @"Forks";
+    }
+    else {
+        self.navigationItem.titleView = self.segmentedControl;
+    }
+    
+    _needRefresh = NO;
+    _repos = [NSArray array];
+    [self setupRefreshHeader];
+    
     [self checkGitHubOAuth];
 }
 
@@ -73,50 +84,71 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     NSLog(@"");
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    NSLog(@"");
+}
+
 - (void)initAndRefresh
 {
     NSLog(@"_user=%@, [GITUser username]=%@, _reposType=%@", _user, [GITUser username], @(_reposType));
     _user = _user ? : [GITUser username];
-    
-    if (_reposType == RepositoriesTableVCReposTypeForks) {
-        self.navigationItem.title = @"Forks";
-    }
-    else {
-        self.navigationItem.titleView = self.segmentedControl;
-    }
-    
-    _needRefresh = NO;
-    _repos = [NSArray array];
-    
-    [self setupRefreshHeader];
     
     [self loadData];
 }
 
 - (void)checkGitHubOAuth
 {
-    AppDelegate *appDelegate = [[AppDelegate alloc] init];
-    
-    if ([appDelegate isAlreadyOAuth]) {
+    if ([AppDelegate isAlreadyOAuth]) {
         NSLog(@"Just refresh");
         [self initAndRefresh];
     }
     else {
-        [self setupPopupViewWithItemHandler:^(NSInteger index) {
-            NSLog(@"setupGitHubOAuth");
-            [appDelegate setupGitHubOAuth];
-        } completeBlock:nil];
+        MMPopupItemHandler beginOAuthBlock = ^(NSInteger index){
+            [AppDelegate setupGitHubOAuthWithCompleteBlock:^(void) {
+                
+                [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+                
+                // 获取当前授权用户，然后刷新其资源库
+                [GITUser authenticatedUserWithSuccess:^(GITUser *user) {
+                    NSLog(@"%@", user.login);
+                    [self initAndRefresh];
+                } failure:^(AFHTTPRequestOperation *oper, NSError *error) {
+                    NSLog(@"error: %@", error);
+                }];
+            }];
+        };
+        
+        NSArray *items = @[MMItemMake(@"OK", MMItemTypeNormal, beginOAuthBlock)];
+        [[[MMAlertView alloc] initWithTitle:@"Alert"
+                                     detail:@"Login GitHub with Safari to AUTHORIZE Mr.Code ?"
+                                      items:items] show];
     }
 }
 
-- (void)setupPopupViewWithItemHandler:(MMPopupItemHandler)handler completeBlock:(MMPopupBlock)completeBlock
+- (void)showPopupView
 {
-    NSArray *items = @[MMItemMake(@"OK", MMItemTypeNormal, handler)];
+    MMPopupItemHandler beginOAuthBlock = ^(NSInteger index){
+        [AppDelegate setupGitHubOAuthWithCompleteBlock:^(void) {
+            
+            [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+            
+            [GITUser authenticatedUserWithSuccess:^(GITUser *user) {
+                NSLog(@"%@", user.login);
+                [self initAndRefresh];
+            } failure:^(AFHTTPRequestOperation *oper, NSError *error) {
+                NSLog(@"error: %@", error);
+            }];
+        }];
+    };
+    NSArray *items = @[MMItemMake(@"OK", MMItemTypeNormal, beginOAuthBlock)];
     
     [[[MMAlertView alloc] initWithTitle:@"Alert"
-                                 detail:@"Jump to GitHub with Safari to AUTHORIZE Mr.Code ?"
+                                 detail:@"Login GitHub with Safari to AUTHORIZE Mr.Code ?"
                                   items:items]
-     showWithBlock:completeBlock];
+     show];
 }
 
 
@@ -253,8 +285,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
         
         [GITRepository starredRepositoriesByUser:_user needRefresh:_needRefresh success:^(NSArray *repos) {
             self.repos = repos;
-            [self.tableView.header endRefreshing];
-            [self.tableView reloadData];
+            [self refreshData];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"error:\n%@", error);
             [self.tableView.header endRefreshing];
@@ -264,8 +295,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
         
         [GITRepository repositoriesOfUser:_user needRefresh:_needRefresh success:^(NSArray *repos) {
             self.repos = repos;
-            [self.tableView.header endRefreshing];
-            [self.tableView reloadData];
+            [self refreshData];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"error:\n%@", error);
             [self.tableView.header endRefreshing];
@@ -275,13 +305,20 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     else if (_reposType == RepositoriesTableVCReposTypeForks) {
         [GITRepository forksOfRepository:_user success:^(NSArray *repos) {
             self.repos = repos;
-            [self.tableView.header endRefreshing];
-            [self.tableView reloadData];
+            [self refreshData];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"error:\n%@", error);
             [self.tableView.header endRefreshing];
         }];
     }
+}
+
+- (void)refreshData
+{
+    [self.tableView.header endRefreshing];
+    [self.tableView reloadData];
+    [MBProgressHUD hideAllHUDsForView:self.navigationController.view animated:YES];
+    _needRefresh = NO;
 }
 
 @end
