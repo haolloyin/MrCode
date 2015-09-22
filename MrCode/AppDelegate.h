@@ -12,6 +12,9 @@
 
 @property (strong, nonatomic) UIWindow *window;
 
+- (BOOL)isAlreadyOAuth;
+
+- (void)setupGitHubOAuth;
 
 @end
 

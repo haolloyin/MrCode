@@ -16,6 +16,8 @@ static NSString *kTOKEN_STORE_IDENTIFIER = @"GitHubOAuthClient_TOKEN_STORE_IDENT
 
 @interface GitHubOAuthClient ()
 
+@property (nonatomic, assign, readwrite) BOOL alreadyOAuth;
+
 @property (readwrite, nonatomic, copy) NSString *accessToken;
 @property (readwrite, nonatomic, copy) NSString *tokenType;
 
@@ -138,11 +140,11 @@ static NSString *kTOKEN_STORE_IDENTIFIER = @"GitHubOAuthClient_TOKEN_STORE_IDENT
                               
                               //TODO: 这里用异步可能有问题
                               // current authorized user
-                              [GITUser authenticatedUserWithSuccess:^(GITUser *user) {
-                                  NSLog(@"%@", user.login);
-                              } failure:^(AFHTTPRequestOperation *oper, NSError *error) {
-                                  NSLog(@"error: %@", error);
-                              }];
+//                              [GITUser authenticatedUserWithSuccess:^(GITUser *user) {
+//                                  NSLog(@"%@", user.login);
+//                              } failure:^(AFHTTPRequestOperation *oper, NSError *error) {
+//                                  NSLog(@"error: %@", error);
+//                              }];
                           }
                       } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                           NSLog(@"error: %@", error);

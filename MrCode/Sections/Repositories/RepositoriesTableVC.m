@@ -11,6 +11,7 @@
 #import "ReposTableViewCell.h"
 #import "RepositoryDetailTableVC.h"
 #import "GITUser.h"
+#import "AppDelegate.h"
 
 #import "UIImage+MRC_Octicons.h"
 #import <ChameleonFramework/Chameleon.h>
@@ -18,6 +19,8 @@
 #import "MBProgressHUD.h"
 #import "MJRefresh.h"
 #import "NSDate+DateTools.h"
+#import "MMPopupItem.h"
+#import "MMAlertView.h"
 
 static NSString *kReposCellIdentifier = @"ReposCellIdentifier";
 static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
@@ -47,6 +50,8 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    NSLog(@"");
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -58,9 +63,21 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 80.0;
     
+    [self checkGitHubOAuth];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    NSLog(@"");
+}
+
+- (void)initAndRefresh
+{
     NSLog(@"_user=%@, [GITUser username]=%@, _reposType=%@", _user, [GITUser username], @(_reposType));
     _user = _user ? : [GITUser username];
-
+    
     if (_reposType == RepositoriesTableVCReposTypeForks) {
         self.navigationItem.title = @"Forks";
     }
@@ -69,12 +86,39 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     }
     
     _needRefresh = NO;
-    _repos             = [NSArray array];
+    _repos = [NSArray array];
     
     [self setupRefreshHeader];
     
     [self loadData];
 }
+
+- (void)checkGitHubOAuth
+{
+    AppDelegate *appDelegate = [[AppDelegate alloc] init];
+    
+    if ([appDelegate isAlreadyOAuth]) {
+        NSLog(@"Just refresh");
+        [self initAndRefresh];
+    }
+    else {
+        [self setupPopupViewWithItemHandler:^(NSInteger index) {
+            NSLog(@"setupGitHubOAuth");
+            [appDelegate setupGitHubOAuth];
+        } completeBlock:nil];
+    }
+}
+
+- (void)setupPopupViewWithItemHandler:(MMPopupItemHandler)handler completeBlock:(MMPopupBlock)completeBlock
+{
+    NSArray *items = @[MMItemMake(@"OK", MMItemTypeNormal, handler)];
+    
+    [[[MMAlertView alloc] initWithTitle:@"Alert"
+                                 detail:@"Jump to GitHub with Safari to AUTHORIZE Mr.Code ?"
+                                  items:items]
+     showWithBlock:completeBlock];
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

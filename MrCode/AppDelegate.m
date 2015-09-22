@@ -28,7 +28,7 @@ NSString * const kAccessURL        = @"https://github.com/login/oauth/access_tok
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-    [self setupGitHubOAuth];
+//    [self setupGitHubOAuth];
     
     return YES;
 }
@@ -67,21 +67,25 @@ NSString * const kAccessURL        = @"https://github.com/login/oauth/access_tok
     return NO;
 }
 
-#pragma mark - Private
+#pragma mark - Public
+
+- (BOOL)isAlreadyOAuth
+{
+    GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
+    return client.alreadyOAuth;
+}
 
 - (void)setupGitHubOAuth
 {
     GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
-    if (!client.alreadyOAuth) {
-        [client setupWithClientID:kClientID
-                           secret:kClientSecret
-                          baseURL:kGitHubAPIBaseURL
-                     authorizeURL:kAuthorizeURL
-                      redirectURL:kRedirectURL
-                   accessTokenURL:kAccessURL];
-        
-        [client authorizeWithScope:kOAuthScope];
-    }
+    [client setupWithClientID:kClientID
+                       secret:kClientSecret
+                      baseURL:kGitHubAPIBaseURL
+                 authorizeURL:kAuthorizeURL
+                  redirectURL:kRedirectURL
+               accessTokenURL:kAccessURL];
+    
+    [client authorizeWithScope:kOAuthScope];
 }
 
 @end
