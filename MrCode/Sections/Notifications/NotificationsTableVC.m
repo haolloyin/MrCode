@@ -163,12 +163,15 @@ static NSString *kNotificationCellIdentifier = @"NotificationCellIdentifier";
     if (self.tableView.header.isRefreshing) {
         _needRefresh = YES;
     }
+    else {
+        [self.tableView.header beginRefreshing];
+    }
     
     [GITNotification myNotificationsNeedRefresh:_needRefresh success:^(NSArray *array) {
         self.notifications = array;
         self.needRefresh = NO;
-        [self.tableView.header endRefreshing];
         [self.tableView reloadData];
+        [self.tableView.header endRefreshing];
     }failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"error: %@", error);
     }];
