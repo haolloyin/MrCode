@@ -14,7 +14,8 @@
 
 + (BOOL)isAlreadyOAuth;
 
-+ (void)setupGitHubOAuthWithCompleteBlock:(void (^)(void))completeBlock;
++ (void)setupGitHubOAuthWithRequestingAccessTokenBlock:(void(^)(void))requestingAccessTokenBlock
+                                         completeBlock:(void (^)(void))completeBlock;
 
 @end
 

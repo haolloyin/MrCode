@@ -75,9 +75,11 @@ NSString * const kAccessURL        = @"https://github.com/login/oauth/access_tok
     return client.alreadyOAuth;
 }
 
-+ (void)setupGitHubOAuthWithCompleteBlock:(void (^)(void))completeBlock
++ (void)setupGitHubOAuthWithRequestingAccessTokenBlock:(void(^)(void))requestingAccessTokenBlock
+                                         completeBlock:(void (^)(void))completeBlock
 {
     GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
+    [client setRequestingAccessTokenBlock:requestingAccessTokenBlock];
     [client setOauthCompleteBlock:completeBlock];
     
     [client setupWithClientID:kClientID

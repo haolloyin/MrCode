@@ -28,6 +28,7 @@ typedef NS_ENUM(NSUInteger, GitHubOAuthClienAPIStatus) {
 @interface GitHubOAuthClient : NSObject <NSCoding>
 
 @property (nonatomic, assign, readonly) BOOL alreadyOAuth;
+@property (nonatomic, copy) void(^requestingAccessTokenBlock)(void) ;
 @property (nonatomic, copy) void(^oauthCompleteBlock)(void) ;
 
 #pragma mark - Initial

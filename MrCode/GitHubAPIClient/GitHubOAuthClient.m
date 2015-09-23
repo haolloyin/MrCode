@@ -129,6 +129,9 @@ static NSString *kTOKEN_STORE_IDENTIFIER = @"GitHubOAuthClient_TOKEN_STORE_IDENT
  */
 - (void)requestAccessTokenWithCode:(NSString *)code
 {
+    NSLog(@"requesting access token");
+    self.requestingAccessTokenBlock();
+    
     [self.requestManager POST:_accessTokenURL
                    parameters:@{@"client_id": _clientID, @"client_secret": _secret, @"code": code}
                       success:^(AFHTTPRequestOperation *operation, id responseObject) {

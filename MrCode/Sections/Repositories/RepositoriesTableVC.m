@@ -31,6 +31,8 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
 @property (nonatomic, strong) NSArray *repos;
 @property (nonatomic, assign) BOOL needRefresh;
 
+@property (nonatomic, strong) MBProgressHUD *loadingHUD;
+
 @end
 
 @implementation RepositoriesTableVC
@@ -107,13 +109,20 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     }
     else {
         MMPopupItemHandler beginOAuthBlock = ^(NSInteger index){
-            [AppDelegate setupGitHubOAuthWithCompleteBlock:^(void) {
+            [AppDelegate setupGitHubOAuthWithRequestingAccessTokenBlock:^(void) {
                 
-                [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+                _loadingHUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+                _loadingHUD.labelText = @"Requesting Access Token ...";
+                
+            } completeBlock:^(void) {
+                
+                _loadingHUD.labelText = @"Acessing current user";
                 
                 // 获取当前授权用户，然后刷新其资源库
                 [GITUser authenticatedUserWithSuccess:^(GITUser *user) {
                     NSLog(@"%@", user.login);
+                    
+                    _loadingHUD.labelText = @"Fetching starred repos";
                     [self initAndRefresh];
                 } failure:^(AFHTTPRequestOperation *oper, NSError *error) {
                     NSLog(@"error: %@", error);
@@ -121,36 +130,12 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
             }];
         };
         
-        NSArray *items = @[MMItemMake(@"OK", MMItemTypeNormal, beginOAuthBlock)];
+        NSArray *items = @[MMItemMake(@"OK", MMItemTypeHighlight, beginOAuthBlock)];
         [[[MMAlertView alloc] initWithTitle:@"Alert"
                                      detail:@"Login GitHub with Safari to AUTHORIZE Mr.Code ?"
                                       items:items] show];
     }
 }
-
-- (void)showPopupView
-{
-    MMPopupItemHandler beginOAuthBlock = ^(NSInteger index){
-        [AppDelegate setupGitHubOAuthWithCompleteBlock:^(void) {
-            
-            [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-            
-            [GITUser authenticatedUserWithSuccess:^(GITUser *user) {
-                NSLog(@"%@", user.login);
-                [self initAndRefresh];
-            } failure:^(AFHTTPRequestOperation *oper, NSError *error) {
-                NSLog(@"error: %@", error);
-            }];
-        }];
-    };
-    NSArray *items = @[MMItemMake(@"OK", MMItemTypeNormal, beginOAuthBlock)];
-    
-    [[[MMAlertView alloc] initWithTitle:@"Alert"
-                                 detail:@"Login GitHub with Safari to AUTHORIZE Mr.Code ?"
-                                  items:items]
-     show];
-}
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
