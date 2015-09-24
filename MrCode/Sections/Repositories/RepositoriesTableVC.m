@@ -129,21 +129,22 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
         [self initAndRefresh];
     }
     else {
+        @weakify(self)
         MMPopupItemHandler beginOAuthBlock = ^(NSInteger index){
+            @strongify(self)
             [AppDelegate setupGitHubOAuthWithRequestingAccessTokenBlock:^(void) {
-                
-                _loadingHUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-                _loadingHUD.labelText = @"Requesting Access Token ...";
+                self.loadingHUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+                self.loadingHUD.labelText = @"Requesting Access Token ...";
                 
             } completeBlock:^(void) {
                 
-                _loadingHUD.labelText = @"Acessing current user";
+                self.loadingHUD.labelText = @"Acessing current user";
                 
                 // 获取当前授权用户，然后刷新其资源库
                 [GITUser authenticatedUserWithSuccess:^(GITUser *user) {
                     NSLog(@"%@", user.login);
                     
-                    _loadingHUD.labelText = @"Fetching starred repos";
+                    self.loadingHUD.labelText = @"Fetching starred repos";
                     [self initAndRefresh];
                 } failure:^(AFHTTPRequestOperation *oper, NSError *error) {
                     NSLog(@"error: %@", error);
@@ -187,7 +188,9 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    @weakify(self)
     CGFloat height = [tableView fd_heightForCellWithIdentifier:kCustomReposCellIdentifier configuration:^(id cell) {
+        @strongify(self)
         GITRepository *repo = self.repos[indexPath.row];
         [cell configWithRepository:repo];
     }];
@@ -290,12 +293,15 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     if (_segmentedControl && _segmentedControl.selectedSegmentIndex == 0) {
         
         if (_needRefresh || !self.starredRepoCache || self.starredRepoCache.count == 0) {
+            @weakify(self)
             self.requestOperation = [GITRepository starredRepositoriesByUser:_user needRefresh:_needRefresh success:^(NSArray *repos) {
+                @strongify(self)
                 self.repos = repos;
                 self.starredRepoCache = repos;
                 [self refreshData];
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                 NSLog(@"error:\n%@", error);
+                @strongify(self)
                 [self.tableView.header endRefreshing];
             }];
         }
@@ -309,12 +315,15 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     else if (_segmentedControl && _segmentedControl.selectedSegmentIndex == 1) {
         
         if (_needRefresh || !self.ownnedRepoCache || self.ownnedRepoCache.count == 0) {
+            @weakify(self)
             self.requestOperation = [GITRepository repositoriesOfUser:_user needRefresh:_needRefresh success:^(NSArray *repos) {
+                @strongify(self)
                 self.repos = repos;
                 self.ownnedRepoCache = repos;
                 [self refreshData];
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                 NSLog(@"error:\n%@", error);
+                @strongify(self)
                 [self.tableView.header endRefreshing];
             }];
         }
@@ -325,11 +334,14 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     }
     // 无 _segmentControl，列出某个 Repo 被 fork 的列表
     else if (_reposType == RepositoriesTableVCReposTypeForks) {
+        @weakify(self)
         self.requestOperation = [GITRepository forksOfRepository:_user success:^(NSArray *repos) {
+            @strongify(self)
             self.repos = repos;
             [self refreshData];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"error:\n%@", error);
+            @strongify(self)
             [self.tableView.header endRefreshing];
         }];
     }

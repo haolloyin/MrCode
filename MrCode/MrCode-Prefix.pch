@@ -27,4 +27,6 @@ fprintf(stderr, "-------\n");           \
 #define NSLogPoint(point) NSLog(@"%s x:%.4f, y:%.4f", #point, point.x, point.y)
 #define NSLogInset(inset) NSLog(@"%s top:%.4f, left:%.4f, bottom:%.4f, right:%.4f", #inset, inset.top, inset.left, inset.bottom, inset.right)
 
+#import "RACEXTScope.h"
+
 #endif

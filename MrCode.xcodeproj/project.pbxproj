@@ -61,6 +61,8 @@
 /* Begin PBXFileReference section */
 		3F0006F01B4D7C6C00503F50 /* NSString+ToNSDate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+ToNSDate.h"; sourceTree = "<group>"; };
 		3F0006F11B4D7C6C00503F50 /* NSString+ToNSDate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+ToNSDate.m"; sourceTree = "<group>"; };
+		3F0F437D1BB46865002B5608 /* RACmetamacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RACmetamacros.h; sourceTree = "<group>"; };
+		3F0F437E1BB46893002B5608 /* RACEXTScope.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RACEXTScope.h; sourceTree = "<group>"; };
 		3F25473E1B45A0060012CDD6 /* MrCode.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MrCode.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F2547421B45A0060012CDD6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3F2547431B45A0060012CDD6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -203,6 +205,8 @@
 				3F2547421B45A0060012CDD6 /* Info.plist */,
 				3F2547431B45A0060012CDD6 /* main.m */,
 				3F2547901B48053C0012CDD6 /* MrCode-Prefix.pch */,
+				3F0F437D1BB46865002B5608 /* RACmetamacros.h */,
+				3F0F437E1BB46893002B5608 /* RACEXTScope.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
