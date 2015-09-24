@@ -394,7 +394,7 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
     GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
     
     return [client getWithURL:url parameters:nil success:^(AFHTTPRequestOperation *operation, id obj) {
-        success(obj);
+        success([GITRepository jsonArrayToModelArray:obj]);
     } failure:failure];
 }
 

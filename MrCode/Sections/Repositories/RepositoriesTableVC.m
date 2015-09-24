@@ -29,6 +29,8 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
 
 @property (strong, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 @property (nonatomic, strong) NSArray *repos;
+@property (nonatomic, strong) NSArray *starredRepoCache;
+@property (nonatomic, strong) NSArray *ownnedRepoCache;
 @property (nonatomic, assign) BOOL needRefresh;
 
 @property (nonatomic, strong) MBProgressHUD *loadingHUD;
@@ -74,6 +76,8 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     
     _needRefresh = NO;
     _repos = [NSArray array];
+    _starredRepoCache = [NSArray array];
+    _ownnedRepoCache = [NSArray array];
     [self setupRefreshHeader];
     
     [self checkGitHubOAuth];
@@ -261,32 +265,53 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
 
 - (void)loadData
 {
+    NSLog(@"");
+    
     if (self.tableView.header.isRefreshing) {
         _needRefresh = YES;
     }
+    else {
+        [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    }
     
-    // 有 _segmentedControl，说明是查看本人资源库
+    // 有 _segmentedControl 且是第一个 segment，说明是查看某用户的 star 资源库
     if (_segmentedControl && _segmentedControl.selectedSegmentIndex == 0) {
         
-        [GITRepository starredRepositoriesByUser:_user needRefresh:_needRefresh success:^(NSArray *repos) {
-            self.repos = repos;
+        if (_needRefresh || !self.starredRepoCache || self.starredRepoCache.count == 0) {
+            [GITRepository starredRepositoriesByUser:_user needRefresh:_needRefresh success:^(NSArray *repos) {
+                self.repos = repos;
+                self.starredRepoCache = repos;
+                [self refreshData];
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                NSLog(@"error:\n%@", error);
+                [self.tableView.header endRefreshing];
+            }];
+        }
+        // 读缓存
+        else {
+            self.repos = self.starredRepoCache;
             [self refreshData];
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"error:\n%@", error);
-            [self.tableView.header endRefreshing];
-        }];
+        }
     }
+    // 有 _segmentedControl 且是第二个 segment，说明是查看某用户的 public 资源库
     else if (_segmentedControl && _segmentedControl.selectedSegmentIndex == 1) {
         
-        [GITRepository repositoriesOfUser:_user needRefresh:_needRefresh success:^(NSArray *repos) {
-            self.repos = repos;
+        if (_needRefresh || !self.ownnedRepoCache || self.ownnedRepoCache.count == 0) {
+            [GITRepository repositoriesOfUser:_user needRefresh:_needRefresh success:^(NSArray *repos) {
+                self.repos = repos;
+                self.ownnedRepoCache = repos;
+                [self refreshData];
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                NSLog(@"error:\n%@", error);
+                [self.tableView.header endRefreshing];
+            }];
+        }
+        else {
+            self.repos = self.ownnedRepoCache;
             [self refreshData];
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"error:\n%@", error);
-            [self.tableView.header endRefreshing];
-        }];
+        }
     }
-    // 列出某个 Repo 被 fork 的列表
+    // 无 _segmentControl，列出某个 Repo 被 fork 的列表
     else if (_reposType == RepositoriesTableVCReposTypeForks) {
         [GITRepository forksOfRepository:_user success:^(NSArray *repos) {
             self.repos = repos;
