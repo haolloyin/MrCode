@@ -20,6 +20,7 @@
 @interface UserProfileTableVC () <UserProfileHeaderViewDelegate>
 
 @property (nonatomic, strong) UserProfileHeaderView *headerView;
+@property (nonatomic, strong) AFHTTPRequestOperation *requestOperation;
 
 @end
 
@@ -55,6 +56,14 @@
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     [self fetchUserProfile];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    NSLog(@"");
+    [self.requestOperation cancel];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -213,7 +222,7 @@
     [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
     
     if (!self.user) {
-        [GITUser authenticatedUserWithSuccess:^(GITUser *user) {
+        self.requestOperation = [GITUser authenticatedUserWithSuccess:^(GITUser *user) {
             self.user = user;
             [self reload];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -221,7 +230,7 @@
         }];
     }
     else {
-        [GITUser userWithUserName:self.user.login success:^(GITUser *user) {
+        self.requestOperation = [GITUser userWithUserName:self.user.login success:^(GITUser *user) {
             self.user = user;
             [self reload];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {

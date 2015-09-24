@@ -18,10 +18,13 @@
 @interface RepositoryDetailTableVC () <RepositoryHeaderViewDelegate, WebViewControllerDelegate>
 
 @property (nonatomic, strong) RepositoryHeaderView *headerView;
+@property (nonatomic, strong) AFHTTPRequestOperation *requestOperation;
 
 @end
 
 @implementation RepositoryDetailTableVC
+
+#pragma mark - Life circle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -48,6 +51,13 @@
     }
     
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [self.requestOperation cancel];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -250,7 +260,7 @@
 - (void)starRepository
 {
     if (self.headerView.isStarred) {
-        [GITRepository unstarRepository:self.repo success:^(BOOL ok) {
+        self.requestOperation = [GITRepository unstarRepository:self.repo success:^(BOOL ok) {
             NSLog(@"unstar OK");
             [self.headerView updateStarButtonWithStar:NO];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -258,7 +268,7 @@
         }];
     }
     else {
-        [GITRepository starRepository:self.repo success:^(BOOL ok) {
+        self.requestOperation = [GITRepository starRepository:self.repo success:^(BOOL ok) {
             NSLog(@"star OK");
             [self.headerView updateStarButtonWithStar:YES];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {

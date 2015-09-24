@@ -14,6 +14,7 @@
 @interface RepositoryContentTableVC ()
 
 @property (nonatomic, strong) NSArray *contents;
+@property (nonatomic, strong) AFHTTPRequestOperation *requestOperation;
 
 @end
 
@@ -35,6 +36,13 @@
            forCellReuseIdentifier:NSStringFromClass([RepositoryContentTableViewCell class])];
     
     [self loadData];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [self.requestOperation cancel];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -109,7 +117,7 @@
     else if ([identifier isEqualToString:@"ReposContent2WebView"]) {
         GITRepositoryContent *content = sender;
         NSLog(@"begin load file data");
-        [content fileOfPath:content.apiPath needRefresh:NO success:^(NSString *html) {
+        self.requestOperation = [content fileOfPath:content.apiPath needRefresh:NO success:^(NSString *html) {
             WebViewController *controller = (WebViewController *)segue.destinationViewController;
             controller.htmlString = html;
             controller.title = content.name;
@@ -123,11 +131,11 @@
 
 - (void)loadData
 {
-    [_repo contentsOfPath:_path needRefresh:NO success:^(NSArray *array) {
+    self.requestOperation = [_repo contentsOfPath:_path needRefresh:NO success:^(NSArray *array) {
         _contents = [array copy];
         [self.tableView reloadData];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
+        NSLog(@"error\n%@", error);
     }];
 }
 

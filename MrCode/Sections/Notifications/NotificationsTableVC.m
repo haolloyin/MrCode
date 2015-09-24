@@ -24,6 +24,7 @@ static NSString *kNotificationCellIdentifier = @"NotificationCellIdentifier";
 
 @property (nonatomic, strong) NSArray *notifications;
 @property (nonatomic, assign) BOOL needRefresh;
+@property (nonatomic, strong) AFHTTPRequestOperation *requestOperation;
 
 @end
 
@@ -61,6 +62,13 @@ static NSString *kNotificationCellIdentifier = @"NotificationCellIdentifier";
     [self setupRefreshHeader];
     
     [self loadData];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [self.requestOperation cancel];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -167,7 +175,7 @@ static NSString *kNotificationCellIdentifier = @"NotificationCellIdentifier";
         [self.tableView.header beginRefreshing];
     }
     
-    [GITNotification myNotificationsNeedRefresh:_needRefresh success:^(NSArray *array) {
+    self.requestOperation = [GITNotification myNotificationsNeedRefresh:_needRefresh success:^(NSArray *array) {
         self.notifications = array;
         self.needRefresh = NO;
         [self.tableView reloadData];

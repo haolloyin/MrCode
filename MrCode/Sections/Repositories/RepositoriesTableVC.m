@@ -34,10 +34,13 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
 @property (nonatomic, assign) BOOL needRefresh;
 
 @property (nonatomic, strong) MBProgressHUD *loadingHUD;
+@property (nonatomic, strong) AFHTTPRequestOperation *requestOperation;
 
 @end
 
 @implementation RepositoriesTableVC
+
+#pragma mark - Lift circle
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
@@ -87,15 +90,29 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
 {
     [super viewWillAppear:animated];
     
-    NSLog(@"");
+//    NSLog(@"");
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     
-    NSLog(@"");
+//    NSLog(@"");
 }
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [self.requestOperation cancel];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Initial
 
 - (void)initAndRefresh
 {
@@ -139,11 +156,6 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
                                      detail:@"Login GitHub with Safari to AUTHORIZE Mr.Code ?"
                                       items:items] show];
     }
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Table view data source
@@ -278,7 +290,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     if (_segmentedControl && _segmentedControl.selectedSegmentIndex == 0) {
         
         if (_needRefresh || !self.starredRepoCache || self.starredRepoCache.count == 0) {
-            [GITRepository starredRepositoriesByUser:_user needRefresh:_needRefresh success:^(NSArray *repos) {
+            self.requestOperation = [GITRepository starredRepositoriesByUser:_user needRefresh:_needRefresh success:^(NSArray *repos) {
                 self.repos = repos;
                 self.starredRepoCache = repos;
                 [self refreshData];
@@ -297,7 +309,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     else if (_segmentedControl && _segmentedControl.selectedSegmentIndex == 1) {
         
         if (_needRefresh || !self.ownnedRepoCache || self.ownnedRepoCache.count == 0) {
-            [GITRepository repositoriesOfUser:_user needRefresh:_needRefresh success:^(NSArray *repos) {
+            self.requestOperation = [GITRepository repositoriesOfUser:_user needRefresh:_needRefresh success:^(NSArray *repos) {
                 self.repos = repos;
                 self.ownnedRepoCache = repos;
                 [self refreshData];
@@ -313,7 +325,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     }
     // 无 _segmentControl，列出某个 Repo 被 fork 的列表
     else if (_reposType == RepositoriesTableVCReposTypeForks) {
-        [GITRepository forksOfRepository:_user success:^(NSArray *repos) {
+        self.requestOperation = [GITRepository forksOfRepository:_user success:^(NSArray *repos) {
             self.repos = repos;
             [self refreshData];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {

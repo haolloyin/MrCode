@@ -19,6 +19,7 @@
 
 @property (nonatomic, strong) UIImage *placehodlerImage;
 @property (nonatomic, strong) NSArray *users;
+@property (nonatomic, strong) AFHTTPRequestOperation *requestOperation;
 
 @end
 
@@ -44,6 +45,14 @@
     _users = [NSArray array];
     
     [self reloadData];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    NSLog(@"");
+    [self.requestOperation cancel];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -107,7 +116,7 @@
 {
     NSLog(@"");
     if (_userType == UsersTableVCUserTypeFollower) {
-        [GITUser followersOfUser:_user success:^(NSArray *users) {
+        self.requestOperation = [GITUser followersOfUser:_user success:^(NSArray *users) {
             _users = users;
             [self.tableView reloadData];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -115,7 +124,7 @@
         }];
     }
     else if (_userType == UsersTableVCUserTypeFollowing) {
-        [GITUser followingOfUser:_user success:^(NSArray *users) {
+        self.requestOperation = [GITUser followingOfUser:_user success:^(NSArray *users) {
             _users = users;
             [self.tableView reloadData];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {

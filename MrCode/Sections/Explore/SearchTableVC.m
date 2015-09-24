@@ -59,6 +59,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 @property (nonatomic, copy) NSString *selectedDatePeriod; //当前选中日期范围，有 Today，This Week，This month
 
 @property (nonatomic, assign) BOOL needRefresh;
+@property (nonatomic, strong) AFHTTPRequestOperation *requestOperation;
 
 @end
 
@@ -106,12 +107,17 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
+    
     NSLog(@"");
 }
 
-- (void)viewDidDisappear:(BOOL)animated
+- (void)viewWillDisappear:(BOOL)animated
 {
+    [super viewWillDisappear:animated];
+    
     NSLog(@"");
+    [self.requestOperation cancel];
     [self saveCurrentSelectedLanguage];
     [self saveCurrentSelectedDatePeriod];
 }
@@ -552,7 +558,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     
     // 排行榜
     if (_currentTargetType == CurrentTargetTypeTrending) {
-        [GITSearch trendingReposOfLanguage:self.selectedLanguage since:self.selectedDatePeriod success:^(NSArray *repos) {
+        self.requestOperation = [GITSearch trendingReposOfLanguage:self.selectedLanguage since:self.selectedDatePeriod success:^(NSArray *repos) {
             
             [_trendingReposCache removeAllObjects];
             [_trendingReposCache addObjectsFromArray:repos];
@@ -565,7 +571,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     // 搜索
     else if (_currentTargetType == CurrentTargetTypeSearch) {
         if (self.keyword) {
-            [GITSearch repositoriesWithKeyword:self.keyword language:self.selectedLanguage sortBy:nil success:^(NSArray *array) {
+            self.requestOperation = [GITSearch repositoriesWithKeyword:self.keyword language:self.selectedLanguage sortBy:nil success:^(NSArray *array) {
                 
                 [_searchReposCache removeAllObjects];
                 [_searchReposCache addObjectsFromArray:array];
@@ -585,7 +591,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
 {
     // 排行榜
     if (_currentTargetType == CurrentTargetTypeTrending) {
-        [GITSearch developersWithKeyword:nil sortBy:nil success:^(NSArray *array) {
+        self.requestOperation = [GITSearch developersWithKeyword:nil sortBy:nil success:^(NSArray *array) {
             
             [_trendingDevelopersCache removeAllObjects];
             [_trendingDevelopersCache addObjectsFromArray:array];
@@ -598,7 +604,7 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     // 搜索
     else if (_currentTargetType == CurrentTargetTypeSearch) {
         if (self.keyword) {
-            [GITSearch developersWithKeyword:self.keyword sortBy:nil success:^(NSArray *array) {
+            self.requestOperation = [GITSearch developersWithKeyword:self.keyword sortBy:nil success:^(NSArray *array) {
                 
                 [_searchDevelopersCache removeAllObjects];
                 [_searchDevelopersCache addObjectsFromArray:array];

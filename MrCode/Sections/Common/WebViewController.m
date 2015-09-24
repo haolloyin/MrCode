@@ -44,9 +44,18 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    NSLog(@"webView=%@", _webView);
+    [super viewWillDisappear:animated];
     
+    NSLog(@"webView=%@", _webView);
     [self reloadWebView];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    NSLog(@"");
+    [self.webView stopLoading];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -82,20 +91,20 @@
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
     NSLog(@"");
-    [MBProgressHUD hideHUDForView:self.navigationController.view animated:YES];
+    [MBProgressHUD hideHUDForView:self.webView animated:YES];
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
     NSLog(@"%@", error);
-    [MBProgressHUD hideHUDForView:self.navigationController.view animated:YES];
+    [MBProgressHUD hideHUDForView:self.webView animated:YES];
 }
 
 #pragma mark - Public
 
 - (void)reloadWebView
 {
-    [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    [MBProgressHUD showHUDAddedTo:self.webView animated:YES];
     
     // 优先执行 delegate 中的代码
     if (self.delegate) {
@@ -114,8 +123,6 @@
 
 -(void)downloadAllImagesInNative:(NSArray *)imageUrls
 {
-//    NSLog(@"downloadAllImagesInNative, imageUrls=\n%@", imageUrls);
-    
     SDWebImageManager *manager = [SDWebImageManager sharedManager];
     
     //初始化一个置空元素数组
@@ -133,8 +140,6 @@
                     //把图片在磁盘中的地址传回给JS
                     NSString *key = [manager cacheKeyForURL:imageURL];
                     NSString *cachedPath = [manager.imageCache defaultCachePathForKey:key];
-//                    NSLog(@"downloaded=%@", url);
-//                    NSLog(@"cachePath=%@", cachedPath);
                     
                     [_jsBridge callHandler:@"imagesDownloadComplete" data:@[url, cachedPath]];
                 });
