@@ -138,7 +138,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
                 
             } completeBlock:^(void) {
                 
-                self.loadingHUD.labelText = @"Acessing current user";
+                self.loadingHUD.labelText = @"Accessing current user";
                 
                 // 获取当前授权用户，然后刷新其资源库
                 [GITUser authenticatedUserWithSuccess:^(GITUser *user) {

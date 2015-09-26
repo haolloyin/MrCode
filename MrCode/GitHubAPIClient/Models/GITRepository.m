@@ -184,7 +184,9 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
     }
     
     NSString *url = [NSString stringWithFormat:@"/users/%@/repos", user];
-    return [GITRepository repositoriesOfUrl:url success:success failure:failure];
+    return [GITRepository repositoriesOfUrl:url success:^(NSArray *repos) {
+        success([GITRepository jsonArrayToModelArray:repos]);
+    } failure:failure];
 }
 
 + (AFHTTPRequestOperation *)starredRepositoriesByUser:(NSString *)user
@@ -199,7 +201,7 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
     
     NSString *url = [NSString stringWithFormat:@"/users/%@/starred?sort=created", user];
     return [GITRepository repositoriesOfUrl:url success:^(NSArray *repos) {
-        success(repos);
+        success([GITRepository jsonArrayToModelArray:repos]);
     } failure:failure];
 }
 
@@ -208,7 +210,9 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
                                       failure:(GitHubClientFailureBlock)failure
 {
     NSString *url = [NSString stringWithFormat:@"/repos/%@/forks?sort=newest", repoName];
-    return [GITRepository repositoriesOfUrl:url success:success failure:failure];
+    return [GITRepository repositoriesOfUrl:url success:^(NSArray *repos) {
+        success([GITRepository jsonArrayToModelArray:repos]);
+    } failure:failure];
 }
 
 + (AFHTTPRequestOperation *)starRepository:(GITRepository *)repo
@@ -394,7 +398,7 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
     GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
     
     return [client getWithURL:url parameters:nil success:^(AFHTTPRequestOperation *operation, id obj) {
-        success([GITRepository jsonArrayToModelArray:obj]);
+        success(obj);
     } failure:failure];
 }
 
@@ -409,7 +413,6 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
             return nil;
         }
     }
-    
     NSString *url = [NSString stringWithFormat:@"/users/%@/starred?sort=created", [GITUser username]];
     return [GITRepository repositoriesOfUrl:url success:^(NSArray *repos) {
         // 每次调用 API 成功获取之后都保存到本地
@@ -440,7 +443,6 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
 
 + (void)storeObject:(id)obj byKey:(NSString *)key
 {
-    NSLog(@"");
     [[KVStoreManager sharedStore] createTableWithName:RepositoriesTableName];
     [[KVStoreManager sharedStore] putObject:obj withId:key intoTable:RepositoriesTableName];
 }
