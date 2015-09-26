@@ -296,6 +296,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
             @weakify(self)
             self.requestOperation = [GITRepository starredRepositoriesByUser:_user needRefresh:_needRefresh success:^(NSArray *repos) {
                 @strongify(self)
+                NSLog(@"count=%@", @(repos.count));
                 self.repos = repos;
                 self.starredRepoCache = repos;
                 [self refreshData];
@@ -318,6 +319,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
             @weakify(self)
             self.requestOperation = [GITRepository repositoriesOfUser:_user needRefresh:_needRefresh success:^(NSArray *repos) {
                 @strongify(self)
+                NSLog(@"count=%@", @(repos.count));
                 self.repos = repos;
                 self.ownnedRepoCache = repos;
                 [self refreshData];

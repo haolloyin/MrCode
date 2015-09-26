@@ -14,6 +14,7 @@
 
 #import "UIImageView+WebCache.h"
 #import "UIImage+MRC_Octicons.h"
+#import "MBProgressHUD.h"
 
 @interface UsersTableVC ()
 
@@ -114,23 +115,31 @@
 
 - (void)reloadData
 {
-    NSLog(@"");
+    [MBProgressHUD showHUDAddedTo:self.tableView animated:YES];
+
     if (_userType == UsersTableVCUserTypeFollower) {
         self.requestOperation = [GITUser followersOfUser:_user success:^(NSArray *users) {
             _users = users;
             [self.tableView reloadData];
+            [self finishRefresh];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            
+            [self finishRefresh];
         }];
     }
     else if (_userType == UsersTableVCUserTypeFollowing) {
         self.requestOperation = [GITUser followingOfUser:_user success:^(NSArray *users) {
             _users = users;
             [self.tableView reloadData];
+            [self finishRefresh];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            
+            [self finishRefresh];
         }];
     }
+}
+
+- (void)finishRefresh
+{
+    [MBProgressHUD hideHUDForView:self.tableView animated:YES];
 }
 
 @end
