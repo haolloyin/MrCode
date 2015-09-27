@@ -144,7 +144,6 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
                 [GITUser authenticatedUserWithSuccess:^(GITUser *user) {
                     NSLog(@"%@", user.login);
                     
-                    self.loadingHUD.labelText = @"Fetching starred repos";
                     [self initAndRefresh];
                 } failure:^(AFHTTPRequestOperation *oper, NSError *error) {
                     NSLog(@"error: %@", error);
