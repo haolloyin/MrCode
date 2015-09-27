@@ -48,7 +48,7 @@
 
 #pragma mark - private
 
-+ (GITUser *)storeCurrentAuthenticatedUser:(NSDictionary *)obj
++ (void)storeCurrentAuthenticatedUser:(NSDictionary *)obj
 {
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:obj];
     for (NSString *key in dict.allKeys) {
@@ -57,14 +57,11 @@
             dict[key] = nil;
         }
     }
+    
+    // 保存整个授权对象，以及用户名
     [[NSUserDefaults standardUserDefaults] setObject:[dict copy] forKey:kAUTHENTICATED_USER];
-    
-    // 转成模型是为了保存用户名
-    GITUser *user = [GITUser objectWithKeyValues:obj];
-    [[NSUserDefaults standardUserDefaults] setObject:user.login forKey:kAUTHENTICATED_USER_IDENTIFIER];
+    [[NSUserDefaults standardUserDefaults] setObject:obj[@"login"] forKey:kAUTHENTICATED_USER_IDENTIFIER];
     [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    return user;
 }
 
 + (GITUser *)getCurrentAuthenticatedUser
@@ -87,15 +84,16 @@
 {
     GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
     
-    __block GITUser *currentUser = [GITUser getCurrentAuthenticatedUser];
+    GITUser *currentUser = [GITUser getCurrentAuthenticatedUser];
     if (currentUser) {
         success(currentUser);
         return nil;
     }
     else {
         return [client getWithURL:@"/user" parameters:nil success:^(AFHTTPRequestOperation *operation, NSDictionary *obj) {
-            currentUser = [self storeCurrentAuthenticatedUser:obj];
-            success(currentUser);
+            [self storeCurrentAuthenticatedUser:obj];
+            GITUser *user = [GITUser objectWithKeyValues:obj];
+            success(user);
         } failure:failure];
     }
 }
