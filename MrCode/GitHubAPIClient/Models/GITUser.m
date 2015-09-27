@@ -48,10 +48,32 @@
 
 #pragma mark - private
 
-+ (void)storeCurrentAuthenticatedUser:(GITUser *)user
++ (GITUser *)storeCurrentAuthenticatedUser:(NSDictionary *)obj
 {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:obj];
+    for (NSString *key in dict.allKeys) {
+        // FIXME: 这里搞这么复杂是因为当 value 为 NSNull 时 NSUserDefaults 保存会报错
+        if ([dict[key] isKindOfClass:[NSNull class]]) {
+            dict[key] = nil;
+        }
+    }
+    [[NSUserDefaults standardUserDefaults] setObject:[dict copy] forKey:kAUTHENTICATED_USER];
+    
+    // 转成模型是为了保存用户名
+    GITUser *user = [GITUser objectWithKeyValues:obj];
     [[NSUserDefaults standardUserDefaults] setObject:user.login forKey:kAUTHENTICATED_USER_IDENTIFIER];
     [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    return user;
+}
+
++ (GITUser *)getCurrentAuthenticatedUser
+{
+    id obj = [[NSUserDefaults standardUserDefaults] objectForKey:kAUTHENTICATED_USER];
+    if (obj) {
+        return [GITUser objectWithKeyValues:obj];
+    }
+    return nil;
 }
 
 #pragma mark - API
@@ -64,11 +86,18 @@
 + (AFHTTPRequestOperation *)authenticatedUserWithSuccess:(void (^)(GITUser *))success failure:(GitHubClientFailureBlock)failure
 {
     GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
-    return [client getWithURL:@"/user" parameters:nil success:^(AFHTTPRequestOperation *operation, id obj) {
-        GITUser *user = [GITUser objectWithKeyValues:obj];
-        [self storeCurrentAuthenticatedUser:user];
-        success(user);
-    } failure:failure];
+    
+    __block GITUser *currentUser = [GITUser getCurrentAuthenticatedUser];
+    if (currentUser) {
+        success(currentUser);
+        return nil;
+    }
+    else {
+        return [client getWithURL:@"/user" parameters:nil success:^(AFHTTPRequestOperation *operation, NSDictionary *obj) {
+            currentUser = [self storeCurrentAuthenticatedUser:obj];
+            success(currentUser);
+        } failure:failure];
+    }
 }
 
 + (AFHTTPRequestOperation *)userWithUserName:(NSString *)username success:(void (^)(GITUser *))success failure:(GitHubClientFailureBlock)failure

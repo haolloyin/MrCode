@@ -11,6 +11,7 @@
 #import "GITBaseModel.h"
 
 static NSString *kAUTHENTICATED_USER_IDENTIFIER = @"GitHubOAuthClient_AUTHENTICATED_USER_IDENTIFIER";
+static NSString *kAUTHENTICATED_USER = @"GitHubOAuthClient_AUTHENTICATED_USER";
 
 @interface GITUser : GITBaseModel
 
