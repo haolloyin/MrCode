@@ -42,6 +42,7 @@
     
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 80.0;
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     _users = [NSArray array];
     

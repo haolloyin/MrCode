@@ -54,8 +54,15 @@
     }
     
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
     
-    [self fetchUserProfile];
+    if (!self.user) {
+        [self fetchUserProfile];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -208,15 +215,6 @@
 
 #pragma mark - Private
 
-- (void)reload
-{
-    [self.tableView reloadData];
-    [self.tableView setNeedsLayout];
-    [self.tableView layoutIfNeeded];
-    
-    [MBProgressHUD hideHUDForView:self.navigationController.view animated:YES];
-}
-
 - (void)fetchUserProfile
 {
     [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
@@ -225,18 +223,32 @@
         self.requestOperation = [GITUser authenticatedUserWithSuccess:^(GITUser *user) {
             self.user = user;
             [self reload];
+            [self finishReload];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            
+            [self finishReload];
         }];
     }
     else {
         self.requestOperation = [GITUser userWithUserName:self.user.login success:^(GITUser *user) {
             self.user = user;
             [self reload];
+            [self finishReload];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            
+            [self finishReload];
         }];
     }
+}
+
+- (void)reload
+{
+    [self.tableView reloadData];
+    [self.tableView setNeedsLayout];
+    [self.tableView layoutIfNeeded];
+}
+
+- (void)finishReload
+{
+    [MBProgressHUD hideHUDForView:self.navigationController.view animated:YES];
 }
 
 - (NSString *)stringDescription:(id)obj

@@ -726,6 +726,7 @@
 			baseConfigurationReference = AB24770223FEE1F449EAD4FD /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PREFIX_HEADER = "$(SRCROOT)/MrCode/MrCode-Prefix.pch";
 				INFOPLIST_FILE = MrCode/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -739,6 +740,7 @@
 			baseConfigurationReference = C003DD33F5E02E04E4EEC24D /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PREFIX_HEADER = "$(SRCROOT)/MrCode/MrCode-Prefix.pch";
 				INFOPLIST_FILE = MrCode/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
