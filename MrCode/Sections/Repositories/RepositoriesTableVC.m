@@ -64,6 +64,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    self.navigationController.navigationBar.translucent = NO;
     self.navigationController.navigationBar.topItem.title = _user;
     
     [self.tableView registerClass:[ReposTableViewCell class] forCellReuseIdentifier:kCustomReposCellIdentifier];
@@ -152,8 +153,8 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
         };
         
         NSArray *items = @[MMItemMake(@"OK", MMItemTypeHighlight, beginOAuthBlock)];
-        [[[MMAlertView alloc] initWithTitle:@"Alert"
-                                     detail:@"Login GitHub with Safari to AUTHORIZE Mr.Code ?"
+        [[[MMAlertView alloc] initWithTitle:@"Login GitHub with Safari to AUTHORIZE MrCode"
+                                     detail:@"With Safari, you DON'T need to type your PASSWORD for MrCode"
                                       items:items] show];
     }
 }
@@ -212,6 +213,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
 
     if ([identifier isEqualToString:@"RepositoriesTableVC2RepoDetail"]) {
         RepositoryDetailTableVC *controller = (RepositoryDetailTableVC *)segue.destinationViewController;
+        controller.hidesBottomBarWhenPushed = YES;
         controller.repo = (GITRepository *)sender;
     }
 }

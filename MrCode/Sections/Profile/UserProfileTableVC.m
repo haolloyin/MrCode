@@ -13,6 +13,7 @@
 #import "UsersTableVC.h"
 #import "WebViewController.h"
 
+#import "UIColor+HexRGB.h"
 #import "UIImage+MRC_Octicons.h"
 #import <ChameleonFramework/Chameleon.h>
 #import "MBProgressHUD.h"
@@ -46,31 +47,36 @@
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    self.navigationController.navigationBar.translucent = NO;
     
     if (!self.tableView.tableHeaderView) {
         self.headerView = [[UserProfileHeaderView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 130.f)];
         self.headerView.delegate = self;
         self.tableView.tableHeaderView = self.headerView;
     }
-    
+
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    
+    [self fetchUserProfile];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
-    if (!self.user) {
-        [self fetchUserProfile];
-    }
+    NSLog(@"user=%@", self.user);
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     
-    NSLog(@"");
     [self.requestOperation cancel];
+}
+
+- (void)dealloc
+{
+    [self finishReload];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -88,13 +94,12 @@
     return section == 0 ? 2 : 3;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-//    if (section == 1) {
-//        return @" ";
-//    }
-//    return nil;
-    return @" ";
+    UIView *blankView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 40)];
+    blankView.backgroundColor = [UIColor colorFromHex:0xf7f7f7];
+    blankView.alpha = 0.0;
+    return blankView;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -167,6 +172,7 @@
     NSString *identifier = segue.identifier;
     if ([identifier isEqualToString:@"UserProfile2ReposTableVC"]) {
         RepositoriesTableVC *controller = (RepositoriesTableVC *)segue.destinationViewController;
+        controller.hidesBottomBarWhenPushed = YES;
         controller.user = _user.login;
         
         NSString *reposType = (NSString *)sender;
@@ -179,6 +185,7 @@
     }
     else if ([identifier isEqualToString:@"UserProfile2UsersTableVC"]) {
         UsersTableVC *controller = (UsersTableVC *)segue.destinationViewController;
+        controller.hidesBottomBarWhenPushed = YES;
         controller.user = _user.login;
         
         NSString *userType = (NSString *)sender;
@@ -191,6 +198,7 @@
     }
     else if ([identifier isEqualToString:@"UserProfile2WebView"]) {
         WebViewController *controller = (WebViewController *)segue.destinationViewController;
+        controller.hidesBottomBarWhenPushed = YES;
         controller.url = [NSURL URLWithString:sender];
     }
 }
@@ -217,7 +225,7 @@
 
 - (void)fetchUserProfile
 {
-    [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    [MBProgressHUD showHUDAddedTo:self.tableView animated:YES];
     
     if (!self.user) {
         self.requestOperation = [GITUser authenticatedUserWithSuccess:^(GITUser *user) {
@@ -241,6 +249,8 @@
 
 - (void)reload
 {
+    NSLog(@"");
+    
     [self.tableView reloadData];
     [self.tableView setNeedsLayout];
     [self.tableView layoutIfNeeded];
@@ -248,7 +258,7 @@
 
 - (void)finishReload
 {
-    [MBProgressHUD hideHUDForView:self.navigationController.view animated:YES];
+    [MBProgressHUD hideAllHUDsForView:self.tableView animated:YES];
 }
 
 - (NSString *)stringDescription:(id)obj
@@ -267,6 +277,7 @@
 
 - (void)setUser:(GITUser *)user
 {
+    NSLog(@"");
     _user = user;
     self.headerView.user = self.user;
 }

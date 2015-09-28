@@ -50,6 +50,7 @@ static NSString *kNotificationCellIdentifier = @"NotificationCellIdentifier";
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    self.navigationController.navigationBar.translucent = NO;
     
     Class cellClass = [NotificationTableViewCell class];
     [self.tableView registerClass:cellClass forCellReuseIdentifier:NSStringFromClass(cellClass)];
@@ -124,11 +125,13 @@ static NSString *kNotificationCellIdentifier = @"NotificationCellIdentifier";
     if ([identifier isEqualToString:@"NotificationCell2RepositoryDetail"]) {
         RepositoryDetailTableVC *controller = (RepositoryDetailTableVC *)segue.destinationViewController;
         GITNotification *notification = (GITNotification *)sender;
+        controller.hidesBottomBarWhenPushed = YES;
         controller.repo = notification.repository;
     }
     else if ([identifier isEqualToString:@"Notification2WebView"]) {
         WebViewController *controller = (WebViewController *)segue.destinationViewController;
         GITNotification *notification = (GITNotification *)sender;
+        controller.hidesBottomBarWhenPushed = YES;
         controller.url = notification.htmlURL;
     }
 }

@@ -86,6 +86,8 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
+    self.navigationController.navigationBar.translucent = NO;
+    
     [self.tableView registerClass:[UserTableViewCell class] forCellReuseIdentifier:NSStringFromClass([UserTableViewCell class])];
     [self.tableView registerClass:[ReposTableViewCell class] forCellReuseIdentifier:NSStringFromClass([ReposTableViewCell class])];
     
@@ -250,10 +252,12 @@ typedef NS_ENUM(NSUInteger, CurrentTargetType) {
     
     if ([identifier isEqualToString:@"SearchVC2RepositoryDetail"]) {
         RepositoryDetailTableVC *controller = (RepositoryDetailTableVC *)segue.destinationViewController;
+        controller.hidesBottomBarWhenPushed = YES;
         controller.repo = (GITRepository *)sender;
     }
     else if ([identifier isEqualToString:@"Search2UserProfile"]) {
         UserProfileTableVC *controller = (UserProfileTableVC *)segue.destinationViewController;
+        controller.hidesBottomBarWhenPushed = YES;
         controller.user = (GITUser *)sender;
     }
 }
