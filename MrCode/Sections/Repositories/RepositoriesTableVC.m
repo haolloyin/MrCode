@@ -28,10 +28,13 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
 @interface RepositoriesTableVC ()
 
 @property (strong, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
-@property (nonatomic, strong) NSArray *repos;
-@property (nonatomic, strong) NSArray *starredRepoCache;
-@property (nonatomic, strong) NSArray *ownnedRepoCache;
+@property (nonatomic, strong) NSMutableArray *repos;
+@property (nonatomic, strong) NSMutableArray *starredRepoCache;
+@property (nonatomic, strong) NSMutableArray *ownnedRepoCache;
 @property (nonatomic, assign) BOOL needRefresh;
+@property (nonatomic, assign) NSInteger currentStarredPage;
+@property (nonatomic, assign) NSInteger currentOwnnedPage;
+@property (nonatomic, assign) NSInteger currentForksPage;
 
 @property (nonatomic, strong) MBProgressHUD *loadingHUD;
 @property (nonatomic, strong) AFHTTPRequestOperation *requestOperation;
@@ -79,10 +82,13 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     }
     
     _needRefresh = NO;
-    _repos = [NSArray array];
-    _starredRepoCache = [NSArray array];
-    _ownnedRepoCache = [NSArray array];
-    [self setupRefreshHeader];
+    _currentStarredPage = 1;
+    _currentOwnnedPage = 1;
+    _repos = [NSMutableArray array];
+    _starredRepoCache = [NSMutableArray array];
+    _ownnedRepoCache = [NSMutableArray array];
+    
+    [self setupRefreshHeaderFooter];
     
     [self checkGitHubOAuth];
 }
@@ -134,6 +140,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
         MMPopupItemHandler beginOAuthBlock = ^(NSInteger index){
             @strongify(self)
             [AppDelegate setupGitHubOAuthWithRequestingAccessTokenBlock:^(void) {
+                // 当请求 AccessToken 时让弹出 HUD 提示用户
                 self.loadingHUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
                 self.loadingHUD.labelText = @"Requesting Access Token ...";
                 
@@ -226,13 +233,13 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
         _segmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"Starred", @"Owned"]];
         _segmentedControl.selectedSegmentIndex = _reposType; // 根据资源库类型设定是 starred 还是 public
         
-        [_segmentedControl addTarget:self action:@selector(loadData) forControlEvents:UIControlEventValueChanged];
+        [_segmentedControl addTarget:self action:@selector(segmentedControlTapped) forControlEvents:UIControlEventValueChanged];
     }
     
     return _segmentedControl;
 }
 
-- (void)setupRefreshHeader
+- (void)setupRefreshHeaderFooter
 {
     MJRefreshNormalHeader *header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(loadData)];
     
@@ -249,11 +256,12 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     header.stateLabel.textColor = [UIColor grayColor];
     header.lastUpdatedTimeLabel.textColor = [UIColor grayColor];
     header.lastUpdatedTimeText = ^(NSDate *date) {
-        return [NSString stringWithFormat:@"Last updated: %@", date.timeAgoSinceNow];
+        return [NSString stringWithFormat:@"Updated %@", date.timeAgoSinceNow];
     };
     
     // 设置刷新控件
     self.tableView.header = header;
+    self.tableView.footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreData)];
 }
 
 #pragma mark - Private
@@ -279,6 +287,12 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
                                                            size:CGSizeMake(30.0f, 30.0f)];
 }
 
+- (void)segmentedControlTapped
+{
+    [self.repos removeAllObjects];
+    [self loadData];
+}
+
 - (void)loadData
 {
     NSLog(@"");
@@ -295,13 +309,19 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
         
         if (_needRefresh || !self.starredRepoCache || self.starredRepoCache.count == 0) {
             @weakify(self)
-            self.requestOperation = [GITRepository starredRepositoriesByUser:_user needRefresh:_needRefresh success:^(NSArray *repos) {
-                @strongify(self)
+            self.requestOperation = [GITRepository starredRepositoriesByUser:_user needRefresh:_needRefresh parameters:nil success:^(NSArray *repos) {
+                
                 NSLog(@"count=%@", @(repos.count));
-                self.repos = repos;
-                self.starredRepoCache = repos;
+                @strongify(self)
+                
+                [self.starredRepoCache removeAllObjects];
+                [self.starredRepoCache addObjectsFromArray:repos];
+                self.repos = [self.starredRepoCache copy];
+                
                 [self refreshData];
+                
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                
                 NSLog(@"error:\n%@", error);
                 @strongify(self)
                 [self.tableView.header endRefreshing];
@@ -309,7 +329,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
         }
         // 读缓存
         else {
-            self.repos = self.starredRepoCache;
+            self.repos = [self.starredRepoCache copy];
             [self refreshData];
         }
     }
@@ -318,12 +338,17 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
         
         if (_needRefresh || !self.ownnedRepoCache || self.ownnedRepoCache.count == 0) {
             @weakify(self)
-            self.requestOperation = [GITRepository repositoriesOfUser:_user needRefresh:_needRefresh success:^(NSArray *repos) {
-                @strongify(self)
+            self.requestOperation = [GITRepository repositoriesOfUser:_user needRefresh:_needRefresh parameters:nil success:^(NSArray *repos) {
+
                 NSLog(@"count=%@", @(repos.count));
-                self.repos = repos;
-                self.ownnedRepoCache = repos;
+                @strongify(self)
+                
+                [self.ownnedRepoCache removeAllObjects];
+                [self.ownnedRepoCache addObjectsFromArray:repos];
+                self.repos = [self.ownnedRepoCache copy];
+                
                 [self refreshData];
+                
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                 NSLog(@"error:\n%@", error);
                 @strongify(self)
@@ -331,21 +356,95 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
             }];
         }
         else {
-            self.repos = self.ownnedRepoCache;
+            self.repos = [self.ownnedRepoCache copy];
             [self refreshData];
         }
     }
     // 无 _segmentControl，列出某个 Repo 被 fork 的列表
     else if (_reposType == RepositoriesTableVCReposTypeForks) {
         @weakify(self)
-        self.requestOperation = [GITRepository forksOfRepository:_user success:^(NSArray *repos) {
+        self.requestOperation = [GITRepository forksOfRepository:_user parameters:nil success:^(NSArray *repos) {
+            
             @strongify(self)
-            self.repos = repos;
+            [self.repos addObjectsFromArray:repos];
             [self refreshData];
+            
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
             NSLog(@"error:\n%@", error);
             @strongify(self)
             [self.tableView.header endRefreshing];
+            
+        }];
+    }
+}
+
+- (void)loadMoreData
+{
+    NSLog(@"");
+    
+    // 有 _segmentedControl 且是第一个 segment，说明是查看某用户的 star 资源库
+    if (_segmentedControl && _segmentedControl.selectedSegmentIndex == 0) {
+        
+        if (_needRefresh || !self.starredRepoCache || self.starredRepoCache.count == 0) {
+            @weakify(self)
+            _currentStarredPage += 1;
+            NSDictionary *paras = @{@"page": @(_currentStarredPage)};
+            self.requestOperation = [GITRepository starredRepositoriesByUser:_user needRefresh:_needRefresh parameters:paras success:^(NSArray *repos) {
+                
+                NSLog(@"count=%@", @(repos.count));
+                @strongify(self)
+                [self.starredRepoCache addObjectsFromArray:repos];
+                self.repos = [self.starredRepoCache copy];
+                [self refreshData];
+                
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                
+                NSLog(@"error:\n%@", error);
+                @strongify(self)
+                [self.tableView.footer endRefreshing];
+            }];
+        }
+    }
+    // 有 _segmentedControl 且是第二个 segment，说明是查看某用户的 public 资源库
+    else if (_segmentedControl && _segmentedControl.selectedSegmentIndex == 1) {
+        
+        if (_needRefresh || !self.ownnedRepoCache || self.ownnedRepoCache.count == 0) {
+            @weakify(self)
+            _currentOwnnedPage += 1;
+            NSDictionary *paras = @{@"page": @(_currentOwnnedPage)};
+            self.requestOperation = [GITRepository repositoriesOfUser:_user needRefresh:_needRefresh parameters:paras success:^(NSArray *repos) {
+                
+                NSLog(@"count=%@", @(repos.count));
+                @strongify(self)
+                [self.ownnedRepoCache addObjectsFromArray:repos];
+                self.repos = [self.repos copy];
+                [self refreshData];
+                
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                NSLog(@"error:\n%@", error);
+                @strongify(self)
+                [self.tableView.footer endRefreshing];
+            }];
+        }
+    }
+    // 无 _segmentControl，列出某个 Repo 被 fork 的列表
+    else if (_reposType == RepositoriesTableVCReposTypeForks) {
+        @weakify(self)
+        _currentForksPage += 1;
+        NSDictionary *paras = @{@"page": @(_currentForksPage)};
+        self.requestOperation = [GITRepository forksOfRepository:_user parameters:paras success:^(NSArray *repos) {
+            
+            @strongify(self)
+            [self.repos addObjectsFromArray:repos];
+            [self refreshData];
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+            NSLog(@"error:\n%@", error);
+            @strongify(self)
+            [self.tableView.footer endRefreshing];
+            
         }];
     }
 }
@@ -353,6 +452,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
 - (void)refreshData
 {
     [self.tableView.header endRefreshing];
+    [self.tableView.footer endRefreshing];
     [self.tableView reloadData];
     [MBProgressHUD hideAllHUDsForView:self.navigationController.view animated:YES];
     _needRefresh = NO;

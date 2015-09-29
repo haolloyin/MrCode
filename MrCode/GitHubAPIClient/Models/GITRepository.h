@@ -101,11 +101,13 @@ typedef NS_ENUM(NSUInteger, JGHRepositoryOrderBy) {
 
 + (AFHTTPRequestOperation *)repositoriesOfUser:(NSString *)user
                                    needRefresh:(BOOL)needRefresh
+                                    parameters:(NSDictionary *)parameters
                                        success:(void (^)(NSArray *))success
                                        failure:(GitHubClientFailureBlock)failure;
 
 + (AFHTTPRequestOperation *)starredRepositoriesByUser:(NSString *)user
                                           needRefresh:(BOOL)needRefresh
+                                           parameters:(NSDictionary *)parameters
                                               success:(void (^)(NSArray *))success
                                               failure:(GitHubClientFailureBlock)failure;
 
@@ -116,6 +118,7 @@ typedef NS_ENUM(NSUInteger, JGHRepositoryOrderBy) {
 
 // https://developer.github.com/v3/repos/forks/#list-forks
 + (AFHTTPRequestOperation *)forksOfRepository:(NSString *)repoName
+                                   parameters:(NSDictionary *)parameters
                                       success:(void (^)(NSArray *))success
                                       failure:(GitHubClientFailureBlock)failure;
 
