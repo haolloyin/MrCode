@@ -314,12 +314,15 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     if (_segmentedControl && _segmentedControl.selectedSegmentIndex == 0) {
         
         if (_needRefresh || !self.starredRepoCache || self.starredRepoCache.count == 0) {
+            
             @weakify(self)
             self.requestOperation = [GITRepository starredRepositoriesByUser:_user needRefresh:_needRefresh parameters:nil success:^(NSArray *repos) {
                 
                 NSLog(@"count=%@", @(repos.count));
                 @strongify(self)
                 
+                // 回滚为第一页，并且删掉所有缓存
+                _currentStarredPage = 1;
                 [self.starredRepoCache removeAllObjects];
                 [self.starredRepoCache addObjectsFromArray:repos];
                 self.repos = [self.starredRepoCache copy];
@@ -349,6 +352,8 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
                 NSLog(@"count=%@", @(repos.count));
                 @strongify(self)
                 
+                // 回滚为第一页，并且删掉所有缓存
+                _currentOwnnedPage = 1;
                 [self.ownnedRepoCache removeAllObjects];
                 [self.ownnedRepoCache addObjectsFromArray:repos];
                 self.repos = [self.ownnedRepoCache copy];
