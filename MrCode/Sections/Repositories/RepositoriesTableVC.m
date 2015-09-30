@@ -373,10 +373,14 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     }
     // 无 _segmentControl，列出某个 Repo 被 fork 的列表
     else if (_reposType == RepositoriesTableVCReposTypeForks) {
+        
+        [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+        
         @weakify(self)
         self.requestOperation = [GITRepository forksOfRepository:_user parameters:nil success:^(NSArray *repos) {
             
             @strongify(self)
+            [self.repos removeAllObjects];
             [self.repos addObjectsFromArray:repos];
             [self refreshData];
             
