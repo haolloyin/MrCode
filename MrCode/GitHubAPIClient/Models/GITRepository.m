@@ -197,7 +197,7 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
                                               failure:(GitHubClientFailureBlock)failure
 {
     // 本人
-    if ([user isEqualToString:[GITUser username]] && !parameters) {
+    if ([user isEqualToString:[GITUser username]]) {
         return [GITRepository myStarredRepositoriesNeedRefresh:needRefresh parameters:parameters success:success failure:failure];
     }
     
@@ -233,7 +233,7 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
             NSArray *starredRepos = [GITRepository getCachedObjectByKey:MyStarredRepositories];
             NSMutableArray *newStarredRepos = [NSMutableArray arrayWithArray:starredRepos];
             [newStarredRepos addObject:repo];
-            [GITRepository storeObject:[newStarredRepos copy] byKey:MyStarredRepositories];
+            [GITRepository storeObject:[newStarredRepos copy] byKey:MyStarredRepositories pagination:NO];
             
             success(YES);
         }
@@ -259,7 +259,7 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
                     [newStarredRepos addObject:item];
                 }
             }
-            [GITRepository storeObject:[newStarredRepos copy] byKey:MyStarredRepositories];
+            [GITRepository storeObject:[newStarredRepos copy] byKey:MyStarredRepositories pagination:NO];
             
             success(YES);
         }
@@ -413,7 +413,8 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
                                                      success:(void (^)(NSArray *))success
                                                      failure:(GitHubClientFailureBlock)failure
 {
-    if (!needRefresh) {
+    // 不需要刷新，且没有带分页参数，直接读取本地缓存
+    if (!needRefresh && !parameters) {
         NSArray *cachedRepos = [GITRepository getCachedObjectByKey:MyStarredRepositories];
         if (cachedRepos) {
             success([GITRepository jsonArrayToModelArray:cachedRepos]);
@@ -423,7 +424,8 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
     NSString *url = [NSString stringWithFormat:@"/users/%@/starred?sort=created", [GITUser username]];
     return [GITRepository repositoriesOfUrl:url parameters:parameters success:^(NSArray *repos) {
         // 每次调用 API 成功获取之后都保存到本地
-        [GITRepository storeObject:repos byKey:MyStarredRepositories];
+        BOOL pagination = parameters ? YES : NO;
+        [GITRepository storeObject:repos byKey:MyStarredRepositories pagination:pagination];
 
         success([GITRepository jsonArrayToModelArray:repos]);
     } failure:failure];
@@ -434,7 +436,7 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
                                               success:(void (^)(NSArray *))success
                                               failure:(GitHubClientFailureBlock)failure
 {
-    if (!needRefresh) {
+    if (!needRefresh && !parameters) {
         NSArray *cachedRepos = [GITRepository getCachedObjectByKey:MyOwnedRepositories];
         if (cachedRepos) {
             success([GITRepository jsonArrayToModelArray:cachedRepos]);
@@ -444,15 +446,25 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
     
     return [GITRepository repositoriesOfUrl:@"/user/repos?sort=created" parameters:parameters success:^(NSArray *repos) {
         // 每次调用 API 成功获取之后都保存到本地
-        [GITRepository storeObject:repos byKey:MyOwnedRepositories];
+        BOOL pagination = parameters ? YES : NO;
+        [GITRepository storeObject:repos byKey:MyOwnedRepositories pagination:pagination];
         success([GITRepository jsonArrayToModelArray:repos]);
     } failure:failure];
 }
 
-+ (void)storeObject:(id)obj byKey:(NSString *)key
++ (void)storeObject:(id)obj byKey:(NSString *)key pagination:(BOOL)pagination
 {
     [[KVStoreManager sharedStore] createTableWithName:RepositoriesTableName];
-    [[KVStoreManager sharedStore] putObject:obj withId:key intoTable:RepositoriesTableName];
+    if (pagination) {
+        // 先取出旧的已缓存的，再加上分页的
+        NSMutableArray *cached = [NSMutableArray arrayWithArray:[GITRepository getCachedObjectByKey:key]];
+        [cached addObjectsFromArray:obj];
+        [[KVStoreManager sharedStore] putObject:cached withId:key intoTable:RepositoriesTableName];
+    }
+    else {
+        [[KVStoreManager sharedStore] putObject:obj withId:key intoTable:RepositoriesTableName];
+    }
+    
 }
 
 + (id)getCachedObjectByKey:(NSString *)key

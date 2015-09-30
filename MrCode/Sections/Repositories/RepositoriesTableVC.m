@@ -318,7 +318,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
             @weakify(self)
             self.requestOperation = [GITRepository starredRepositoriesByUser:_user needRefresh:_needRefresh parameters:nil success:^(NSArray *repos) {
                 
-                NSLog(@"count=%@", @(repos.count));
+                NSLog(@"response count=%@", @(repos.count));
                 @strongify(self)
                 
                 // 回滚为第一页，并且删掉所有缓存
@@ -339,6 +339,9 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
         // 读缓存
         else {
             self.repos = [self.starredRepoCache copy];
+            
+            NSLog(@"cached count=%@", @(self.repos.count));
+            
             [self refreshData];
         }
     }
@@ -349,7 +352,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
             @weakify(self)
             self.requestOperation = [GITRepository repositoriesOfUser:_user needRefresh:_needRefresh parameters:nil success:^(NSArray *repos) {
 
-                NSLog(@"count=%@", @(repos.count));
+                NSLog(@"response count=%@", @(repos.count));
                 @strongify(self)
                 
                 // 回滚为第一页，并且删掉所有缓存
@@ -368,6 +371,9 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
         }
         else {
             self.repos = [self.ownnedRepoCache copy];
+            
+            NSLog(@"cached count=%@", @(self.repos.count));
+            
             [self refreshData];
         }
     }
@@ -378,6 +384,8 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
         
         @weakify(self)
         self.requestOperation = [GITRepository forksOfRepository:_user parameters:nil success:^(NSArray *repos) {
+            
+            _currentForksPage = 1;
             
             @strongify(self)
             [self.repos removeAllObjects];
@@ -406,7 +414,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
         NSDictionary *paras = @{@"page": @(_currentStarredPage)};
         self.requestOperation = [GITRepository starredRepositoriesByUser:_user needRefresh:_needRefresh parameters:paras success:^(NSArray *repos) {
             
-            NSLog(@"count=%@", @(repos.count));
+            NSLog(@"response count=%@", @(repos.count));
             @strongify(self)
             [self.starredRepoCache addObjectsFromArray:repos];
             self.repos = [self.starredRepoCache copy];
@@ -427,7 +435,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
         NSDictionary *paras = @{@"page": @(_currentOwnnedPage)};
         self.requestOperation = [GITRepository repositoriesOfUser:_user needRefresh:_needRefresh parameters:paras success:^(NSArray *repos) {
             
-            NSLog(@"count=%@", @(repos.count));
+            NSLog(@"response count=%@", @(repos.count));
             @strongify(self)
             [self.ownnedRepoCache addObjectsFromArray:repos];
             self.repos = [self.ownnedRepoCache copy];
@@ -446,6 +454,8 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
         _currentForksPage += 1;
         NSDictionary *paras = @{@"page": @(_currentForksPage)};
         self.requestOperation = [GITRepository forksOfRepository:_user parameters:paras success:^(NSArray *repos) {
+            
+            NSLog(@"response count=%@", @(repos.count));
             
             @strongify(self)
             [self.repos addObjectsFromArray:repos];
