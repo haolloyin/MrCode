@@ -72,7 +72,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return section == 0 ? 2 : 8;
+    return section == 0 ? 2 : 3;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -108,38 +108,31 @@
     else if (indexPath.section == 1) {
         switch (indexPath.row) {
             case 0:
+                textLabel = @"Source Code";
+                iconIdentifier = @"Code";
+                break;
+            case 1:
                 textLabel = @"Forks";
                 iconIdentifier = @"GitBranch";
                 cell.detailTextLabel.text = self.repo.owner.login;
                 break;
-            case 1:
-                textLabel = @"Stargazers";
-                iconIdentifier = @"Star";
-                break;
             case 2:
-                textLabel = @"Source Code";
-                iconIdentifier = @"Code";
-                break;
-            case 3:
                 textLabel = @"Contributors";
                 iconIdentifier = @"Organization";
                 break;
-            case 4:
-                textLabel = @"Recent Activity";
-                iconIdentifier = @"Rss";
-                break;
-            case 5:
-                textLabel = @"Pull Requests";
-                iconIdentifier = @"GitPullRequest";
-                break;
-            case 6:
-                textLabel = @"Issues";
-                iconIdentifier = @"IssueOpened";
-                break;
-            case 7:
-                textLabel = @"Releases";
-                iconIdentifier = @"Tag";
-                break;
+            // TODO 以下功能好像没多大用处，先略过吧
+//            case 3:
+//                textLabel = @"Recent Activity";
+//                iconIdentifier = @"Rss";
+//                break;
+//            case 4:
+//                textLabel = @"Pull Requests";
+//                iconIdentifier = @"GitPullRequest";
+//                break;
+//            case 5:
+//                textLabel = @"Issues";
+//                iconIdentifier = @"IssueOpened";
+//                break;
         }
     }
     
@@ -171,13 +164,13 @@
     else if (indexPath.section == 1) {
         switch (indexPath.row) {
             case 0:
-                [self performSegueWithIdentifier:@"ReposDetail2ReposTableVC" sender:self.repo];
+                [self performSegueWithIdentifier:@"ReposDetail2ReposContentTableVC" sender:self.repo];
                 break;
             case 1:
-                [self performSegueWithIdentifier:@"ReposDetail2UserTableVC" sender:self.repo];
+                [self performSegueWithIdentifier:@"ReposDetail2ReposTableVC" sender:self.repo];
                 break;
             case 2:
-                [self performSegueWithIdentifier:@"ReposDetail2ReposContentTableVC" sender:self.repo];
+                [self performSegueWithIdentifier:@"ReposDetail2UserTableVC" sender:self.repo];
                 break;
             default:
                 break;
@@ -245,7 +238,6 @@
 - (void)webViewShouldLoadRequest:(UIWebView *)webView
 {
     [self.repo readmeWithsuccess:^(NSString *success) {
-//        NSLog(@"%@", success);
         
         NSURL *baseURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]];
         [webView loadHTMLString:success baseURL:baseURL];
@@ -280,7 +272,7 @@
 - (void)forkRepository
 {
     NSLog(@"");
-    [self performSegueWithIdentifier:@"ReposDetail2ReposTableVC" sender:self.repo];
+    // TOOD
 }
 
 - (void)watchRepository
