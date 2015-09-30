@@ -94,13 +94,18 @@
     return section == 0 ? 2 : 3;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    UIView *blankView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 40)];
-    blankView.backgroundColor = [UIColor colorFromHex:0xf7f7f7];
-    blankView.alpha = 0.0;
-    return blankView;
+    return @" ";
 }
+
+//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+//{
+//    UIView *blankView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 40)];
+//    blankView.backgroundColor = [UIColor colorFromHex:0xf7f7f7];
+//    blankView.alpha = 0.0;
+//    return blankView;
+//}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
