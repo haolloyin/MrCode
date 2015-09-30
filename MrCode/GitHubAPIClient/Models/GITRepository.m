@@ -180,7 +180,7 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
                                        failure:(GitHubClientFailureBlock)failure
 {
     // 本人
-    if ([user isEqualToString:[GITUser username]]) {
+    if ([user isEqualToString:[GITUser username]] && !parameters) {
         return [GITRepository myRepositoriesNeedRefresh:needRefresh parameters:parameters success:success failure:failure];
     }
     
@@ -197,7 +197,7 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
                                               failure:(GitHubClientFailureBlock)failure
 {
     // 本人
-    if ([user isEqualToString:[GITUser username]]) {
+    if ([user isEqualToString:[GITUser username]] && !parameters) {
         return [GITRepository myStarredRepositoriesNeedRefresh:needRefresh parameters:parameters success:success failure:failure];
     }
     
