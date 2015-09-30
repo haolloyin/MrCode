@@ -307,7 +307,12 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
         _needRefresh = YES;
     }
     else {
-        self.loadingHUD.labelText = nil;
+        if (!self.loadingHUD) {
+            [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+        }
+        else {
+            self.loadingHUD.labelText = nil;
+        }
     }
     
     // 有 _segmentedControl 且是第一个 segment，说明是查看某用户的 star 资源库
