@@ -10,12 +10,16 @@
 
 typedef NS_ENUM(NSUInteger, UsersTableVCUserType) {
     UsersTableVCUserTypeFollowing = 0,
-    UsersTableVCUserTypeFollower = 1
+    UsersTableVCUserTypeFollower,
+    UsersTableVCUserTypeContributor
 };
+
+@class GITRepository;
 
 @interface UsersTableVC : UITableViewController
 
 @property (nonatomic, copy) NSString *user;
+@property (nonatomic, strong) GITRepository *repo;
 @property (nonatomic, assign) UsersTableVCUserType userType;
 
 @end

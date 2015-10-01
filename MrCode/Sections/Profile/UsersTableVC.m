@@ -35,8 +35,15 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-    self.navigationItem.title = _userType == UsersTableVCUserTypeFollowing ? @"Following" : @"Followers";
-    self.navigationController.navigationBar.topItem.title = _user;
+    if (_userType == UsersTableVCUserTypeFollower) {
+        self.navigationItem.title = @"Followers";
+    }
+    else if (_userType == UsersTableVCUserTypeFollowing) {
+        self.navigationItem.title = @"Following";
+    }
+    else if (_userType == UsersTableVCUserTypeContributor) {
+        self.navigationItem.title = @"Contributors";
+    }
     
     [self.tableView registerClass:[UserTableViewCell class] forCellReuseIdentifier:NSStringFromClass([UserTableViewCell class])];
     
@@ -118,20 +125,39 @@
 {
     [MBProgressHUD showHUDAddedTo:self.tableView animated:YES];
 
+    @weakify(self)
     if (_userType == UsersTableVCUserTypeFollower) {
         self.requestOperation = [GITUser followersOfUser:_user success:^(NSArray *users) {
-            _users = users;
+            
+            @strongify(self)
+            self.users = users;
             [self.tableView reloadData];
             [self finishRefresh];
+            
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             [self finishRefresh];
         }];
     }
     else if (_userType == UsersTableVCUserTypeFollowing) {
         self.requestOperation = [GITUser followingOfUser:_user success:^(NSArray *users) {
-            _users = users;
+            
+            @strongify(self)
+            self.users = users;
             [self.tableView reloadData];
             [self finishRefresh];
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            [self finishRefresh];
+        }];
+    }
+    else if (_userType == UsersTableVCUserTypeContributor) {
+        self.requestOperation = [self.repo contributorsWithSuccess:^(NSArray *users) {
+            
+            @strongify(self)
+            self.users = users;
+            [self.tableView reloadData];
+            [self finishRefresh];
+            
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             [self finishRefresh];
         }];

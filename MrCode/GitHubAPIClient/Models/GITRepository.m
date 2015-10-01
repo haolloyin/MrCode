@@ -185,7 +185,7 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
     }
     
     NSString *url = [NSString stringWithFormat:@"/users/%@/repos", user];
-    return [GITRepository repositoriesOfUrl:url parameters:parameters success:^(NSArray *repos) {
+    return [GITRepository requestURLString:url parameters:parameters success:^(NSArray *repos) {
         success([GITRepository jsonArrayToModelArray:repos]);
     } failure:failure];
 }
@@ -202,7 +202,7 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
     }
     
     NSString *url = [NSString stringWithFormat:@"/users/%@/starred?sort=created", user];
-    return [GITRepository repositoriesOfUrl:url parameters:parameters success:^(NSArray *repos) {
+    return [GITRepository requestURLString:url parameters:parameters success:^(NSArray *repos) {
         success([GITRepository jsonArrayToModelArray:repos]);
     } failure:failure];
 }
@@ -213,10 +213,27 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
                                       failure:(GitHubClientFailureBlock)failure
 {
     NSString *url = [NSString stringWithFormat:@"/repos/%@/forks?sort=newest", repoName];
-    return [GITRepository repositoriesOfUrl:url parameters:parameters success:^(NSArray *repos) {
+    return [GITRepository requestURLString:url parameters:parameters success:^(NSArray *repos) {
         success([GITRepository jsonArrayToModelArray:repos]);
     } failure:failure];
 }
+
+- (AFHTTPRequestOperation *)contributorsWithSuccess:(void (^)(NSArray *))success
+                                            failure:(GitHubClientFailureBlock)failure
+{
+    NSString *url = [NSString stringWithFormat:@"/repos/%@/contributors?per_page=100", self.fullName];
+    return [GITRepository requestURLString:url parameters:nil success:^(NSArray *array) {
+        
+        NSMutableArray *mutableArray = [NSMutableArray arrayWithCapacity:array.count];
+        for (NSDictionary *dict in array) {
+            GITUser *item = [GITUser objectWithKeyValues:dict];
+            [mutableArray addObject:item];
+        }
+        success([mutableArray copy]);
+        
+    } failure:failure];
+}
+
 
 + (AFHTTPRequestOperation *)starRepository:(GITRepository *)repo
                                    success:(void (^)(BOOL))success
@@ -396,10 +413,10 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
     return [mutableArray copy];
 }
 
-+ (AFHTTPRequestOperation *)repositoriesOfUrl:(NSString *)url
-                                   parameters:(NSDictionary *)parameters
-                                      success:(void (^)(NSArray *))success
-                                      failure:(GitHubClientFailureBlock)failure
++ (AFHTTPRequestOperation *)requestURLString:(NSString *)url
+                                  parameters:(NSDictionary *)parameters
+                                     success:(void (^)(NSArray *))success
+                                     failure:(GitHubClientFailureBlock)failure
 {
     GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
     
@@ -422,7 +439,7 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
         }
     }
     NSString *url = [NSString stringWithFormat:@"/users/%@/starred?sort=created", [GITUser username]];
-    return [GITRepository repositoriesOfUrl:url parameters:parameters success:^(NSArray *repos) {
+    return [GITRepository requestURLString:url parameters:parameters success:^(NSArray *repos) {
         // 每次调用 API 成功获取之后都保存到本地
         BOOL pagination = parameters ? YES : NO;
         [GITRepository storeObject:repos byKey:MyStarredRepositories pagination:pagination];
@@ -444,7 +461,7 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
         }
     }
     
-    return [GITRepository repositoriesOfUrl:@"/user/repos?sort=created" parameters:parameters success:^(NSArray *repos) {
+    return [GITRepository requestURLString:@"/user/repos?sort=created" parameters:parameters success:^(NSArray *repos) {
         // 每次调用 API 成功获取之后都保存到本地
         BOOL pagination = parameters ? YES : NO;
         [GITRepository storeObject:repos byKey:MyOwnedRepositories pagination:pagination];

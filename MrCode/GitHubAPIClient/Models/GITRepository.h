@@ -122,6 +122,9 @@ typedef NS_ENUM(NSUInteger, JGHRepositoryOrderBy) {
                                       success:(void (^)(NSArray *))success
                                       failure:(GitHubClientFailureBlock)failure;
 
+- (AFHTTPRequestOperation *)contributorsWithSuccess:(void (^)(NSArray *))success
+                                            failure:(GitHubClientFailureBlock)failure;
+
 
 + (AFHTTPRequestOperation *)starRepository:(GITRepository *)repo
                                    success:(void (^)(BOOL))success

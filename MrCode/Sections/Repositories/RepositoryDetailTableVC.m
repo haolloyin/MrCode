@@ -12,6 +12,7 @@
 #import "RepositoriesTableVC.h"
 #import "WebViewController.h"
 #import "RepositoryContentTableVC.h"
+#import "UsersTableVC.h"
 
 #import "UIImage+MRC_Octicons.h"
 
@@ -35,7 +36,7 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-    self.navigationItem.title = @"Repos Detail";
+    self.navigationItem.title = self.repo.name;
     
     if (!self.tableView.tableHeaderView) {
         self.headerView = [[RepositoryHeaderView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), 150.f)];
@@ -215,9 +216,10 @@
     }
     else if ([identifier isEqualToString:@"ReposDetail2UserTableVC"]) {
         
-        RepositoriesTableVC *controller = (RepositoriesTableVC *)segue.destinationViewController;
-        controller.user = [NSString stringWithFormat:@"%@/%@", self.repo.owner.login, self.repo.name];
-        controller.reposType = RepositoriesTableVCReposTypeForks;
+        UsersTableVC *controller = (UsersTableVC *)segue.destinationViewController;
+        controller.repo = self.repo;
+        controller.userType = UsersTableVCUserTypeContributor;
+        
     }
     else if ([identifier isEqualToString:@"ReposDetail2WebView"]) {
         
