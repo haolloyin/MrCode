@@ -88,8 +88,6 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     _starredRepoCache = [NSMutableArray array];
     _ownnedRepoCache = [NSMutableArray array];
     
-    [self setupRefreshHeaderFooter];
-    
     [self checkGitHubOAuth];
 }
 
@@ -126,6 +124,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     NSLog(@"_user=%@, [GITUser username]=%@, _reposType=%@", _user, [GITUser username], @(_reposType));
     _user = _user ? : [GITUser username];
     
+    [self setupRefreshHeaderFooter];
     [self loadData];
 }
 
@@ -248,16 +247,23 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     [header setTitle:@"Release to refresh" forState:MJRefreshStatePulling];
     [header setTitle:@"Loading ..." forState:MJRefreshStateRefreshing];
     
-    // 设置字体
     header.stateLabel.font = [UIFont systemFontOfSize:16];
     header.lastUpdatedTimeLabel.font = [UIFont systemFontOfSize:14];
-    
-    // 设置颜色
     header.stateLabel.textColor = [UIColor grayColor];
-    header.lastUpdatedTimeLabel.textColor = [UIColor grayColor];
-    header.lastUpdatedTimeText = ^(NSDate *date) {
-        return [NSString stringWithFormat:@"Updated %@", date.timeAgoSinceNow];
-    };
+    
+    // 当前用户才需要显示下拉时间
+    if ([_user isEqualToString:[GITUser username]]) {
+        header.lastUpdatedTimeLabel.textColor = [UIColor grayColor];
+        header.lastUpdatedTimeKey = NSStringFromClass([self class]);
+        header.lastUpdatedTimeText = ^(NSDate *date) {
+            return [NSString stringWithFormat:@"Updated %@", date.timeAgoSinceNow];
+        };
+    }
+    else {
+        // 隐藏时间
+        header.lastUpdatedTimeLabel.hidden = YES;
+    }
+
     
     // 设置刷新控件
     self.tableView.header = header;
