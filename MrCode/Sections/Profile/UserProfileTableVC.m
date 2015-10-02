@@ -243,7 +243,6 @@
     
     header.stateLabel.font = [UIFont systemFontOfSize:16];
     header.stateLabel.textColor = [UIColor grayColor];
-    
 
     header.lastUpdatedTimeLabel.font = [UIFont systemFontOfSize:14];
     header.lastUpdatedTimeLabel.textColor = [UIColor grayColor];

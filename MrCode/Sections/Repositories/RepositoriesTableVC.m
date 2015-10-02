@@ -254,7 +254,8 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     // 当前用户才需要显示下拉时间
     if ([_user isEqualToString:[GITUser username]]) {
         header.lastUpdatedTimeLabel.textColor = [UIColor grayColor];
-        header.lastUpdatedTimeKey = NSStringFromClass([self class]);
+        header.lastUpdatedTimeKey = [NSString stringWithFormat:@"%@_%@",
+                                     NSStringFromClass([self class]), @(_segmentedControl.selectedSegmentIndex)];
         header.lastUpdatedTimeText = ^(NSDate *date) {
             return [NSString stringWithFormat:@"Updated %@", date.timeAgoSinceNow];
         };

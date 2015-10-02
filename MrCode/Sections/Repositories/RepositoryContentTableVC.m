@@ -11,6 +11,10 @@
 #import "RepositoryContentTableViewCell.h"
 #import "WebViewController.h"
 
+#import "MBProgressHUD.h"
+#import "MJRefresh.h"
+#import "NSDate+DateTools.h"
+
 @interface RepositoryContentTableVC ()
 
 @property (nonatomic, strong) NSArray *contents;
@@ -35,6 +39,7 @@
     [self.tableView registerClass:[RepositoryContentTableViewCell class]
            forCellReuseIdentifier:NSStringFromClass([RepositoryContentTableViewCell class])];
     
+    [self setupRefreshHeader];
     [self loadData];
 }
 
@@ -129,14 +134,54 @@
     }
 }
 
+#pragma mark - Private
+
+- (void)setupRefreshHeader
+{
+    MJRefreshNormalHeader *header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(loadData)];
+    
+    // 设置文字
+    [header setTitle:@"Pull down to refresh" forState:MJRefreshStateIdle];
+    [header setTitle:@"Release to refresh" forState:MJRefreshStatePulling];
+    [header setTitle:@"Loading ..." forState:MJRefreshStateRefreshing];
+    
+    header.stateLabel.font = [UIFont systemFontOfSize:16];
+    header.stateLabel.textColor = [UIColor grayColor];
+    
+    header.lastUpdatedTimeLabel.font = [UIFont systemFontOfSize:14];
+    header.lastUpdatedTimeLabel.textColor = [UIColor grayColor];
+    header.lastUpdatedTimeKey = [NSString stringWithFormat:@"%@_%@", _repo.fullName, _path];
+    header.lastUpdatedTimeText = ^(NSDate *date) {
+        return [NSString stringWithFormat:@"Updated %@", date.timeAgoSinceNow];
+    };
+    
+    // 设置刷新控件
+    self.tableView.header = header;
+}
+
 - (void)loadData
 {
-    self.requestOperation = [_repo contentsOfPath:_path needRefresh:NO success:^(NSArray *array) {
+    BOOL needRefresh = NO;
+    if ([self.tableView.header isRefreshing]) {
+        needRefresh = YES;
+    }
+    else {
+        [self.tableView.header beginRefreshing];
+    }
+    
+    self.requestOperation = [_repo contentsOfPath:_path needRefresh:needRefresh success:^(NSArray *array) {
         _contents = [array copy];
-        [self.tableView reloadData];
+        [self finishReload];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"error\n%@", error);
+        [self finishReload];
     }];
+}
+
+- (void)finishReload
+{
+    [self.tableView reloadData];
+    [self.tableView.header endRefreshing];
 }
 
 @end
