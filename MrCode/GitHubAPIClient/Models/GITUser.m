@@ -73,6 +73,16 @@
     return nil;
 }
 
++ (AFHTTPRequestOperation *)authenticatedUserWithSuccess:(void (^)(GITUser *))success failure:(GitHubClientFailureBlock)failure
+{
+    GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
+    return [client getWithURL:@"/user" parameters:nil success:^(AFHTTPRequestOperation *operation, NSDictionary *obj) {
+        [self storeCurrentAuthenticatedUser:obj];
+        GITUser *user = [GITUser objectWithKeyValues:obj];
+        success(user);
+    } failure:failure];
+}
+
 #pragma mark - API
 
 + (NSString *)username
@@ -80,21 +90,24 @@
     return [[NSUserDefaults standardUserDefaults] objectForKey:kAUTHENTICATED_USER_IDENTIFIER];
 }
 
-+ (AFHTTPRequestOperation *)authenticatedUserWithSuccess:(void (^)(GITUser *))success failure:(GitHubClientFailureBlock)failure
++ (AFHTTPRequestOperation *)authenticatedUserNeedRefresh:(BOOL)needRefresh
+                                                 success:(void (^)(GITUser *))success
+                                                 failure:(GitHubClientFailureBlock)failure
 {
-    GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
-    
-    GITUser *currentUser = [GITUser getCurrentAuthenticatedUser];
-    if (currentUser) {
-        success(currentUser);
-        return nil;
+    if (needRefresh) {
+        return [GITUser authenticatedUserWithSuccess:success failure:failure];
     }
     else {
-        return [client getWithURL:@"/user" parameters:nil success:^(AFHTTPRequestOperation *operation, NSDictionary *obj) {
-            [self storeCurrentAuthenticatedUser:obj];
-            GITUser *user = [GITUser objectWithKeyValues:obj];
-            success(user);
-        } failure:failure];
+        // 从缓存中获取
+        GITUser *currentUser = [GITUser getCurrentAuthenticatedUser];
+        if (currentUser) {
+            NSLog(@"not need refresh");
+            success(currentUser);
+            return nil;
+        }
+        
+        NSLog(@"not need refresh but never cached");
+        return [GITUser authenticatedUserWithSuccess:success failure:failure];
     }
 }
 

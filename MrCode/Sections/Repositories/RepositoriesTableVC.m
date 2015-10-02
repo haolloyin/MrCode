@@ -149,7 +149,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
                 self.loadingHUD.labelText = @"Access current user";
                 
                 // 获取当前授权用户，然后刷新其资源库
-                [GITUser authenticatedUserWithSuccess:^(GITUser *user) {
+                [GITUser authenticatedUserNeedRefresh:YES success:^(GITUser *user) {
                     NSLog(@"%@", user.login);
                     
                     [self initAndRefresh];

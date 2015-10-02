@@ -17,11 +17,14 @@
 #import "UIImage+MRC_Octicons.h"
 #import <ChameleonFramework/Chameleon.h>
 #import "MBProgressHUD.h"
+#import "MJRefresh.h"
+#import "NSDate+DateTools.h"
 
 @interface UserProfileTableVC () <UserProfileHeaderViewDelegate>
 
 @property (nonatomic, strong) UserProfileHeaderView *headerView;
 @property (nonatomic, strong) AFHTTPRequestOperation *requestOperation;
+@property (nonatomic, assign) BOOL isCurrentAuthencatedUser;
 
 @end
 
@@ -57,14 +60,10 @@
 
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
-    [self fetchUserProfile];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
+    _isCurrentAuthencatedUser = (!self.user || [self.user.login isEqualToString:[GITUser username]]);
     
-    NSLog(@"user=%@", self.user);
+    [self setupRefreshHeader];
+    [self loadData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -228,23 +227,74 @@
 
 #pragma mark - Private
 
-- (void)fetchUserProfile
+- (void)setupRefreshHeader
 {
-    [MBProgressHUD showHUDAddedTo:self.tableView animated:YES];
+    // 只有当前用户才需要下拉刷新控件
+    if (self.user) {
+        return;
+    }
     
-    if (!self.user) {
-        self.requestOperation = [GITUser authenticatedUserWithSuccess:^(GITUser *user) {
+    MJRefreshNormalHeader *header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(loadData)];
+    
+    // 设置文字
+    [header setTitle:@"Pull down to refresh" forState:MJRefreshStateIdle];
+    [header setTitle:@"Release to refresh" forState:MJRefreshStatePulling];
+    [header setTitle:@"Loading ..." forState:MJRefreshStateRefreshing];
+    
+    header.stateLabel.font = [UIFont systemFontOfSize:16];
+    header.stateLabel.textColor = [UIColor grayColor];
+    
+
+    header.lastUpdatedTimeLabel.font = [UIFont systemFontOfSize:14];
+    header.lastUpdatedTimeLabel.textColor = [UIColor grayColor];
+    header.lastUpdatedTimeKey = NSStringFromClass([self class]);
+    header.lastUpdatedTimeText = ^(NSDate *date) {
+        return [NSString stringWithFormat:@"Updated %@", date.timeAgoSinceNow];
+    };
+    
+    // 设置刷新控件
+    self.tableView.header = header;
+}
+
+- (void)loadData
+{
+    BOOL needRefresh = NO;
+    
+    NSLog(@"user=%@, %@, isCurrentAuthencatedUser=%@", self.user, self.user.login, @(_isCurrentAuthencatedUser));
+    
+    // 如果是当前授权用户，需要用下拉控件
+    if (_isCurrentAuthencatedUser) {
+        if ([self.tableView.header isRefreshing]) {
+            // 是用户触发的下拉刷新
+            needRefresh = YES;
+        }
+        else {
+            [self.tableView.header beginRefreshing];
+        }
+    }
+    // 不是当前授权用户，没必要下拉刷新，用 MBProgressHUD 标识网络请求状态
+    else {
+        [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    }
+    
+    @weakify(self)
+    if (_isCurrentAuthencatedUser) {
+        // 当前授权用户
+        self.requestOperation = [GITUser authenticatedUserNeedRefresh:needRefresh success:^(GITUser *user) {
+            @strongify(self)
             self.user = user;
-            [self reload];
+            [self refreshUI];
             [self finishReload];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             [self finishReload];
         }];
     }
     else {
+        // 其他用户
         self.requestOperation = [GITUser userWithUserName:self.user.login success:^(GITUser *user) {
+            @strongify(self)
             self.user = user;
-            [self reload];
+            [self refreshUI];
             [self finishReload];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             [self finishReload];
@@ -252,7 +302,7 @@
     }
 }
 
-- (void)reload
+- (void)refreshUI
 {
     NSLog(@"");
     
@@ -263,7 +313,12 @@
 
 - (void)finishReload
 {
-    [MBProgressHUD hideAllHUDsForView:self.tableView animated:YES];
+    if (self.tableView.header) {
+        [self.tableView.header endRefreshing];
+    }
+    else {
+        [MBProgressHUD hideAllHUDsForView:self.navigationController.view animated:YES];
+    }
 }
 
 - (NSString *)stringDescription:(id)obj
