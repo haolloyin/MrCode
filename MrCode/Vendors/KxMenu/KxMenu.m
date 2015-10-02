@@ -840,7 +840,7 @@ static UIFont *gTitleFont;
     _menuView = [[KxMenuView alloc] init];
     [_menuView showMenuInView:view fromRect:rect menuItems:menuItems];
     
-    _isShowing = _menuView;
+    _isShowing = (_menuView ? YES : NO);
 }
 
 - (void) dismissMenu
