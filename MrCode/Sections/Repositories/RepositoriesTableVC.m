@@ -248,27 +248,25 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     [header setTitle:@"Loading ..." forState:MJRefreshStateRefreshing];
     
     header.stateLabel.font = [UIFont systemFontOfSize:16];
-    header.lastUpdatedTimeLabel.font = [UIFont systemFontOfSize:14];
     header.stateLabel.textColor = [UIColor grayColor];
     
     // 当前用户才需要显示下拉时间
     if ([_user isEqualToString:[GITUser username]]) {
+        header.lastUpdatedTimeLabel.font = [UIFont systemFontOfSize:14];
         header.lastUpdatedTimeLabel.textColor = [UIColor grayColor];
-        header.lastUpdatedTimeKey = [NSString stringWithFormat:@"%@_%@",
-                                     NSStringFromClass([self class]), @(_segmentedControl.selectedSegmentIndex)];
         header.lastUpdatedTimeText = ^(NSDate *date) {
             return [NSString stringWithFormat:@"Updated %@", date.timeAgoSinceNow];
         };
+        // 这个 key 一定要在 lastUpdatedTimeText 这个 block 之后，否则会显示中文，见源码 setLastUpdatedTimeKey:
+        header.lastUpdatedTimeKey = [NSString stringWithFormat:@"%@_%@",
+                                     NSStringFromClass([self class]), @(_segmentedControl.selectedSegmentIndex)];
     }
     else {
-        // 隐藏时间
-        header.lastUpdatedTimeLabel.hidden = YES;
+        header.lastUpdatedTimeLabel.hidden = YES; // 隐藏时间
     }
-
-    
-    // 设置刷新控件
     self.tableView.header = header;
     
+    // 上拉刷新
     MJRefreshAutoNormalFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreData)];
     [footer setTitle:@"Pull up to load more" forState:MJRefreshStateIdle];
     [footer setTitle:@"Release to load more" forState:MJRefreshStatePulling];
@@ -303,6 +301,11 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
 - (void)segmentedControlTapped
 {
     self.repos = nil;
+    if (self.tableView.header) {
+        self.tableView.header.lastUpdatedTimeKey = [NSString stringWithFormat:@"%@_%@",
+                                                    NSStringFromClass([self class]), @(_segmentedControl.selectedSegmentIndex)];
+    }
+
     [self loadData];
 }
 
