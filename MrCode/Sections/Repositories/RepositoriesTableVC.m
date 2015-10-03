@@ -303,11 +303,15 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
 {
     self.repos = nil;
     if (self.tableView.header) {
-        self.tableView.header.lastUpdatedTimeKey = [NSString stringWithFormat:@"%@_%@",
-                                                    NSStringFromClass([self class]), @(_segmentedControl.selectedSegmentIndex)];
+        NSString *key = [NSString stringWithFormat:@"%@_%@", NSStringFromClass([self class]), @(_segmentedControl.selectedSegmentIndex)];
+        self.tableView.header.lastUpdatedTimeKey = key;
     }
-
+    
     [self loadData];
+    
+    // 滚到最顶部
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
 }
 
 - (void)loadData
