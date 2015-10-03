@@ -73,7 +73,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     [self.tableView registerClass:[ReposTableViewCell class] forCellReuseIdentifier:kCustomReposCellIdentifier];
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 80.0;
-    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+//    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     if (_reposType == RepositoriesTableVCReposTypeForks) {
         self.navigationItem.title = @"Forks";
@@ -126,7 +126,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     _user = _user ? : [GITUser username];
     
     [self setupRefreshHeaderFooter];
-    [self loadData];
+    [self.tableView.header beginRefreshing];
 }
 
 - (void)checkGitHubOAuth
@@ -136,6 +136,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
         [self initAndRefresh];
     }
     else {
+        // TODO 这里嵌套 block 该怎么避免循环引用？
         @weakify(self)
         MMPopupItemHandler beginOAuthBlock = ^(NSInteger index){
             @strongify(self)
@@ -150,11 +151,18 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
                 
                 // 获取当前授权用户，然后刷新其资源库
                 [GITUser authenticatedUserNeedRefresh:YES success:^(GITUser *user) {
+                    
                     NSLog(@"%@", user.login);
                     
+                    self.loadingHUD = nil;
+                    [MBProgressHUD hideAllHUDsForView:self.navigationController.view animated:YES];
+                    
                     [self initAndRefresh];
+                    
                 } failure:^(AFHTTPRequestOperation *oper, NSError *error) {
                     NSLog(@"error: %@", error);
+                    self.loadingHUD = nil;
+                    [MBProgressHUD hideAllHUDsForView:self.navigationController.view animated:YES];
                 }];
             }];
         };
@@ -241,7 +249,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
 
 - (void)setupRefreshHeaderFooter
 {
-    MJRefreshNormalHeader *header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(loadData)];
+    MJRefreshNormalHeader *header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(pullDownRefresh)];
     
     // 设置文字
     [header setTitle:@"Pull down to refresh" forState:MJRefreshStateIdle];
@@ -299,6 +307,12 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
                                                            size:CGSizeMake(30.0f, 30.0f)];
 }
 
+- (void)pullDownRefresh
+{
+    _needRefresh = YES;
+    [self loadData];
+}
+
 - (void)segmentedControlTapped
 {
     self.repos = nil;
@@ -307,31 +321,21 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
         self.tableView.header.lastUpdatedTimeKey = key;
     }
     
-    [self loadData];
-    
     // 滚到最顶部
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+//    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+//    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    
+    [self loadData];
 }
 
 - (void)loadData
 {
     NSLog(@"");
     
-    if (self.tableView.header.isRefreshing) {
-        _needRefresh = YES;
-    }
-    else {
-        if (self.loadingHUD) {
-            self.loadingHUD.labelText = nil;
-        }
-    }
-    
     // 有 _segmentedControl 且是第一个 segment，说明是查看某用户的 star 资源库
     if (_segmentedControl && _segmentedControl.selectedSegmentIndex == 0) {
         
-        if (_needRefresh || !self.starredRepoCache || self.starredRepoCache.count == 0) {
-            
+        if (_needRefresh) {
             @weakify(self)
             self.requestOperation = [GITRepository starredRepositoriesByUser:_user needRefresh:_needRefresh parameters:nil success:^(NSArray *repos) {
                 
@@ -353,6 +357,11 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
                 [self refreshData];
             }];
         }
+        else if (self.starredRepoCache.count == 0) {
+            _needRefresh = YES;
+            [self.tableView.header beginRefreshing];
+            return;
+        }
         // 读缓存
         else {
             self.repos = [self.starredRepoCache copy];
@@ -365,7 +374,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     // 有 _segmentedControl 且是第二个 segment，说明是查看某用户的 public 资源库
     else if (_segmentedControl && _segmentedControl.selectedSegmentIndex == 1) {
         
-        if (_needRefresh || !self.ownnedRepoCache || self.ownnedRepoCache.count == 0) {
+        if (_needRefresh) {
             @weakify(self)
             self.requestOperation = [GITRepository repositoriesOfUser:_user needRefresh:_needRefresh parameters:nil success:^(NSArray *repos) {
 
@@ -386,6 +395,11 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
                 [self refreshData];
             }];
         }
+        else if (self.ownnedRepoCache.count == 0) {
+            _needRefresh = YES;
+            [self.tableView.header beginRefreshing];
+            return;
+        }
         else {
             self.repos = [self.ownnedRepoCache copy];
             
@@ -396,9 +410,6 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     }
     // 无 _segmentControl，列出某个 Repo 被 fork 的列表
     else if (_reposType == RepositoriesTableVCReposTypeForks) {
-        
-        [MBProgressHUD showHUDAddedTo:self.tableView animated:YES];
-        
         @weakify(self)
         self.requestOperation = [GITRepository forksOfRepository:_user parameters:nil success:^(NSArray *repos) {
             
@@ -490,8 +501,6 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     [self.tableView.header endRefreshing];
     [self.tableView.footer endRefreshing];
     [self.tableView reloadData];
-    [MBProgressHUD hideAllHUDsForView:self.navigationController.view animated:YES];
-    [MBProgressHUD hideAllHUDsForView:self.tableView animated:YES];
     _needRefresh = NO;
 }
 
