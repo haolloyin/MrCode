@@ -156,14 +156,14 @@ static NSString *kNotificationCellIdentifier = @"NotificationCellIdentifier";
     
     // 设置字体
     header.stateLabel.font = [UIFont systemFontOfSize:16];
-    header.lastUpdatedTimeLabel.font = [UIFont systemFontOfSize:14];
-    
-    // 设置颜色
     header.stateLabel.textColor = [UIColor grayColor];
+    
+    header.lastUpdatedTimeLabel.font = [UIFont systemFontOfSize:14];
     header.lastUpdatedTimeLabel.textColor = [UIColor grayColor];
     header.lastUpdatedTimeText = ^(NSDate *date) {
         return [NSString stringWithFormat:@"Last updated: %@", date.timeAgoSinceNow];
     };
+    header.lastUpdatedTimeKey = NSStringFromClass([self class]);
     
     // 设置刷新控件
     self.tableView.header = header;

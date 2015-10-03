@@ -73,6 +73,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     [self.tableView registerClass:[ReposTableViewCell class] forCellReuseIdentifier:kCustomReposCellIdentifier];
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 80.0;
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     if (_reposType == RepositoriesTableVCReposTypeForks) {
         self.navigationItem.title = @"Forks";
@@ -317,10 +318,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
         _needRefresh = YES;
     }
     else {
-        if (!self.loadingHUD) {
-            [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-        }
-        else {
+        if (self.loadingHUD) {
             self.loadingHUD.labelText = nil;
         }
     }
@@ -348,7 +346,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
                 
                 NSLog(@"error:\n%@", error);
                 @strongify(self)
-                [self.tableView.header endRefreshing];
+                [self refreshData];
             }];
         }
         // 读缓存
@@ -381,7 +379,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                 NSLog(@"error:\n%@", error);
                 @strongify(self)
-                [self.tableView.header endRefreshing];
+                [self refreshData];
             }];
         }
         else {
@@ -395,7 +393,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     // 无 _segmentControl，列出某个 Repo 被 fork 的列表
     else if (_reposType == RepositoriesTableVCReposTypeForks) {
         
-        [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+        [MBProgressHUD showHUDAddedTo:self.tableView animated:YES];
         
         @weakify(self)
         self.requestOperation = [GITRepository forksOfRepository:_user parameters:nil success:^(NSArray *repos) {
@@ -411,16 +409,13 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
             
             NSLog(@"error:\n%@", error);
             @strongify(self)
-            [self.tableView.header endRefreshing];
-            
+            [self refreshData];
         }];
     }
 }
 
 - (void)loadMoreData
 {
-    NSLog(@"");
-    
     // 有 _segmentedControl 且是第一个 segment，说明是查看某用户的 star 资源库
     if (_segmentedControl && _segmentedControl.selectedSegmentIndex == 0) {
         
@@ -492,6 +487,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
     [self.tableView.footer endRefreshing];
     [self.tableView reloadData];
     [MBProgressHUD hideAllHUDsForView:self.navigationController.view animated:YES];
+    [MBProgressHUD hideAllHUDsForView:self.tableView animated:YES];
     _needRefresh = NO;
 }
 

@@ -246,10 +246,10 @@
 
     header.lastUpdatedTimeLabel.font = [UIFont systemFontOfSize:14];
     header.lastUpdatedTimeLabel.textColor = [UIColor grayColor];
-    header.lastUpdatedTimeKey = NSStringFromClass([self class]);
     header.lastUpdatedTimeText = ^(NSDate *date) {
         return [NSString stringWithFormat:@"Updated %@", date.timeAgoSinceNow];
     };
+    header.lastUpdatedTimeKey = NSStringFromClass([self class]);
     
     // 设置刷新控件
     self.tableView.header = header;

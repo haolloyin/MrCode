@@ -34,13 +34,13 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     self.navigationItem.title = _repo.name;
     
+    NSString *identifier = NSStringFromClass([RepositoryContentTableViewCell class]);
+    [self.tableView registerClass:[RepositoryContentTableViewCell class] forCellReuseIdentifier:identifier];
+    
     _contents = [NSArray array];
     
-    [self.tableView registerClass:[RepositoryContentTableViewCell class]
-           forCellReuseIdentifier:NSStringFromClass([RepositoryContentTableViewCell class])];
-    
     [self setupRefreshHeader];
-    [self loadData];
+    [self.tableView.header beginRefreshing];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -150,10 +150,10 @@
     
     header.lastUpdatedTimeLabel.font = [UIFont systemFontOfSize:14];
     header.lastUpdatedTimeLabel.textColor = [UIColor grayColor];
-    header.lastUpdatedTimeKey = [NSString stringWithFormat:@"%@_%@", _repo.fullName, _path];
     header.lastUpdatedTimeText = ^(NSDate *date) {
         return [NSString stringWithFormat:@"Updated %@", date.timeAgoSinceNow];
     };
+    header.lastUpdatedTimeKey = [NSString stringWithFormat:@"%@_%@", _repo.fullName, _path];
     
     // 设置刷新控件
     self.tableView.header = header;
@@ -164,9 +164,6 @@
     BOOL needRefresh = NO;
     if ([self.tableView.header isRefreshing]) {
         needRefresh = YES;
-    }
-    else {
-        [self.tableView.header beginRefreshing];
     }
     
     self.requestOperation = [_repo contentsOfPath:_path needRefresh:needRefresh success:^(NSArray *array) {
@@ -180,8 +177,8 @@
 
 - (void)finishReload
 {
-    [self.tableView reloadData];
     [self.tableView.header endRefreshing];
+    [self.tableView reloadData];
 }
 
 @end
