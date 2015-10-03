@@ -61,8 +61,7 @@ static NSString *kNotificationCellIdentifier = @"NotificationCellIdentifier";
     _needRefresh = NO;
     
     [self setupRefreshHeader];
-    
-    [self loadData];
+    [self.tableView.header beginRefreshing];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -174,18 +173,25 @@ static NSString *kNotificationCellIdentifier = @"NotificationCellIdentifier";
     if (self.tableView.header.isRefreshing) {
         _needRefresh = YES;
     }
-    else {
-        [self.tableView.header beginRefreshing];
-    }
     
+    @weakify(self)
     self.requestOperation = [GITNotification myNotificationsNeedRefresh:_needRefresh success:^(NSArray *array) {
+        @strongify(self)
         self.notifications = array;
-        self.needRefresh = NO;
-        [self.tableView reloadData];
-        [self.tableView.header endRefreshing];
-    }failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [self finishReload];
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
         NSLog(@"error: %@", error);
+        @strongify(self)
+        [self finishReload];
     }];
+}
+
+- (void)finishReload
+{
+    self.needRefresh = NO;
+    [self.tableView reloadData];
+    [self.tableView.header endRefreshing];
 }
 
 @end
