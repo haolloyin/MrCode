@@ -253,20 +253,23 @@
 
 - (void)starRepository
 {
+    @weakify(self)
     if (self.headerView.isStarred) {
         self.requestOperation = [GITRepository unstarRepository:self.repo success:^(BOOL ok) {
             NSLog(@"unstar OK");
+            @strongify(self)
             [self.headerView updateStarButtonWithStar:NO];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            
+            NSLog(@"error=%@", error);            
         }];
     }
     else {
         self.requestOperation = [GITRepository starRepository:self.repo success:^(BOOL ok) {
             NSLog(@"star OK");
+            @strongify(self)
             [self.headerView updateStarButtonWithStar:YES];
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            
+            NSLog(@"error=%@", error);
         }];
     }
 }

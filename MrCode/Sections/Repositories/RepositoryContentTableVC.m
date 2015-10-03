@@ -161,16 +161,16 @@
 
 - (void)loadData
 {
-    BOOL needRefresh = NO;
-    if ([self.tableView.header isRefreshing]) {
-        needRefresh = YES;
-    }
+    BOOL needRefresh = [self.tableView.header isRefreshing];
     
+    @weakify(self)
     self.requestOperation = [_repo contentsOfPath:_path needRefresh:needRefresh success:^(NSArray *array) {
+        @strongify(self)
         _contents = [array copy];
         [self finishReload];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"error\n%@", error);
+        @strongify(self)
         [self finishReload];
     }];
 }
