@@ -184,7 +184,7 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
         return [GITRepository myRepositoriesNeedRefresh:needRefresh parameters:parameters success:success failure:failure];
     }
     
-    NSString *url = [NSString stringWithFormat:@"/users/%@/repos", user];
+    NSString *url = [NSString stringWithFormat:@"/users/%@/repos?sort=created", user];
     return [GITRepository requestURLString:url parameters:parameters success:^(NSArray *repos) {
         success([GITRepository jsonArrayToModelArray:repos]);
     } failure:failure];
