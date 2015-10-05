@@ -54,6 +54,8 @@
     }
     
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    
+    [self isWatching];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -257,21 +259,37 @@
 {
     @weakify(self)
     if (self.headerView.isStarred) {
+        self.loadingHUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+        self.loadingHUD.labelText = @"Unstarring";
+        
         self.requestOperation = [GITRepository unstarRepository:self.repo success:^(BOOL ok) {
-            NSLog(@"unstar OK");
+            
             @strongify(self)
             [self.headerView updateStarButtonWithStar:NO];
+            self.loadingHUD.labelText = @"Unstar OK";
+            [self.loadingHUD hide:YES afterDelay:1];
+            
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"error=%@", error);            
+            NSLog(@"error=%@", error);
+            self.loadingHUD.labelText = @"Unstar Failed";
+            [self.loadingHUD hide:YES afterDelay:1];
         }];
     }
     else {
+        self.loadingHUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+        self.loadingHUD.labelText = @"Starring";
+        
         self.requestOperation = [GITRepository starRepository:self.repo success:^(BOOL ok) {
-            NSLog(@"star OK");
+
             @strongify(self)
             [self.headerView updateStarButtonWithStar:YES];
+            self.loadingHUD.labelText = @"Star OK";
+            [self.loadingHUD hide:YES afterDelay:1];
+            
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"error=%@", error);
+            self.loadingHUD.labelText = @"Star Failed";
+            [self.loadingHUD hide:YES afterDelay:1];
         }];
     }
 }
@@ -317,20 +335,37 @@
 
 - (void)watchRepository
 {
-    NSLog(@"");
-    self.loadingHUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-    self.loadingHUD.labelText = @"Watching";
-    
-    [GITRepository watchRepository:self.repo success:^(BOOL ok) {
-
-        [self.headerView updateWatchButtonWithWatch:YES];
-        self.loadingHUD.labelText = @"Watching OK";
-        [self.loadingHUD hide:YES afterDelay:1];
+    if (self.headerView.isWatching) {
+        self.loadingHUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+        self.loadingHUD.labelText = @"Unwatching";
         
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        self.loadingHUD.labelText = @"Watch Failed";
-        [self.loadingHUD hide:YES afterDelay:1];
-    }];
+        [GITRepository unwatchRepository:self.repo success:^(BOOL ok) {
+            
+            [self.headerView updateWatchButtonWithWatch:YES];
+            self.loadingHUD.labelText = @"Unwatch OK";
+            [self.loadingHUD hide:YES afterDelay:1];
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            self.loadingHUD.labelText = @"Unwatch Failed";
+            [self.loadingHUD hide:YES afterDelay:1];
+        }];
+    }
+    else
+    {
+        self.loadingHUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+        self.loadingHUD.labelText = @"Watching";
+        
+        [GITRepository watchRepository:self.repo success:^(BOOL ok) {
+
+            [self.headerView updateWatchButtonWithWatch:YES];
+            self.loadingHUD.labelText = @"Watching OK";
+            [self.loadingHUD hide:YES afterDelay:1];
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            self.loadingHUD.labelText = @"Watch Failed";
+            [self.loadingHUD hide:YES afterDelay:1];
+        }];
+    }
 }
 
 @end
