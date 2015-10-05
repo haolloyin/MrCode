@@ -73,20 +73,13 @@ typedef NS_ENUM(NSUInteger, JGHRepositoryOrderBy) {
 @property (nonatomic, strong          ) GITUser    *owner;
 @property (nonatomic, readonly, strong) NSURL      *url;
 @property (nonatomic, readonly, strong) NSURL      *cloneURL;
-@property (nonatomic, readonly, strong) NSURL      *mirrorURL;
 @property (nonatomic, readonly, strong) NSURL      *homepage;
 @property (nonatomic, readonly, strong) NSURL      *htmlURL;
 @property (nonatomic, readonly, strong) NSURL      *gitURL;
-@property (nonatomic, readonly, strong) NSURL      *svnURL;
-@property (nonatomic, readonly, strong) NSURL      *sshURL;
 @property (nonatomic, assign          ) BOOL       isForked;
-@property (nonatomic, assign          ) BOOL       hasDownloads;
 @property (nonatomic, assign          ) BOOL       hasWiki;
 @property (nonatomic, assign          ) BOOL       hasPages;
 @property (nonatomic, assign          ) BOOL       hasIssues;
-@property (nonatomic, assign          ) BOOL       isAdmin;
-@property (nonatomic, assign          ) BOOL       canPush;
-@property (nonatomic, assign          ) BOOL       canPull;
 @property (nonatomic, assign          ) BOOL       isPrivate;
 @property (nonatomic, readonly, copy  ) NSString   *desc;
 @property (nonatomic, readonly, copy  ) NSString   *defaultBranch;
@@ -141,6 +134,9 @@ typedef NS_ENUM(NSUInteger, JGHRepositoryOrderBy) {
 + (AFHTTPRequestOperation *)unwatchRepository:(GITRepository *)repo
                                     success:(void (^)(BOOL))success
                                     failure:(GitHubClientFailureBlock)failure;
+
+- (AFHTTPRequestOperation *)isWatching:(void (^)(BOOL))isWatching
+                               failure:(GitHubClientFailureBlock)failure;
 
 - (AFHTTPRequestOperation *)forksWithSuccess:(void (^)(BOOL))success
                                    failure:(GitHubClientFailureBlock)failure;
