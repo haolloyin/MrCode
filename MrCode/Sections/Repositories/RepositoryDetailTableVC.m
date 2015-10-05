@@ -113,8 +113,8 @@
                 iconIdentifier = @"Code";
                 break;
             case 1:
-                textLabel = @"Forks";
-                iconIdentifier = @"GitBranch";
+                textLabel = [NSString stringWithFormat:@"%@ Forks", @(self.repo.forksCount)];
+                iconIdentifier = @"RepoForked";
                 cell.detailTextLabel.text = self.repo.owner.login;
                 break;
             case 2:

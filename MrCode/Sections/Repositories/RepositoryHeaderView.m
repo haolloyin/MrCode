@@ -53,13 +53,13 @@
     
     // Buttons
     _starButton = [UIButton new];
-    [self setupButton:_starButton withTag:101];
+    [self setupButton:_starButton withTag:101 iconName:@"Star"];
     
     _forkButton = [UIButton new];
-    [self setupButton:_forkButton withTag:102];
+    [self setupButton:_forkButton withTag:102 iconName:@"GistFork"];
     
     _watchButton = [UIButton new];
-    [self setupButton:_watchButton withTag:103];
+    [self setupButton:_watchButton withTag:103 iconName:@"Eye"];
     
     _descriptionLabel = [UILabel new];
     _descriptionLabel.numberOfLines = 0;
@@ -126,7 +126,7 @@
 
 #pragma mark - Private
 
-- (void)setupButton:(UIButton *)button withTag:(NSUInteger)tag
+- (void)setupButton:(UIButton *)button withTag:(NSUInteger)tag iconName:(NSString *)iconName
 {
     button.tag = tag;
     
@@ -141,6 +141,9 @@
     button.enabled = YES;
     [button setUserInteractionEnabled:YES];
     [button setTitleColor:[UIColor darkTextColor] forState:UIControlStateNormal];
+    
+    CGSize size = CGSizeMake(20, 20);
+    [button setImage:[UIImage octicon_imageWithIdentifier:iconName size:size] forState:UIControlStateNormal];
     
     [button addTarget:self action:@selector(tapButton:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -181,7 +184,7 @@
         _starCount += (isStarred ? 1 : -1);
         _isStarred = isStarred;
     }
-    NSString *title = [NSString stringWithFormat:(_isStarred ? @"%@\nStar √" : @"%@\nStar"), @(_starCount)];
+    NSString *title = [NSString stringWithFormat:(_isStarred ? @"%@\nUnstar" : @"%@\nStar"), @(_starCount)];
     
     [self.starButton setTitleColor:(_isStarred ? [UIColor flatBlueColorDark] : [UIColor darkTextColor]) forState:UIControlStateNormal];
     [self.starButton setTitle:title forState:UIControlStateNormal];
@@ -193,7 +196,7 @@
         _watchingCount += (isWatching ? 1 : -1);
         _watchingCount = isWatching;
     }
-    NSString *title = [NSString stringWithFormat:(_isWatching ? @"%@\nWatch √" : @"%@\nWatch"), @(_starCount)];
+    NSString *title = [NSString stringWithFormat:(_isWatching ? @"%@\nUnwatch" : @"%@\nWatch"), @(_starCount)];
     
     [self.watchButton setTitleColor:(_isWatching ? [UIColor flatBlueColorDark] : [UIColor darkTextColor]) forState:UIControlStateNormal];
     [self.watchButton setTitle:title forState:UIControlStateNormal];
