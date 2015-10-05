@@ -313,6 +313,32 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
     } failure:failure];
 }
 
+- (AFHTTPRequestOperation *)forksWithSuccess:(void (^)(BOOL))success
+                                     failure:(GitHubClientFailureBlock)failure
+{
+    NSString *url = [NSString stringWithFormat:@"/repos/%@/forks", self.fullName];
+    GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
+    
+    return [client postWithURL:url parameters:nil success:^(AFHTTPRequestOperation *operation, id obj) {
+
+//        NSLog(@"response class=%@, obj=%@", [obj class], obj);
+        GITRepository *repo = [GITRepository objectWithKeyValues:obj];
+        
+        // 判断 fork 之后的全称即可
+        if ([repo isKindOfClass:[GITRepository class]]) {
+            NSString *forkedName = [NSString stringWithFormat:@"%@/%@", [GITUser username], self.name];
+            success([repo.fullName isEqualToString:forkedName]);
+        }
+        else {
+            success(NO);
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"error=%@", error);
+        success(NO);
+    }];
+}
+
 - (AFHTTPRequestOperation *)readmeWithsuccess:(void (^)(NSString *))success
                                       failure:(GitHubClientFailureBlock)failure
                                   needRefresh:(BOOL)refresh

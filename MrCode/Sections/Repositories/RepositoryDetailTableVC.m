@@ -15,11 +15,13 @@
 #import "UsersTableVC.h"
 
 #import "UIImage+MRC_Octicons.h"
+#import "MBProgressHUD.h"
 
 @interface RepositoryDetailTableVC () <RepositoryHeaderViewDelegate, WebViewControllerDelegate>
 
 @property (nonatomic, strong) RepositoryHeaderView *headerView;
 @property (nonatomic, strong) AFHTTPRequestOperation *requestOperation;
+@property (nonatomic, strong) MBProgressHUD *loadingHUD;
 
 @end
 
@@ -277,7 +279,23 @@
 - (void)forkRepository
 {
     NSLog(@"");
-    // TOOD
+    self.loadingHUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    self.loadingHUD.labelText = @"Forking";
+    
+    self.requestOperation = [self.repo forksWithSuccess:^(BOOL isOk) {
+        if (isOk) {
+            self.loadingHUD.labelText = @"Fork OK";
+        }
+        else {
+            self.loadingHUD.labelText = @"Fork Failed";
+        }
+        [self.loadingHUD hide:YES afterDelay:1];
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        self.loadingHUD.labelText = @"Fork Failed";
+        [self.loadingHUD hide:YES afterDelay:1];
+    }];
+    
 }
 
 - (void)watchRepository
