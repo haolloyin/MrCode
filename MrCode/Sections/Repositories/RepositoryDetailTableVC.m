@@ -298,14 +298,39 @@
     
 }
 
+- (void)isWatching
+{
+    NSLog(@"");
+    @weakify(self)
+    self.requestOperation = [self.repo isWatching:^(BOOL isWatching) {
+        @strongify(self)
+        if (isWatching) {
+            [self.headerView updateWatchButtonWithWatch:YES];
+        }
+        else {
+            NSLog(@"no wathing");
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"error=%@", error);
+    }];
+}
+
 - (void)watchRepository
 {
-    // TODO: 暂时先不做，因为要缓存 watch 的资源库，似乎不是很必要
-//    [GITRepository watchRepository:self.repo success:^(BOOL ok) {
-//        NSLog(@"OK");
-//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-//        
-//    }];
+    NSLog(@"");
+    self.loadingHUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    self.loadingHUD.labelText = @"Watching";
+    
+    [GITRepository watchRepository:self.repo success:^(BOOL ok) {
+
+        [self.headerView updateWatchButtonWithWatch:YES];
+        self.loadingHUD.labelText = @"Watching OK";
+        [self.loadingHUD hide:YES afterDelay:1];
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        self.loadingHUD.labelText = @"Watch Failed";
+        [self.loadingHUD hide:YES afterDelay:1];
+    }];
 }
 
 @end

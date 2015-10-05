@@ -119,11 +119,6 @@
     self.descriptionLabel.preferredMaxLayoutWidth = CGRectGetWidth(self.bounds) - 15 * 2;
 }
 
-- (void)dealloc
-{
-    NSLog(@"");
-}
-
 #pragma mark - Private
 
 - (void)setupButton:(UIButton *)button withTag:(NSUInteger)tag iconName:(NSString *)iconName
@@ -168,8 +163,11 @@
     
     _isStarred = [GITRepository isStarredRepo:self.repo];
     _isWatching = NO;
+    
+    NSLog(@"stargazersCount=%@, watchersCount=%@", @(self.repo.stargazersCount), @(self.repo.watchersCount));
 
     _starCount = self.repo.stargazersCount;
+    _watchingCount = self.repo.watchersCount;
     [self updateStarButtonWithStar:_isStarred];
     
     [self.forkButton setTitle:[NSString stringWithFormat:@"%@\nFork", @(self.repo.forksCount)] forState:UIControlStateNormal];
@@ -186,19 +184,21 @@
     }
     NSString *title = [NSString stringWithFormat:(_isStarred ? @"%@\nUnstar" : @"%@\nStar"), @(_starCount)];
     
-    [self.starButton setTitleColor:(_isStarred ? [UIColor flatBlueColorDark] : [UIColor darkTextColor]) forState:UIControlStateNormal];
+    [self.starButton setTitleColor:(_isStarred ? [UIColor flatPurpleColor] : [UIColor darkTextColor]) forState:UIControlStateNormal];
     [self.starButton setTitle:title forState:UIControlStateNormal];
 }
 
 - (void)updateWatchButtonWithWatch:(BOOL)isWatching
 {
+    NSLog(@"isWatching=%@", @(isWatching));
+    
     if (_isWatching != isWatching) {
         _watchingCount += (isWatching ? 1 : -1);
-        _watchingCount = isWatching;
+        _isWatching = isWatching;
     }
-    NSString *title = [NSString stringWithFormat:(_isWatching ? @"%@\nUnwatch" : @"%@\nWatch"), @(_starCount)];
+    NSString *title = [NSString stringWithFormat:(_isWatching ? @"%@\nUnwatch" : @"%@\nWatch"), @(_watchingCount)];
     
-    [self.watchButton setTitleColor:(_isWatching ? [UIColor flatBlueColorDark] : [UIColor darkTextColor]) forState:UIControlStateNormal];
+    [self.watchButton setTitleColor:(_isWatching ? [UIColor flatPurpleColor] : [UIColor darkTextColor]) forState:UIControlStateNormal];
     [self.watchButton setTitle:title forState:UIControlStateNormal];
 }
 

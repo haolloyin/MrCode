@@ -121,7 +121,6 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
 {
     return @{
              @"hasWiki": @"has_wiki",
-             @"mirrorURL": @"mirror_url",
              @"forksCount": @"forks_count",
              @"updatedAt": @"updated_at",
              @"isPrivate": @"private",
@@ -135,18 +134,11 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
              @"homepage": @"homepage",
              @"isForked": @"fork",
              @"desc": @"description",
-             @"hasDownloads": @"has_downloads",
              @"hasPages": @"has_pages",
              @"defaultBranch": @"default_branch",
              @"htmlURL": @"html_url",
              @"gitURL": @"git_url",
-             @"svnURL": @"svn_url",
-             @"sshURL": @"ssh_url",
              @"hasIssues": @"has_issues",
-             @"permissions": @"permissions",
-             @"isAdmin": @"permissions.admin",
-             @"canPush": @"permissions.push",
-             @"catPull": @"permissions.pull",
              @"openIssuesCount": @"open_issues_count",
              @"name": @"name",
              @"language": @"language",
@@ -246,12 +238,16 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
         // See https://developer.github.com/v3/activity/starring/#response-2
         if (operation.response.statusCode == 204) {
             
-            // 保存新增的 star
+            // TODO: 保存新增的 star，一致性很难搞，要新增缓存又要更新已经显示出来的 UI，
+            // 虽然可以用 KVO，但目前卡在缓存那里，这部分手动写 NSCoding 应该可以搞定
+            /*
             NSArray *starredRepos = [GITRepository getCachedObjectByKey:MyStarredRepositories];
-            NSMutableArray *newStarredRepos = [NSMutableArray arrayWithArray:starredRepos];
-            [newStarredRepos addObject:repo];
+            NSMutableArray *newStarredRepos = [NSMutableArray arrayWithCapacity:starredRepos.count + 1];
+            NSDictionary *dict = [repo keyValuesWithIgnoredKeys:@[@"updatedAt",@"createdAt",@"pushedAt"]];
+            [newStarredRepos addObject:dict];
+            [newStarredRepos addObjectsFromArray:starredRepos];
             [GITRepository storeObject:[newStarredRepos copy] byKey:MyStarredRepositories pagination:NO];
-            
+            */
             success(YES);
         }
     } failure:failure];
@@ -261,7 +257,7 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
                                      success:(void (^)(BOOL))success
                                      failure:(GitHubClientFailureBlock)failure
 {
-    NSString *url = [NSString stringWithFormat:@"/user/starred/%@/%@", repo.owner.login, repo.name];
+    NSString *url = [NSString stringWithFormat:@"/user/starred/%@", repo.fullName];
     GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
     
     return [client deleteWithURL:url parameters:nil success:^(AFHTTPRequestOperation *operation, id obj) {
@@ -271,11 +267,12 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
             NSArray *starredRepos = [GITRepository getCachedObjectByKey:MyStarredRepositories];
             NSMutableArray *newStarredRepos = [NSMutableArray array];
             
-            for (GITRepository *item in starredRepos) {
-                if (![item.fullName isEqualToString:repo.fullName]) {
+            for (NSDictionary *item in starredRepos) {
+                if (![item[@"full_name"] isEqualToString:repo.fullName]) {
                     [newStarredRepos addObject:item];
                 }
             }
+            NSLog(@"count=%@", @(newStarredRepos.count));
             [GITRepository storeObject:[newStarredRepos copy] byKey:MyStarredRepositories pagination:NO];
             
             success(YES);
@@ -287,13 +284,19 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
                                     success:(void (^)(BOOL))success
                                     failure:(GitHubClientFailureBlock)failure
 {
-    NSString *url = [NSString stringWithFormat:@"/user/subscriptions/%@/%@", repo.owner.login, repo.name];
+    NSString *url = [NSString stringWithFormat:@"/repos/%@/subscription", repo.fullName];
     GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
     
     return [client putWithURL:url parameters:nil success:^(AFHTTPRequestOperation *operation, id obj) {
-        // See https://developer.github.com/v3/activity/watching/#response-4
-        if (operation.response.statusCode == 204) {
+        // See https://developer.github.com/v3/activity/watching/#set-a-repository-subscription
+        NSLog(@"response class=%@, obj=%@", [obj class], obj);
+        
+        NSDictionary *dic = obj;
+        if (dic[@"subscribed"]) {
             success(YES);
+        }
+        else {
+            success(NO);
         }
     } failure:failure];
 }
@@ -309,6 +312,27 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
         // See https://developer.github.com/v3/activity/watching/#response-5
         if (operation.response.statusCode == 204) {
             success(YES);
+        }
+    } failure:failure];
+}
+
+- (AFHTTPRequestOperation *)isWatching:(void (^)(BOOL))isWatching
+                               failure:(GitHubClientFailureBlock)failure
+{
+    NSString *url = [NSString stringWithFormat:@"/repos/%@/subscription", self.fullName];
+    GitHubOAuthClient *client = [GitHubOAuthClient sharedInstance];
+    
+    return [client getWithURL:url parameters:nil success:^(AFHTTPRequestOperation *operation, id obj) {
+        // See https://developer.github.com/v3/activity/watching/#get-a-repository-subscription
+
+        NSDictionary *dic = obj;
+        NSLog(@"response class=%@, obj=%@, subscribed=%@", [obj class], obj, dic[@"subscribed"]);
+        
+        if (dic[@"subscribed"]) {
+            isWatching(YES);
+        }
+        else {
+            isWatching(NO);
         }
     } failure:failure];
 }
