@@ -29,19 +29,11 @@ MrCode
 ### Screenshots
 ----
 
-![Repos](https://raw.githubusercontent.com/haolloyin/MrCode/master/Screenshots/repos.jpg)
+![screenshots_1](https://raw.githubusercontent.com/haolloyin/MrCode/master/Screenshots/screenshots_1.png)
 
-![Repos detail](https://raw.githubusercontent.com/haolloyin/MrCode/master/Screenshots/repo_detail.jpg)
+![screenshots_1](https://raw.githubusercontent.com/haolloyin/MrCode/master/Screenshots/screenshots_2.png)
 
-![Repos forks](https://raw.githubusercontent.com/haolloyin/MrCode/master/Screenshots/forks.jpg)
-
-![Repos trending](https://raw.githubusercontent.com/haolloyin/MrCode/master/Screenshots/trending.jpg)
-
-![User profile](https://raw.githubusercontent.com/haolloyin/MrCode/master/Screenshots/user_profile.jpg)
-
-![Notifications](https://raw.githubusercontent.com/haolloyin/MrCode/master/Screenshots/notifications.jpg)
-
-![Markdown file](https://raw.githubusercontent.com/haolloyin/MrCode/master/Screenshots/md_file.jpg)
+![screenshots_1](https://raw.githubusercontent.com/haolloyin/MrCode/master/Screenshots/screenshots_3.png)
 
 
 ### Build
