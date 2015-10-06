@@ -1,24 +1,48 @@
-Mr. Code
+MrCode
 ----
-`Mr. Code` 是一个简单的 GitHub iPhone 客户端，命名源自 [Mr. Robot](https://movie.douban.com/subject/26290409/)（黑客军团，当时出了一两集就有人说是神剧的美剧）。
+`MrCode` 是一个简单的 GitHub iPhone 客户端，命名源自 [Mr. Robot](https://movie.douban.com/subject/26290409/)（黑客军团，当时出了一两集就有人说是神剧的美剧）。
 
-### Story
+### Why make MrCode
 ----
 
 最初目的是想在 iPhone 上读这本书 [guidetodatamining](https://github.com/egrcc/guidetodatamining)，每一章都是 Markdown 格式，用 Safari 进行阅读，个人认为 GitHub 渲染后（包含代码）的 HTML 是阅读效果最好的。
 
-虽然 [iOctocat](http://ioctocat.com)、[CodeHub](http://codehub-app.com) 已经有 GitHub 非常全面的功能，但缺少我想要的缓存功能。
+虽然 [iOctocat](http://ioctocat.com)、[CodeHub](http://codehub-app.com) 这些 App 已经有 GitHub 非常全面的功能，但缺少我想要的缓存功能。
 
 因为这书每个章节很长，班车上半小时内看不完，为了减少手机流量消耗才打算做一个 App 在本地缓存 Markdown 文件渲染后的 HTML，以及 HTML 中的图片。
 
 ### Features
 ----
 
-- [x] 不需要在应用内输入 GitHub 密码，只要跳 Safari 进行 OAuth 授权
-- [x] 缓存 star 过的资源库，自己的公开资源库
+- [x] 不需要在应用内输入 GitHub 密码，只要跳 Safari 登录 GitHub 进行 OAuth 授权
+- [x] 缓存 star 过的资源库以及自己的公开资源库
 - [x] 可以 star / fork / watch 资源库
 - [x] 缓存 .md 或 .markdown 文件的渲染后的 HTML 及其图片
 - [x] 可以按语言／时间段查看 [GitHub Trending](http://github.com/trending)（Thanks `CodeHub` 提供的 [GitHub-Trending](https://github.com/thedillonb/GitHub-Trending)）
+
+另外，整个应用全部使用 Storyboard 进行页面跳转的逻辑关系，UI 用 Masonry 库纯手工写布局。事实上这个应用没有大的难点，基本上全部是 UITableView 的简单使用，用 Masonry 简单布局 UITableViewCell。
+
+![Storyboard](https://raw.githubusercontent.com/haolloyin/MrCode/master/Screenshots/MrCode_Storyboard.png)
+
+将 HTML 中的 `image.src` 替换成原生进行下载并缓存是用了这篇文章（[UIWebView与JS的深度交互](http://kittenyang.com/webview-javascript-bridge/)）的思路和代码（需要一些修改）。
+
+### Screenshots
+----
+
+![Repos](https://raw.githubusercontent.com/haolloyin/MrCode/master/Screenshots/repos.jpg)
+
+![Repos detail](https://raw.githubusercontent.com/haolloyin/MrCode/master/Screenshots/repo_detail.jpg)
+
+![Repos forks](https://raw.githubusercontent.com/haolloyin/MrCode/master/Screenshots/forks.jpg)
+
+![Repos trending](https://raw.githubusercontent.com/haolloyin/MrCode/master/Screenshots/trending.jpg)
+
+![User profile](https://raw.githubusercontent.com/haolloyin/MrCode/master/Screenshots/user_profile.jpg)
+
+![Notifications](https://raw.githubusercontent.com/haolloyin/MrCode/master/Screenshots/notifications.jpg)
+
+![Markdown file](https://raw.githubusercontent.com/haolloyin/MrCode/master/Screenshots/md_file.jpg)
+
 
 ### Build
 ----
@@ -49,13 +73,17 @@ p.s. App 首次安装到设备之后，要在 `设置-通用-描述文件` 中�
 
 1. Model 类里面混用了类方法和成员方法
 
-2. 其他
+2. 代码很烂，通用的 WebViewController 为了便捷耦合了不该有的属性
+
+3. more...
+
 
 ### Thanks
 ----
 
 Thanks to these powerful projects.
 
+- CocoaPods
 - AFNetworking
 - MJExtension
 - OcticonsIOS
