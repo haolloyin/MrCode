@@ -54,9 +54,9 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
                                failure:(GitHubClientFailureBlock)failure
 {
     NSString *html;
+    NSString *cachedKey = [NSString stringWithFormat:@"%@/%@", self.repoFullName, path];
     if (!needRefresh) {
-        NSString *key = [NSString stringWithFormat:@"%@/%@", self.repoFullName, self.apiPath];
-        html = [[KVStoreManager sharedStore] getStringById:key fromTable:kReposFileContentTableName];
+        html = [[KVStoreManager sharedStore] getStringById:cachedKey fromTable:kReposFileContentTableName];
     }
     
     if (html) {
@@ -77,21 +77,23 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
         NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:base64String options:NSDataBase64DecodingIgnoreUnknownCharacters];
         NSString *content = [[NSString alloc] initWithData:decodedData encoding:NSUTF8StringEncoding];
         NSString *html = [NSString stringWithFormat:MCGitHubHTMLTemplateString, self.repoFullName, content];
+        NSString *formatedHTML = [html stringByReplacingOccurrencesOfString:@"<img src=" withString:@"<img image_src="];
 
         NSLog(@"ok");
-        [self storeFileContent:html withKey:[NSString stringWithFormat:@"%@/%@", self.repoFullName, path]];
+        [self storeFileContent:formatedHTML withKey:cachedKey];
         
-        success(html);
+        success(formatedHTML);
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         if (operation.response.statusCode == 200) {
             NSData *encodedData = error.userInfo[@"com.alamofire.serialization.response.error.data"];
             NSString *content = [[NSString alloc] initWithData:encodedData encoding:NSUTF8StringEncoding];
             NSString *html = [NSString stringWithFormat:MCGitHubHTMLTemplateString, self.repoFullName, content];
+            NSString *formatedHTML = [html stringByReplacingOccurrencesOfString:@"<img src=" withString:@"<img image_src="];
             
             NSLog(@"error but ok");
-            [self storeFileContent:html withKey:[NSString stringWithFormat:@"%@/%@", self.repoFullName, path]];
-            success(html);
+            [self storeFileContent:formatedHTML withKey:cachedKey];
+            success(formatedHTML);
         }
         else {
             failure(operation, error);

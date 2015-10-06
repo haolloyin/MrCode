@@ -44,7 +44,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillDisappear:animated];
+    [super viewWillAppear:animated];
     
     NSLog(@"webView=%@", _webView);
     [self reloadWebView];
@@ -78,6 +78,7 @@
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
     if (self.delegate || self.htmlString || self.url) {
+        NSLog(@"shouldStartLoadWithRequest");
         return YES;
     }
     return NO;
@@ -132,8 +133,23 @@
     }
     
     for (NSUInteger i = 0; i < imageUrls.count; i++) {
-        NSString *url = imageUrls[i];
-        [manager downloadImageWithURL:[NSURL URLWithString:url] options:SDWebImageHighPriority progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+        NSString *originString = imageUrls[i];
+        NSString *imgString = [NSString stringWithString:originString];
+        
+        // 如果是 NSNull 对象则扔掉
+        if ([originString isKindOfClass:[NSNull class]]) {
+            continue;
+        }
+        
+        // FIXME: 没有以 http 开头，说明是当前资源库下的相对路径，这个 self.repoFullName 没解耦很丑
+        if (![originString hasPrefix:@"http"]) {
+            imgString = [NSString stringWithFormat:@"https://github.com/%@/raw/master/%@", self.repoFullName, originString];
+        }
+        
+        NSURL *url = [NSURL URLWithString:imgString];
+//        NSLog(@"\noriginString=%@\nimgString=%@", originString, imgString);
+        
+        [manager downloadImageWithURL:url options:SDWebImageHighPriority progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
                                 
             if (image) {
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -141,7 +157,7 @@
                     NSString *key = [manager cacheKeyForURL:imageURL];
                     NSString *cachedPath = [manager.imageCache defaultCachePathForKey:key];
                     
-                    [_jsBridge callHandler:@"imagesDownloadComplete" data:@[url, cachedPath]];
+                    [_jsBridge callHandler:@"imagesDownloadComplete" data:@[originString, cachedPath]];
                 });
             }
         }];

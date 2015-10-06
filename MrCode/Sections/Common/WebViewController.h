@@ -19,6 +19,7 @@
 
 @property (nonatomic, copy) NSURL *url;
 @property (nonatomic, copy) NSString *htmlString;
+@property (nonatomic, copy) NSString *repoFullName;
 @property (nonatomic, weak) id<WebViewControllerDelegate> delegate;
 
 - (void)reloadWebView;
