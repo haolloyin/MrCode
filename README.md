@@ -29,11 +29,11 @@ MrCode
 ### Screenshots
 ----
 
-![screenshots_1](https://raw.githubusercontent.com/haolloyin/MrCode/master/Screenshots/screenshots_1.png)
+![screenshots_1](https://raw.githubusercontent.com/haolloyin/MrCode/master/Screenshots/screenshots_1.jpg)
 
-![screenshots_1](https://raw.githubusercontent.com/haolloyin/MrCode/master/Screenshots/screenshots_2.png)
+![screenshots_1](https://raw.githubusercontent.com/haolloyin/MrCode/master/Screenshots/screenshots_2.jpg)
 
-![screenshots_1](https://raw.githubusercontent.com/haolloyin/MrCode/master/Screenshots/screenshots_3.png)
+![screenshots_1](https://raw.githubusercontent.com/haolloyin/MrCode/master/Screenshots/screenshots_3.jpg)
 
 
 ### Build
