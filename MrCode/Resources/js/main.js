@@ -27,22 +27,6 @@ function onLoaded() {
             }
         });
 
-        // 1. 将当前页面所有 image 下的 image_src 地址收集起来
-        var imageUrlsArray = new Array();
-        var allImage = document.querySelectorAll("img");
-
-        // 2. 从已经被替换好的 image.image_src 属性中取出图片路径
-        allImage = Array.prototype.slice.call(allImage, 0);
-        allImage.forEach(function(image) {
-            var image_src = image.getAttribute("image_src");
-            var newLength = imageUrlsArray.push(image_src);
-        });
-        
-        // 3. 将所有图片地址发给 objc 端
-        bridge.send(imageUrlsArray);
-
-
-
         // 4. 当 objc 每下载完一张图片时会调用，
         // 给替换后的 HTML 追加 image.src 属性，赋值为本地图片路径
         bridge.registerHandler('imagesDownloadComplete', function(data) {
@@ -63,5 +47,20 @@ function onLoaded() {
                 }
             });
         });
+
+
+        // 1. 将当前页面所有 image 下的 image_src 地址收集起来
+        var imageUrlsArray = new Array();
+        var allImage = document.querySelectorAll("img");
+
+        // 2. 从已经被替换好的 image.image_src 属性中取出图片路径
+        allImage = Array.prototype.slice.call(allImage, 0);
+        allImage.forEach(function(image) {
+            var image_src = image.getAttribute("image_src");
+            var newLength = imageUrlsArray.push(image_src);
+        });
+        
+        // 3. 将所有图片地址发给 objc 端
+        bridge.send(imageUrlsArray);
     });
 }

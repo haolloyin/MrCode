@@ -69,9 +69,7 @@ p.s. App 首次安装到设备之后，要在 `设置-通用-描述文件` 中�
 
 3. 原生下载图片缓存后，用 JS 更新 WebView 的 HTML 有时不会生效（返回并重新进入没问题）
 
-4. 查看 Source Code 中的 Markdown 文件内容偶尔会爆内存崩溃
-
-5. more...
+4. more...
 
 
 ### Thanks

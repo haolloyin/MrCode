@@ -126,17 +126,18 @@
 
 -(void)downloadAllImagesInNative:(NSArray *)imageUrls
 {
-    NSLog(@"");
-    SDWebImageManager *manager = [SDWebImageManager sharedManager];
+    NSLog(@"imageUrls.count=%@", @(imageUrls.count));
     
-    //初始化一个置空元素数组
-    _allImages = [NSMutableArray arrayWithCapacity:imageUrls.count];//本地的一个用于保存所有图片的数组
-    for (NSUInteger i = 0; i < imageUrls.count-1; i++) {
-        [_allImages addObject:[NSNull null]];
+    if (imageUrls.count == 0) {
+        return;
     }
     
-    for (NSUInteger i = 0; i < imageUrls.count; i++) {
-        NSString *originString = imageUrls[i];
+    SDWebImageManager *manager = [SDWebImageManager sharedManager];
+    
+    // 初始化本地用于保存所有图片的数组
+    _allImages = [NSMutableArray arrayWithCapacity:imageUrls.count];
+    
+    for (NSString *originString in imageUrls) {
         NSString *imgString = [NSString stringWithString:originString];
         
         // 如果是 NSNull 对象则扔掉
@@ -148,7 +149,6 @@
         if (![originString hasPrefix:@"http"]) {
             imgString = [NSString stringWithFormat:@"https://github.com/%@/raw/master/%@", self.repoFullName, originString];
         }
-//        NSLog(@"\noriginString=%@\nimgString=%@", originString, imgString);
         
         NSURL *url = [NSURL URLWithString:imgString];
         
@@ -160,7 +160,7 @@
                     NSString *key = [manager cacheKeyForURL:imageURL];
                     NSString *cachedPath = [manager.imageCache defaultCachePathForKey:key];
                     
-//                    NSLog(@"\noriginString=%@\nimgString=%@", originString, imgString);
+                    NSLog(@"\noriginString=%@\nimgString=%@", originString, imgString);
                     [_jsBridge callHandler:@"imagesDownloadComplete" data:@[originString, cachedPath]];
                 });
             }

@@ -72,6 +72,8 @@
 
 - (void)viewDidDisappear:(BOOL)animated
 {
+    [super viewDidDisappear:animated];
+    
     NSLog(@"");
     [self saveLanguagesSetting];
 }

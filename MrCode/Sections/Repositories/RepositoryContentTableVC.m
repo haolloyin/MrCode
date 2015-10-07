@@ -138,7 +138,7 @@
     NSLog(@"");
     
     self.requestOperation = [_content fileOfPath:_content.apiPath needRefresh:NO success:^(NSString *html) {
-//        NSLog(@"html=%@", html);
+        NSLog(@"html=%@", html);
         NSURL *baseURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]];
         [webView loadHTMLString:html baseURL:baseURL];
         
