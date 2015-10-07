@@ -23,7 +23,6 @@
 		3F2547871B47F41D0012CDD6 /* NotificationsTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F2547861B47F41D0012CDD6 /* NotificationsTableVC.m */; };
 		3F25478E1B47F6FF0012CDD6 /* RepositoriesTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F25478D1B47F6FF0012CDD6 /* RepositoriesTableVC.m */; };
 		3F2547931B4842C80012CDD6 /* ReposTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F2547921B4842C80012CDD6 /* ReposTableViewCell.m */; };
-		3F2547961B4900960012CDD6 /* TestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F2547951B4900960012CDD6 /* TestViewController.m */; };
 		3F29DF1B1B4D8A6D002257DF /* GITBaseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F29DF1A1B4D8A6D002257DF /* GITBaseModel.m */; };
 		3F29DF211B50E718002257DF /* NotificationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F29DF201B50E718002257DF /* NotificationTableViewCell.m */; };
 		3F29DF241B516804002257DF /* GITEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F29DF231B516804002257DF /* GITEvent.m */; };
@@ -93,8 +92,6 @@
 		3F2547901B48053C0012CDD6 /* MrCode-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MrCode-Prefix.pch"; sourceTree = "<group>"; };
 		3F2547911B4842C80012CDD6 /* ReposTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReposTableViewCell.h; sourceTree = "<group>"; };
 		3F2547921B4842C80012CDD6 /* ReposTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReposTableViewCell.m; sourceTree = "<group>"; };
-		3F2547941B4900960012CDD6 /* TestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestViewController.h; sourceTree = "<group>"; };
-		3F2547951B4900960012CDD6 /* TestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestViewController.m; sourceTree = "<group>"; };
 		3F29DF191B4D8A6D002257DF /* GITBaseModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GITBaseModel.h; sourceTree = "<group>"; };
 		3F29DF1A1B4D8A6D002257DF /* GITBaseModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GITBaseModel.m; sourceTree = "<group>"; };
 		3F29DF1F1B50E718002257DF /* NotificationTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationTableViewCell.h; sourceTree = "<group>"; };
@@ -196,8 +193,6 @@
 				3F2547511B45A0070012CDD6 /* Images.xcassets */,
 				3F2547531B45A0070012CDD6 /* LaunchScreen.xib */,
 				3F2547411B45A0060012CDD6 /* Supporting Files */,
-				3F2547941B4900960012CDD6 /* TestViewController.h */,
-				3F2547951B4900960012CDD6 /* TestViewController.m */,
 			);
 			path = MrCode;
 			sourceTree = "<group>";
@@ -585,7 +580,6 @@
 				3FA4F2761BB981FB00461E19 /* UIColor+HexRGB.m in Sources */,
 				3FCF7D001B63B43B002CE5D5 /* LanguagesTableVC.m in Sources */,
 				3F29DF1B1B4D8A6D002257DF /* GITBaseModel.m in Sources */,
-				3F2547961B4900960012CDD6 /* TestViewController.m in Sources */,
 				3F0006F21B4D7C6C00503F50 /* NSString+ToNSDate.m in Sources */,
 				3F8C0FB01B9DDF820004F818 /* RepositoryContentTableViewCell.m in Sources */,
 				3FBFD28F1B4C1C0900BDC00F /* RepositoryDetailTableVC.m in Sources */,

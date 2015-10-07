@@ -41,7 +41,7 @@
     _contents = [NSArray array];
     
     [self setupRefreshHeader];
-    [self.tableView.header beginRefreshing];
+    [self loadData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -175,6 +175,9 @@
 - (void)loadData
 {
     BOOL needRefresh = [self.tableView.header isRefreshing];
+    if (!needRefresh) {
+        [MBProgressHUD showHUDAddedTo:self.tableView animated:YES];
+    }
     
     @weakify(self)
     self.requestOperation = [_repo contentsOfPath:_path needRefresh:needRefresh success:^(NSArray *array) {
@@ -192,6 +195,8 @@
 {
     [self.tableView.header endRefreshing];
     [self.tableView reloadData];
+    
+    [MBProgressHUD hideAllHUDsForView:self.tableView animated:YES];
 }
 
 @end
