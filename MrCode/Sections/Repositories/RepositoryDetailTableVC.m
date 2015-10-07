@@ -230,6 +230,7 @@
         WebViewController *controller = (WebViewController *)segue.destinationViewController;
         controller.title = self.repo.name;
         controller.delegate = self;
+        controller.repoFullName = self.repo.fullName;
     }
     else if ([identifier isEqualToString:@"ReposDetail2ReposContentTableVC"]) {
         

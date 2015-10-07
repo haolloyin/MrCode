@@ -126,6 +126,7 @@
 
 -(void)downloadAllImagesInNative:(NSArray *)imageUrls
 {
+    NSLog(@"");
     SDWebImageManager *manager = [SDWebImageManager sharedManager];
     
     //初始化一个置空元素数组
@@ -147,18 +148,19 @@
         if (![originString hasPrefix:@"http"]) {
             imgString = [NSString stringWithFormat:@"https://github.com/%@/raw/master/%@", self.repoFullName, originString];
         }
-        
-        NSURL *url = [NSURL URLWithString:imgString];
 //        NSLog(@"\noriginString=%@\nimgString=%@", originString, imgString);
         
+        NSURL *url = [NSURL URLWithString:imgString];
+        
         [manager downloadImageWithURL:url options:SDWebImageHighPriority progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-                                
+
             if (image) {
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
                     //把图片在磁盘中的地址传回给JS
                     NSString *key = [manager cacheKeyForURL:imageURL];
                     NSString *cachedPath = [manager.imageCache defaultCachePathForKey:key];
                     
+//                    NSLog(@"\noriginString=%@\nimgString=%@", originString, imgString);
                     [_jsBridge callHandler:@"imagesDownloadComplete" data:@[originString, cachedPath]];
                 });
             }
