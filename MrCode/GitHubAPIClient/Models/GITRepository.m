@@ -42,7 +42,7 @@ static NSString *kReposContentsTableName = @"MrCode_ReposContentsTableName"; // 
 {
     NSString *sitePrefix = [NSString stringWithFormat:@"https://api.github.com/repos/%@/contents/", self.repoFullName];
     NSString *path = [self.url.absoluteString stringByReplacingOccurrencesOfString:sitePrefix withString:@""];
-    NSLog(@"url=%@,\nsitePrefix=%@,\npath=%@", self.url.absoluteString, sitePrefix, path);
+//    NSLog(@"url=%@,\nsitePrefix=%@,\npath=%@", self.url.absoluteString, sitePrefix, path);
     return path;
 }
 

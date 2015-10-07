@@ -46,6 +46,8 @@
 		3FDB8D251B692B38004694B4 /* UsersTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FDB8D241B692B38004694B4 /* UsersTableVC.m */; };
 		3FDB8D281B725E5D004694B4 /* UserTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FDB8D271B725E5D004694B4 /* UserTableViewCell.m */; };
 		3FDB8D301B726B37004694B4 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FDB8D2F1B726B37004694B4 /* WebViewController.m */; };
+		3FFA8CEB1BC4C29B002AD647 /* mobile-github.css in Resources */ = {isa = PBXBuildFile; fileRef = 3FFA8CEA1BC4C29B002AD647 /* mobile-github.css */; settings = {ASSET_TAGS = (); }; };
+		3FFA8CED1BC4C2E4002AD647 /* mobile-github.js in Resources */ = {isa = PBXBuildFile; fileRef = 3FFA8CEC1BC4C2E4002AD647 /* mobile-github.js */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -135,6 +137,8 @@
 		3FDB8D271B725E5D004694B4 /* UserTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserTableViewCell.m; sourceTree = "<group>"; };
 		3FDB8D2E1B726B37004694B4 /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
 		3FDB8D2F1B726B37004694B4 /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
+		3FFA8CEA1BC4C29B002AD647 /* mobile-github.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = "mobile-github.css"; sourceTree = "<group>"; };
+		3FFA8CEC1BC4C2E4002AD647 /* mobile-github.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "mobile-github.js"; sourceTree = "<group>"; };
 		AB24770223FEE1F449EAD4FD /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		C003DD33F5E02E04E4EEC24D /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		E8E792D13A526B5E88944E2D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -322,6 +326,7 @@
 		3F3801611B98097A005DACE5 /* css */ = {
 			isa = PBXGroup;
 			children = (
+				3FFA8CEA1BC4C29B002AD647 /* mobile-github.css */,
 				3F3801621B98097A005DACE5 /* github1.css */,
 				3F3801631B98097A005DACE5 /* github2.css */,
 			);
@@ -346,6 +351,7 @@
 		3F6103CB1BA716F600B6A7D0 /* js */ = {
 			isa = PBXGroup;
 			children = (
+				3FFA8CEC1BC4C2E4002AD647 /* mobile-github.js */,
 				3F6103CC1BA716F600B6A7D0 /* main.js */,
 			);
 			path = js;
@@ -505,9 +511,11 @@
 				3F2547501B45A0060012CDD6 /* Main.storyboard in Resources */,
 				3F2547551B45A0070012CDD6 /* LaunchScreen.xib in Resources */,
 				3F3801651B98097A005DACE5 /* github2.css in Resources */,
+				3FFA8CED1BC4C2E4002AD647 /* mobile-github.js in Resources */,
 				3F6103CD1BA716F600B6A7D0 /* main.js in Resources */,
 				3F3801641B98097A005DACE5 /* github1.css in Resources */,
 				3F2547521B45A0070012CDD6 /* Images.xcassets in Resources */,
+				3FFA8CEB1BC4C29B002AD647 /* mobile-github.css in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -105,6 +105,8 @@
 
 - (void)reloadWebView
 {
+    NSLog(@"");
+    
     [MBProgressHUD showHUDAddedTo:self.webView animated:YES];
     
     // 优先执行 delegate 中的代码
