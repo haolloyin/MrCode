@@ -3,7 +3,7 @@ MrCode
 
 `MrCode` is a simple GitHub iPhone App that can cache Markdown content (include images in HTML) for read it later.
 
-`MrCode` 是一个简单的 GitHub iPhone 客户端，可以缓存项目中的 Markdown 渲染成 HTML 之后的 HTML 及其图片，方便稍后阅读。
+`MrCode` 是一个简单的 GitHub iPhone 客户端，可以缓存项目中的 Markdown 渲染之后的 HTML 及其图片，方便稍后阅读。
 
 `MrCode` 命名源自 [Mr. Robot](https://movie.douban.com/subject/26290409/)（黑客军团，当时出了一两集就有人说是神剧的美剧）。
 
