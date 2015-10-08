@@ -1,8 +1,13 @@
 MrCode
 ----
-`MrCode` 是一个简单的 GitHub iPhone 客户端，命名源自 [Mr. Robot](https://movie.douban.com/subject/26290409/)（黑客军团，当时出了一两集就有人说是神剧的美剧）。
 
-### Why make MrCode
+`MrCode` is a simple GitHub iPhone App that can cache Markdown content (include images in HTML) for read it later.
+
+`MrCode` 是一个简单的 GitHub iPhone 客户端，可以缓存项目中的 Markdown 渲染成 HTML 之后的 HTML 及其图片，方便稍后阅读。
+
+`MrCode` 命名源自 [Mr. Robot](https://movie.douban.com/subject/26290409/)（黑客军团，当时出了一两集就有人说是神剧的美剧）。
+
+### Why make this
 ----
 
 最初目的是想在 iPhone 上读这本书 [guidetodatamining](https://github.com/egrcc/guidetodatamining)，每一章都是 Markdown 格式，用 Safari 进行阅读，个人认为 GitHub 渲染后（包含代码）的 HTML 是阅读效果最好的。
@@ -14,6 +19,7 @@ MrCode
 ### Features
 ----
 
+- [x] 实现了简单易用的 [GitHub API Client](https://github.com/haolloyin/MrCode/tree/master/MrCode/GitHubAPIClient)（基于 Safari 进行 OAuth 授权），官方提供的 [octokit.objc](https://github.com/octokit/octokit.objc) 有点复杂
 - [x] 不需要在应用内输入 GitHub 密码，只要跳 Safari 登录 GitHub 进行 OAuth 授权
 - [x] 缓存 star 过的资源库以及自己的公开资源库
 - [x] 可以 star / fork / watch 资源库
