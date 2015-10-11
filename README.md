@@ -24,6 +24,7 @@ MrCode
 - [x] 缓存 star 过的资源库以及自己的公开资源库
 - [x] 可以 star / fork / watch 资源库
 - [x] 缓存 .md 或 .markdown 文件的渲染后的 HTML 及其图片
+- [x] 尽量减少流量消耗和 WebView 加载速度，把 GitHub mobile 模式下的 CSS 文件保存在本地 [Resources/css 目录](https://github.com/haolloyin/MrCode/tree/master/MrCode/Resources/css)，HTML 模版代码见[这里](https://github.com/haolloyin/MrCode/blob/master/MrCode/Sections/Common/MrCodeConst.m#L24)和[这里](https://github.com/haolloyin/MrCode/blob/master/MrCode/GitHubAPIClient/Models/GITRepository.m#L564)
 - [x] 可以按语言／时间段查看 [GitHub Trending](http://github.com/trending)（Thanks `CodeHub` 提供的 [GitHub-Trending](https://github.com/thedillonb/GitHub-Trending)）
 
 另外，整个应用全部使用 Storyboard 进行页面跳转的逻辑关系，UI 用 Masonry 库纯手工写布局。事实上这个应用没有大的难点，基本上全部是 UITableView 的简单使用，用 Masonry 简单布局 UITableViewCell。
@@ -67,15 +68,17 @@ p.s. App 首次安装到设备之后，要在 `设置-通用-描述文件` 中�
 
 目前最初的主要功能已经够用（其实在实现的过程中已经花了太多时间调其他功能了），但还是有很多问题，例如：
 
-0. star 一个新的资源库时不会更新本地的缓存（技术问题，要修复比较繁琐），也没用 KVO / Notification 更新已经显示的 UI
+1. star 一个新的资源库时不会更新本地的缓存（技术问题，要修复比较繁琐），也没用 KVO / Notification 更新已经显示的 UI
 
-1. Model 类里面混用了类方法和成员方法
+2. Model 类里面混用了类方法和成员方法
 
-2. 代码很烂，通用的 WebViewController 为了便捷耦合了不该有的属性
+3. 代码很烂，代码组织有些遗留的不合理，例如通用的 WebViewController 为了便捷耦合了不该有的属性
 
-3. 原生下载图片缓存后，用 JS 更新 WebView 的 HTML 有时不会生效（返回并重新进入没问题）
+4. 原生下载图片缓存后，用 JS 更新 WebView 的 HTML 有时不会生效（返回并重新进入没问题）
 
-4. more...
+5. GitHub Trending 用了 [GitHub-Trending](https://github.com/thedillonb/GitHub-Trending)，但它没提供 Developers Trending 的 API，所以现有代码里面是用 GitHub Search API 来实现的，考虑后续去掉 Developers 的这部分
+
+6. more...
 
 
 ### Thanks
