@@ -133,12 +133,12 @@
 
 #pragma makr - WebViewControllerDelegate
 
-- (void)webViewShouldLoadRequest:(UIWebView *)webView
+- (void)webViewShouldLoadRequest:(UIWebView *)webView needRefresh:(BOOL)needRefresh
 {
     NSLog(@"");
     
-    self.requestOperation = [_content fileOfPath:_content.apiPath needRefresh:NO success:^(NSString *html) {
-        NSLog(@"html=%@", html);
+    self.requestOperation = [_content fileOfPath:_content.apiPath needRefresh:needRefresh success:^(NSString *html) {
+//        NSLog(@"html=%@", html);
         NSURL *baseURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]];
         [webView loadHTMLString:html baseURL:baseURL];
         

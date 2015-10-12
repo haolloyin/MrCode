@@ -11,7 +11,7 @@
 @protocol WebViewControllerDelegate <NSObject>
 
 @optional
-- (void)webViewShouldLoadRequest:(UIWebView *)webView;
+- (void)webViewShouldLoadRequest:(UIWebView *)webView needRefresh:(BOOL)needRefresh;
 
 @end
 

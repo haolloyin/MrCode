@@ -19,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
 @property (nonatomic, strong) WebViewJavascriptBridge *jsBridge;
 @property (nonatomic, strong) NSMutableArray* allImages;
+@property (nonatomic, assign) BOOL needRefresh;
 
 @end
 
@@ -33,6 +34,7 @@
     _webView.translatesAutoresizingMaskIntoConstraints = NO;
     _webView.delegate = self;
     _webView.scalesPageToFit = YES;
+    _needRefresh = NO;
     
     [self setupJSBridge];
     
@@ -92,13 +94,23 @@
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
     NSLog(@"");
+    _needRefresh = NO;
     [MBProgressHUD hideHUDForView:self.webView animated:YES];
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
     NSLog(@"%@", error);
+    _needRefresh = NO;
     [MBProgressHUD hideHUDForView:self.webView animated:YES];
+}
+
+#pragma mark - IBAction
+
+- (IBAction)refreshWebView:(id)sender {
+    NSLog(@"");
+    _needRefresh = YES;
+    [self reloadWebView];
 }
 
 #pragma mark - Public
@@ -111,7 +123,7 @@
     
     // 优先执行 delegate 中的代码
     if (self.delegate) {
-        [self.delegate webViewShouldLoadRequest:self.webView];
+        [self.delegate webViewShouldLoadRequest:self.webView needRefresh:(BOOL)_needRefresh];
     }
     else if (self.htmlString) {
         NSURL *baseURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]];

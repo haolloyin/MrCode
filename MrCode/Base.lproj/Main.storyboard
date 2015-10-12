@@ -335,7 +335,13 @@
                             <constraint firstAttribute="centerX" secondItem="sW8-Jw-Nf8" secondAttribute="centerX" id="rNH-SF-oMx"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="nVE-Zv-1Vd"/>
+                    <navigationItem key="navigationItem" id="nVE-Zv-1Vd">
+                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="Rnh-XL-Hid">
+                            <connections>
+                                <action selector="refreshWebView:" destination="OBL-bN-xyv" id="Umq-hm-ciO"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="webView" destination="sW8-Jw-Nf8" id="Gcy-T8-8HW"/>
                     </connections>
