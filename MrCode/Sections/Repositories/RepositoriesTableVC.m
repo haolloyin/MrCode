@@ -539,7 +539,7 @@ static NSString *kCustomReposCellIdentifier = @"CustomReposCellIdentifier";
         _needScrollToTop = NO;
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
         if ([self.tableView cellForRowAtIndexPath:indexPath]) { // check nil
-                    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+            [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
         }
 
     }
