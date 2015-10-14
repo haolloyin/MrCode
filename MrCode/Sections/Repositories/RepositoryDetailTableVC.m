@@ -242,7 +242,7 @@
 
 #pragma makr - WebViewControllerDelegate
 
-- (void)webViewShouldLoadRequest:(UIWebView *)webView
+- (void)webViewShouldLoadRequest:(UIWebView *)webView needRefresh:(BOOL)needRefresh
 {
     [self.repo readmeWithsuccess:^(NSString *success) {
         
@@ -251,7 +251,7 @@
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
-    } needRefresh:NO];
+    } needRefresh:needRefresh];
 }
 
 #pragma mark - Private

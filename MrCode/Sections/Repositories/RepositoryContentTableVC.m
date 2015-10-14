@@ -37,6 +37,8 @@
     
     NSString *identifier = NSStringFromClass([RepositoryContentTableViewCell class]);
     [self.tableView registerClass:[RepositoryContentTableViewCell class] forCellReuseIdentifier:identifier];
+    // FIXME 刷新时有分割线的 bug
+//    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     
     _contents = [NSArray array];
     
