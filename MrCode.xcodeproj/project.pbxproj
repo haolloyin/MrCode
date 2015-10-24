@@ -36,7 +36,7 @@
 		3F6103CD1BA716F600B6A7D0 /* main.js in Resources */ = {isa = PBXBuildFile; fileRef = 3F6103CC1BA716F600B6A7D0 /* main.js */; };
 		3F8C0FAD1B9C96E40004F818 /* RepositoryContentTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F8C0FAC1B9C96E40004F818 /* RepositoryContentTableVC.m */; };
 		3F8C0FB01B9DDF820004F818 /* RepositoryContentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F8C0FAF1B9DDF820004F818 /* RepositoryContentTableViewCell.m */; };
-		3FA4F2761BB981FB00461E19 /* UIColor+HexRGB.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FA4F2751BB981FB00461E19 /* UIColor+HexRGB.m */; settings = {ASSET_TAGS = (); }; };
+		3FA4F2761BB981FB00461E19 /* UIColor+HexRGB.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FA4F2751BB981FB00461E19 /* UIColor+HexRGB.m */; };
 		3FBFD28C1B4AD68800BDC00F /* UIImage+MRC_Octicons.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD28B1B4AD68800BDC00F /* UIImage+MRC_Octicons.m */; };
 		3FBFD28F1B4C1C0900BDC00F /* RepositoryDetailTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD28E1B4C1C0900BDC00F /* RepositoryDetailTableVC.m */; };
 		3FBFD2921B4C1C3500BDC00F /* RepositoryHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FBFD2911B4C1C3500BDC00F /* RepositoryHeaderView.m */; };
@@ -46,8 +46,8 @@
 		3FDB8D251B692B38004694B4 /* UsersTableVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FDB8D241B692B38004694B4 /* UsersTableVC.m */; };
 		3FDB8D281B725E5D004694B4 /* UserTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FDB8D271B725E5D004694B4 /* UserTableViewCell.m */; };
 		3FDB8D301B726B37004694B4 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FDB8D2F1B726B37004694B4 /* WebViewController.m */; };
-		3FFA8CEB1BC4C29B002AD647 /* mobile-github.css in Resources */ = {isa = PBXBuildFile; fileRef = 3FFA8CEA1BC4C29B002AD647 /* mobile-github.css */; settings = {ASSET_TAGS = (); }; };
-		3FFA8CED1BC4C2E4002AD647 /* mobile-github.js in Resources */ = {isa = PBXBuildFile; fileRef = 3FFA8CEC1BC4C2E4002AD647 /* mobile-github.js */; settings = {ASSET_TAGS = (); }; };
+		3FFA8CEB1BC4C29B002AD647 /* mobile-github.css in Resources */ = {isa = PBXBuildFile; fileRef = 3FFA8CEA1BC4C29B002AD647 /* mobile-github.css */; };
+		3FFA8CED1BC4C2E4002AD647 /* mobile-github.js in Resources */ = {isa = PBXBuildFile; fileRef = 3FFA8CEC1BC4C2E4002AD647 /* mobile-github.js */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -477,6 +477,7 @@
 				TargetAttributes = {
 					3F25473D1B45A0060012CDD6 = {
 						CreatedOnToolsVersion = 6.3.2;
+						DevelopmentTeam = LKW4JK54PC;
 					};
 					3F2547591B45A0070012CDD6 = {
 						CreatedOnToolsVersion = 6.3.2;
@@ -735,11 +736,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PREFIX_HEADER = "$(SRCROOT)/MrCode/MrCode-Prefix.pch";
 				INFOPLIST_FILE = MrCode/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "hao.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -749,11 +752,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PREFIX_HEADER = "$(SRCROOT)/MrCode/MrCode-Prefix.pch";
 				INFOPLIST_FILE = MrCode/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "hao.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
