@@ -23,6 +23,7 @@ NSString *const MCReadMeFileCacheTable = @"MrCode_ReadMeFileCacheTable";
 
 // 这些是 Mobile 下的 GitHub 样式
 NSString *const MCGitHubHTMLTemplateString = @"<html><head><meta charset='utf-8'>"
+"<meta name=\"viewport\" content=\"initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width\">"
 "<link crossorigin=\"anonymous\" href=\"mobile-github.css\" media=\"all\" rel=\"stylesheet\"/>"
 "<script type=\"text/javascript\" src=\"main.js\"></script>"
 "<title>%@</title></head><body onload=\"onLoaded()\">%@</body></html>";
